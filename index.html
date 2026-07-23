@@ -1,0 +1,2729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="meltemi-icon-192.png" />
+<link rel="manifest" href="manifest.json" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="theme-color" content="#FBF1E6" />
+<title>Meltemi — A & A</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23FAF6EF'/><text x='50' y='66' font-size='46' text-anchor='middle'>🌊</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#F8F2E7; --card:#FFFDF8; --ink:#1E2A33; --ink2:#4A5A64; --soft:#9A9184; --hair:#E8DECC;
+    --aegean:#155E73; --aegean2:#1E7A93; --terra:#B4854F; --sand:#C6A15B; --blush:#E9C4CC;
+    --gold:#C6A15B; --gold2:#B08D45;
+    --serif:'Fraunces',serif; --sans:'Inter',sans-serif;
+    --sh:0 2px 3px rgba(30,42,51,.03),0 22px 55px -22px rgba(30,42,51,.2);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--ink);font-family:var(--sans);font-size:15px;background:var(--paper);min-height:100vh;
+    background-image:
+      radial-gradient(1000px 600px at 100% -10%,rgba(217,164,65,.10),transparent 55%),
+      radial-gradient(900px 600px at -20% 40%,rgba(44,139,166,.08),transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.15 0 0 0 0 0.13 0 0 0 0 0.1 0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-attachment:fixed}
+  .wrap{max-width:620px;margin:0 auto;padding:10px 18px calc(96px + env(safe-area-inset-bottom))}
+
+  /* ---------- header ---------- */
+  .hdr{position:sticky;top:0;z-index:40;background:rgba(250,246,239,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--hair);padding:calc(12px + env(safe-area-inset-top)) 18px 0}
+  .hdr-in{max-width:620px;margin:0 auto}
+  .hrow{display:flex;justify-content:space-between;align-items:center}
+  .wordmark{font-family:var(--serif);font-size:26px;font-weight:500;letter-spacing:.06em;color:var(--ink)}
+  .wordmark em{font-style:italic;color:var(--terra)}
+  .me{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--hair);border-radius:999px;
+    padding:7px 13px;font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;font-family:var(--sans)}
+  .me:active{background:#F2EBDF}
+  .backrow{display:flex;align-items:center;gap:12px;padding:10px 0 12px}
+  .backbtn{border:1px solid var(--hair);background:var(--card);border-radius:999px;width:38px;height:38px;font-size:16px;
+    color:var(--ink);cursor:pointer;box-shadow:var(--sh);transition:transform .12s}
+  .backbtn:active{transform:scale(.88)}
+  .btitle{font-family:var(--serif);font-size:23px;font-weight:500;color:var(--ink)}
+  .btitle em{font-style:italic;color:var(--terra)}
+  .menu{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:4px 0 18px}
+  .mbtn{position:relative;text-align:left;background:var(--card);border:1px solid var(--hair);border-radius:22px;
+    padding:18px 17px 15px;cursor:pointer;box-shadow:var(--sh);font-family:var(--sans);transition:transform .15s;overflow:hidden}
+  .mbtn:active{transform:scale(.965)}
+  .mbtn.wide2{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .mbtn .mi{width:26px;height:26px;color:var(--aegean);display:block}
+  .notepin .mi{width:15px !important;height:15px !important;display:inline-block;vertical-align:-2px}
+  .mbtn .mtitle2{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--ink);margin-top:8px;line-height:1.1}
+  .mbtn.wide2 .mtitle2{margin-top:6px}
+  .mbtn .msub{font-size:10.5px;letter-spacing:.14em;color:var(--soft);font-weight:600;margin-top:5px;text-transform:uppercase}
+  .mbtn .marrow{position:absolute;top:16px;right:15px;color:var(--gold2);font-size:15px}
+  .mbtn.wide2 .marrow{position:static}
+  .mbtn::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;opacity:.85}
+  .mbtn.c1::after{background:linear-gradient(90deg,var(--gold),transparent)}
+  .mbtn.c2::after{background:linear-gradient(90deg,var(--aegean),transparent)}
+  .mbtn.c3::after{background:linear-gradient(90deg,var(--aegean2),transparent)}
+  .mbtn.c4::after{background:linear-gradient(90deg,var(--blush),transparent)}
+  /* ---------- type & primitives ---------- */
+  .eyebrow{font-size:9.5px;letter-spacing:.28em;color:var(--gold2);font-weight:600;text-transform:uppercase}
+  .eyebrow::after{content:'';display:block;width:28px;height:1px;background:var(--gold);margin-top:6px;opacity:.8}
+  .card{background:var(--card);border:1px solid var(--hair);border-radius:24px;padding:18px;margin-bottom:16px;
+    box-shadow:var(--sh);animation:rise .4s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .rule{height:1px;background:var(--hair);margin:14px 0}
+  input,textarea,select{width:100%;border:1px solid var(--hair);border-radius:14px;padding:12px 14px;font-size:16px;
+    font-family:var(--sans);color:var(--ink);background:#FFFDF9;outline:none;transition:border .2s,box-shadow .2s}
+  input:focus,textarea:focus{border-color:var(--aegean2);box-shadow:0 0 0 3px rgba(44,139,166,.1)}
+  textarea{min-height:96px;line-height:1.65;font-family:var(--serif);font-size:18px}
+  input::placeholder,textarea::placeholder{color:#B9AF9F}
+  .btn{border:none;border-radius:999px;padding:13px 22px;font-size:14px;font-weight:600;cursor:pointer;color:#FFFDF9;
+    background:var(--aegean);font-family:var(--sans);letter-spacing:.03em;transition:transform .15s,background .2s;
+    box-shadow:0 10px 24px -10px rgba(38,51,61,.4)}
+  .btn:active{transform:scale(.965)}
+  .btn.terra{background:linear-gradient(120deg,var(--gold2),var(--gold));box-shadow:0 10px 24px -10px rgba(198,161,91,.55)}
+  .btn.quiet{background:transparent;color:var(--ink);border:1px solid var(--ink);box-shadow:none}
+  .btn.wide{width:100%;display:block}
+  .btn[disabled]{opacity:.5}
+  .ghost{background:none;border:none;color:var(--soft);font-size:13px;cursor:pointer;font-family:var(--sans)}
+  .row{display:flex;gap:8px}.row>*{flex:1}
+  .banner{border-radius:14px;padding:11px 15px;font-size:13.5px;margin-bottom:14px;line-height:1.5}
+  .banner.err{background:#F9E9E3;color:#A4442C;border:1px solid #EFCFC2}
+  .toast{position:fixed;bottom:calc(78px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+    background:var(--ink);color:#FAF6EF;border-radius:999px;padding:12px 26px;font-size:13.5px;font-weight:600;
+    letter-spacing:.03em;box-shadow:0 14px 40px -10px rgba(38,51,61,.5);z-index:120;animation:pop .35s cubic-bezier(.4,1.5,.5,1)}
+  @keyframes pop{from{opacity:0;transform:translate(-50%,16px)}to{opacity:1;transform:translate(-50%,0)}}
+  .soft{color:var(--soft);font-size:13px;line-height:1.6}
+  .empty{text-align:center;color:#B4A996;padding:26px 0;line-height:1.7;font-style:italic;font-family:var(--serif);font-size:18px}
+
+  /* ---------- riviera objects ---------- */
+  .tinybar{display:flex;justify-content:center;gap:26px;margin-top:16px;padding-top:14px;border-top:1px solid var(--hair)}
+  .tinybar div{text-align:center}
+  .tinybar b{display:block;font-family:var(--serif);font-size:20px;font-weight:500;color:var(--ink)}
+  .tinybar span{font-size:9.5px;letter-spacing:.2em;color:var(--soft);font-weight:600}
+  .pass{background:var(--card);border:1px solid var(--hair);border-radius:24px;box-shadow:var(--sh);overflow:hidden;margin-bottom:16px}
+  .pass .ptop{background:linear-gradient(135deg,var(--aegean),var(--aegean2));color:#F6EFE2;padding:16px 18px}
+  .pass .route{display:flex;justify-content:space-between;align-items:center}
+  .pass .code{font-family:var(--serif);font-size:32px;font-weight:400}
+  .pass .plane{color:var(--gold);font-size:14px;letter-spacing:.3em}
+  .pass .city{font-size:9px;letter-spacing:.18em;opacity:.75;text-transform:uppercase;margin-top:2px}
+  .pass .perf{border-top:2px dashed var(--hair);position:relative}
+  .pass .perf::before,.pass .perf::after{content:'';position:absolute;top:-9px;width:18px;height:18px;border-radius:50%;background:var(--paper);border:1px solid var(--hair)}
+  .pass .perf::before{left:-10px}.pass .perf::after{right:-10px}
+  .pass .pbot{padding:13px 18px;display:flex;justify-content:space-between}
+  .pass .pbot b{font-family:var(--serif);font-size:15px;font-weight:500;display:block;color:var(--ink)}
+  .pass .pbot span{font-size:9.5px;letter-spacing:.2em;color:var(--soft);text-transform:uppercase;font-weight:600}
+  .bnav{position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:110;
+    background:rgba(251,246,236,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border:1px solid var(--hair);border-radius:22px;display:flex;justify-content:space-around;align-items:center;
+    padding:11px 6px;box-shadow:var(--sh);max-width:592px;margin:0 auto}
+  .bnav button{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:9px;letter-spacing:.1em;
+    color:var(--soft);text-transform:uppercase;font-weight:600;padding:2px 8px;
+    display:flex;flex-direction:column;align-items:center;gap:3px}
+  .bnav button .ni{width:23px;height:23px;color:currentColor;transition:transform .18s}
+  .bnav button.on{color:var(--aegean)}
+  .bnav button.on .cap{font-family:var(--serif);font-style:italic;font-size:12px;text-transform:none;
+    letter-spacing:.02em;font-weight:500;border-bottom:1px solid var(--gold);padding-bottom:1px}
+  .bnav button.on .ni{transform:translateY(-1px)}
+  /* ---------- hero / countdown ---------- */
+  .hero{text-align:center;padding:34px 10px 10px}
+  .hero .pre{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--ink2);font-weight:600;font-style:normal;font-family:var(--sans)}
+  .hero .big{font-family:var(--serif);font-size:120px;font-weight:300;line-height:.95;color:var(--aegean);margin:6px 0 0;
+    letter-spacing:-.01em;font-variant-numeric:lining-nums}
+  .hero .big sup{font-size:28px;color:var(--gold2);font-style:italic;letter-spacing:0;font-weight:400}
+  .hero .un{font-size:10px;letter-spacing:.4em;color:var(--soft);font-weight:600;margin-top:6px}
+  .hero .meta{margin-top:18px;font-size:13.5px;color:var(--ink2)}
+  .hero .divider{width:56px;height:1px;background:var(--gold);margin:18px auto 0}
+  .cgrid{display:flex;justify-content:center;gap:10px;margin-top:10px}
+  .cbox{min-width:82px;padding:14px 8px;border:1px solid var(--hair);border-radius:18px;background:var(--card);box-shadow:var(--sh)}
+  .cbox .n{font-family:var(--serif);font-size:42px;font-weight:300;line-height:1;color:var(--ink);font-variant-numeric:lining-nums}
+  .cbox .u{font-size:9px;letter-spacing:.3em;color:var(--soft);margin-top:6px;font-weight:600}
+
+  /* ---------- day web ---------- */
+  .viewtog{display:flex;gap:18px;margin:4px 2px 14px}
+  .viewtog button{background:none;border:none;font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.08em;
+    color:var(--soft);cursor:pointer;padding:4px 0;border-bottom:2px solid transparent;text-transform:uppercase}
+  .viewtog button.on{color:var(--ink);border-bottom-color:var(--gold)}
+  .dweb{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:18px}
+  .dcell{border:1px solid var(--hair);border-radius:16px;background:var(--card);padding:10px 4px 8px;cursor:pointer;
+    text-align:center;font-family:var(--sans);box-shadow:var(--sh);transition:all .18s;position:relative}
+  .dcell:active{transform:scale(.93)}
+  .dcell .dn{font-family:var(--serif);font-size:22px;line-height:1;color:var(--ink)}
+  .dcell .dm{font-size:9.5px;letter-spacing:.14em;color:var(--soft);margin-top:3px;font-weight:600}
+  .dcell .dd{display:flex;justify-content:center;gap:3px;margin-top:6px;height:5px}
+  .dcell .dot2{width:4.5px;height:4.5px;border-radius:50%}
+  .dcell.sel{background:var(--ink);border-color:var(--ink)}
+  .dcell.sel .dn{color:#FAF6EF}.dcell.sel .dm{color:#B8AE9E}
+  .dcell.today2{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),var(--sh)}
+  .daypage .place{font-family:var(--serif);font-size:34px;font-weight:500;color:var(--ink);line-height:1.1}
+  .daypage .place em{font-style:italic;color:var(--aegean)}
+  .itiline{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #F3ECDF;font-size:14.5px;line-height:1.5;position:relative}
+  .dragh{touch-action:none;cursor:grab;color:#C9BFA9;font-size:15px;padding:2px 6px;margin:-2px -4px -2px 0;user-select:none;-webkit-user-select:none;flex:0 0 auto}
+  .itiline.dragging{opacity:.92;background:var(--card);box-shadow:0 10px 28px -10px rgba(30,42,51,.35);border-radius:12px;z-index:5;pointer-events:none}
+  .itiline.dropbefore::before{content:'';position:absolute;left:0;right:0;top:-1px;height:2px;background:var(--gold)}
+  .itiline.dropafter::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--gold);z-index:2}
+  .itiline:last-child{border-bottom:none}
+  .itiline .tick{color:var(--gold2);font-size:12px;padding-top:3px}
+  /* romance pack */
+  .pingbtn{width:100%;border:1px solid var(--hair);border-radius:999px;background:var(--card);padding:14px;font-family:var(--serif);
+    font-size:18px;font-style:italic;color:var(--ink2);cursor:pointer;box-shadow:var(--sh);transition:transform .15s;margin-bottom:12px}
+  .pingbtn:active{transform:scale(.97)}
+  .pingline{text-align:center;font-size:12.5px;color:var(--terra);font-weight:600;letter-spacing:.04em;margin:-4px 0 14px}
+  .qmono{text-align:center;font-family:var(--serif);font-style:italic;font-size:15px;color:var(--gold2);letter-spacing:.12em;margin-bottom:4px}
+  .qcard{background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(120deg,var(--gold),#EAD9AF,var(--gold)) border-box;
+    border:1.5px solid transparent;border-radius:24px;padding:20px 18px;
+    margin-bottom:16px;box-shadow:var(--sh)}
+  .qq{font-family:var(--serif);font-size:22px;line-height:1.4;margin:6px 0 12px}
+  .qans{border-left:2.5px solid var(--blush);padding:2px 0 2px 12px;margin-top:12px}
+  .qwho{font-size:10px;letter-spacing:.22em;color:var(--soft);font-weight:600}
+  .qtxt{font-family:var(--serif);font-size:18px;line-height:1.55;margin-top:3px}
+  .sealwait{font-family:var(--serif);font-style:italic;color:var(--soft);font-size:15.5px;margin-top:10px}
+  .bk{display:flex;align-items:flex-start;gap:12px;padding:12px 2px;border-bottom:1px solid #F3ECDF}
+  .bk:last-child{border-bottom:none}
+  .bkc{width:26px;height:26px;min-width:26px;border-radius:50%;border:1.5px solid #CDBFA6;background:transparent;cursor:pointer;
+    color:#fff;font-size:13px;line-height:1;transition:all .18s}
+  .bkc.on{background:var(--terra);border-color:var(--terra);box-shadow:0 3px 10px rgba(201,111,74,.4)}
+  .bkt{flex:1;font-family:var(--serif);font-size:18.5px;line-height:1.45}
+  .bkt.done{text-decoration:line-through;color:#B4A996}
+  .bksub{font-size:10.5px;color:var(--soft);letter-spacing:.06em;margin-top:2px;font-family:var(--sans)}
+  .letter{border:1px solid var(--hair);border-radius:18px;padding:16px;margin-bottom:11px;box-shadow:var(--sh);position:relative;overflow:hidden}
+  .letter.sealed{background:linear-gradient(150deg,#F7EFE2,#F2E5D2);text-align:center}
+  .letter.open2{background:var(--card)}
+  .seal{font-size:30px}
+  .lfrom{font-size:10px;letter-spacing:.24em;color:var(--soft);font-weight:600;margin-top:6px}
+  .lopens{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink2);margin-top:3px}
+  .ltxt{font-family:var(--serif);font-size:18.5px;line-height:1.7;white-space:pre-wrap;margin-top:8px}
+  .tmbbtn{width:100%;border:none;border-radius:22px;padding:16px;cursor:pointer;font-family:var(--serif);font-style:italic;font-size:18px;
+    color:#FAF6EF;background:linear-gradient(120deg,var(--aegean),var(--aegean2));box-shadow:0 12px 30px -10px rgba(31,112,133,.5);
+    transition:transform .15s;margin-bottom:16px}
+  .tmbbtn:active{transform:scale(.97)}
+  .dcell.hasph{background-size:cover;background-position:center;border:none}
+  .dcell.hasph::before{content:'';position:absolute;inset:0;border-radius:16px;background:linear-gradient(rgba(24,30,36,.18),rgba(24,30,36,.5))}
+  .dcell.hasph .dn,.dcell.hasph .dm{position:relative;color:#FAF6EF;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+  .dcell.hasph .dd{position:relative}
+  .dcell.hasph.sel{outline:2.5px solid var(--ink);outline-offset:1px}
+  /* ---------- journal ---------- */
+  .jentry{margin-bottom:26px}
+  .jdate{font-size:10px;letter-spacing:.26em;color:var(--soft);font-weight:600;text-transform:uppercase}
+  .jby{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--terra)}
+  .jtxt{font-family:var(--serif);font-size:19px;line-height:1.7;margin-top:6px;white-space:pre-wrap;color:var(--ink)}
+  .jimg{width:100%;border-radius:18px;margin-top:12px;box-shadow:var(--sh);display:block}
+  .jrule{height:1px;background:linear-gradient(90deg,var(--hair),transparent);margin-top:22px}
+  .jx{background:none;border:none;color:#CDC2AE;cursor:pointer;font-size:12px;padding:0}
+  .attachrow{display:flex;align-items:center;gap:10px;margin-top:10px}
+  .attach{border:1.5px dashed #D8CCB8;border-radius:12px;padding:9px 14px;color:var(--soft);font-size:13px;cursor:pointer;
+    background:transparent;font-family:var(--sans);display:inline-block}
+  .stagedimg{position:relative;width:64px;height:64px;border-radius:12px;overflow:hidden}
+  .stagedimg img{width:100%;height:100%;object-fit:cover}
+  .stagedimg button{position:absolute;top:2px;right:2px;background:rgba(38,51,61,.7);border:none;color:#fff;border-radius:8px;
+    width:20px;height:20px;font-size:11px;cursor:pointer;line-height:1}
+
+  /* ---------- notes ---------- */
+  .wall{column-count:2;column-gap:11px}
+  .note{border-radius:18px;padding:16px 15px 12px;font-family:var(--serif);font-size:18px;line-height:1.55;
+    box-shadow:var(--sh);position:relative;margin-bottom:11px;break-inside:avoid;border:1px solid rgba(38,51,61,.05)}
+  .note:nth-child(odd){transform:rotate(-.5deg)}
+  .note:nth-child(even){transform:rotate(.5deg)}
+  .note .by2{font-family:var(--sans);font-size:10px;color:rgba(38,51,61,.5);margin-top:10px;font-weight:600;letter-spacing:.1em}
+  .note .nx{position:absolute;top:8px;right:11px;background:none;border:none;color:rgba(38,51,61,.3);cursor:pointer;font-size:12px}
+  .swatches{display:flex;gap:9px;margin:12px 0}
+  .sw{width:32px;height:32px;border-radius:50%;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(38,51,61,.08)}
+  .sw.on{border-color:var(--ink)}
+
+  /* ---------- photos ---------- */
+  .pgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+  .ph{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:1;background:#F1E9DB;border:none;padding:0;cursor:pointer;
+    box-shadow:var(--sh)}
+  .ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .viewer{position:fixed;inset:0;background:rgba(24,30,36,.94);z-index:200;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;padding:22px;animation:vfade .25s ease}
+  @keyframes vfade{from{opacity:0}to{opacity:1}}
+  .viewer img{max-width:100%;max-height:68vh;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .viewer .cap{color:#FAF6EF;font-family:var(--serif);font-size:21px;font-style:italic;margin-top:16px;text-align:center}
+  .viewer .vby{color:rgba(250,246,239,.55);font-size:11.5px;letter-spacing:.1em;margin-top:5px}
+
+  /* ---------- lock ---------- */
+  .login{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 22px;
+    text-align:center;background:linear-gradient(175deg,#FBF3E7 0%,#FAF6EF 45%,#E8F1F2 100%)}
+  .login .lmark{font-family:var(--serif);font-size:52px;font-weight:400;letter-spacing:.04em;color:var(--ink)}
+  .login .lmark em{font-style:italic;color:var(--terra)}
+  .lsub{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--soft);margin:6px 0 8px}
+  .ldiv{width:40px;height:1px;background:var(--terra);margin:10px auto 22px}
+  .dots{display:flex;gap:16px;justify-content:center;margin:12px 0 22px}
+  .dot{width:12px;height:12px;border-radius:50%;border:1.5px solid #D9CDB8;transition:all .15s cubic-bezier(.4,1.6,.5,1)}
+  .dot.f{background:var(--ink);border-color:var(--ink);transform:scale(1.25)}
+  .dots.bad .dot{border-color:#A4442C;animation:shake .32s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:274px;margin:0 auto}
+  .key{border:1px solid var(--hair);border-radius:999px;background:#FFFDF9;color:var(--ink);font-size:20px;font-weight:500;
+    width:74px;height:74px;cursor:pointer;font-family:var(--serif);box-shadow:var(--sh);transition:all .12s;margin:0 auto}
+  .key:active{transform:scale(.88);background:#F2EBDF}
+  .key.ghostk{background:transparent;border-color:transparent;box-shadow:none;font-size:16px;color:var(--soft);font-family:var(--sans)}
+  .pick{display:flex;flex-direction:column;gap:13px;width:100%;max-width:340px;margin-top:8px}
+  .pcard{display:flex;align-items:center;gap:15px;background:var(--card);border:1px solid var(--hair);border-radius:20px;
+    padding:17px 18px;cursor:pointer;box-shadow:var(--sh);font-family:var(--sans);text-align:left;transition:transform .15s}
+  .pcard:active{transform:scale(.96)}
+  .pcard .pe{font-size:30px}
+  .pcard .pn2{font-family:var(--serif);font-size:24px;font-weight:500;color:var(--ink)}
+  .pcard .ps2{font-size:10.5px;letter-spacing:.18em;color:var(--soft);font-weight:600;margin-top:2px}
+  .pcard.hint{border-color:var(--terra)}
+  /* game */
+  .gwrap{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--hair);box-shadow:var(--sh);background:linear-gradient(180deg,#BFE3EC 0%,#D9EFF2 55%,#F2E8CF 88%,#EAD9AE 100%)}
+  .gwrap canvas{display:block;width:100%;touch-action:none}
+  .gover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    background:rgba(250,246,239,.88);backdrop-filter:blur(6px);text-align:center;padding:20px}
+  .gtitle{font-family:var(--serif);font-size:40px;font-weight:500;color:var(--ink);line-height:1}
+  .gtitle em{font-style:italic;color:var(--terra)}
+  .gsub{font-size:12px;letter-spacing:.2em;color:var(--soft);font-weight:600}
+  .gscore{font-family:var(--serif);font-size:56px;color:var(--ink);line-height:1}
+  .ghud{position:absolute;top:10px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none;
+    font-family:var(--sans);font-weight:700;font-size:15px;color:#26333D;text-shadow:0 1px 3px rgba(255,255,255,.7)}
+  .lb{display:flex;justify-content:space-between;align-items:center;padding:9px 2px;border-bottom:1px solid #F3ECDF;font-size:14px}
+  .lb:last-child{border-bottom:none}
+  .lb .r{font-family:var(--serif);font-size:17px;min-width:26px;color:var(--soft)}
+  .lb b{font-family:var(--serif);font-size:19px}
+  .taunt{text-align:center;font-family:var(--serif);font-style:italic;font-size:17px;color:var(--terra);margin:10px 0 2px}
+  /* concierge + long distance */
+  .chiprow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+  .pchip{border:1px solid var(--hair);background:var(--card);border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:600;
+    color:var(--soft);cursor:pointer;font-family:var(--sans);transition:all .15s}
+  .pchip.on{color:#FFFDF9;background:var(--ink);border-color:var(--ink)}
+  .pchip.now::after{content:' ·';color:var(--terra);font-weight:900}
+  .findc{border:1px solid var(--hair);border-radius:18px;background:var(--card);padding:14px 15px;margin-bottom:11px;box-shadow:var(--sh)}
+  .findc .fn{font-family:var(--serif);font-size:21px;font-weight:500}
+  .findc .fa{font-size:11px;letter-spacing:.12em;color:var(--terra);font-weight:700;text-transform:uppercase;margin-top:2px}
+  .findc .fw{font-size:14px;color:var(--ink2);line-height:1.55;margin-top:7px}
+  .findc .ft{font-size:12.5px;color:var(--soft);margin-top:6px;font-style:italic;font-family:var(--serif);font-size:15px}
+  .clocks{display:flex;gap:10px;margin-bottom:14px}
+  .clock{flex:1;border-radius:18px;padding:14px;text-align:center;border:1px solid var(--hair);box-shadow:var(--sh)}
+  .clock.dayx{background:linear-gradient(160deg,#FDF4E0,#FFFDF9)}
+  .clock.nightx{background:linear-gradient(160deg,#2A3642,#3A4856)}
+  .clock .ct{font-family:var(--serif);font-size:30px;font-weight:500;color:var(--ink)}
+  .clock.nightx .ct{color:#FAF6EF}
+  .clock .cl{font-size:9.5px;letter-spacing:.24em;color:var(--soft);font-weight:600;margin-top:3px}
+  .clock.nightx .cl{color:#9FB0BE}
+  .gmrow{display:flex;gap:9px;margin-bottom:8px}
+  .gmbtn{flex:1;border:1px solid var(--hair);border-radius:16px;background:var(--card);padding:13px;font-family:var(--serif);
+    font-size:17px;cursor:pointer;box-shadow:var(--sh);transition:transform .15s}
+  .gmbtn:active{transform:scale(.96)}
+  .missionc{background:linear-gradient(150deg,#FFFDF9,#F4EFE3);border:1px solid var(--hair);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
+  .mnum{font-family:var(--serif);font-size:13px;letter-spacing:.2em;color:var(--terra);font-weight:600}
+  .mtext{font-family:var(--serif);font-size:20px;line-height:1.45;margin:7px 0 12px}
+  .mdone{display:flex;gap:8px}
+  .mdbtn{flex:1;border:1.5px solid var(--hair);border-radius:999px;padding:10px;font-size:12.5px;font-weight:600;background:var(--card);
+    color:var(--soft);cursor:pointer;font-family:var(--sans)}
+  .mdbtn.on{background:var(--terra);border-color:var(--terra);color:#fff}
+  .dpair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+  .dpair .dph{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:1;background:#F1E9DB}
+  .dpair img{width:100%;height:100%;object-fit:cover;display:block}
+  .dpair .dwho{position:absolute;bottom:6px;left:8px;color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+  .dwho svg{width:12px !important;height:12px !important;vertical-align:-1px}
+  .dlock .mi{width:22px;height:22px}
+  .dlock{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;color:#B4A996;font-size:12px;border:1.5px dashed #D8CCB8;border-radius:14px}
+  .jarbtn{width:100%;border:none;border-radius:20px;padding:17px;cursor:pointer;font-family:var(--serif);font-size:19px;font-style:italic;
+    color:#fff;background:linear-gradient(120deg,var(--gold2),var(--gold));box-shadow:0 12px 30px -10px rgba(198,161,91,.55);transition:transform .15s}
+  .jarbtn:active{transform:scale(.96)}
+  .mt8{margin-top:8px}.mt10{margin-top:10px}.mt12{margin-top:12px}.mb10{margin-bottom:10px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script type="module">
+import { h, render, Fragment } from 'https://esm.sh/preact@10.22.0';
+import { useState, useEffect, useMemo, useRef } from 'https://esm.sh/preact@10.22.0/hooks';
+import htm from 'https://esm.sh/htm@3.1.1';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, onSnapshot, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getStorage, ref as sref, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+const html = htm.bind(h);
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCHhKRlq9lrfCz2DQuZ7NLbnbrOZtmtJok",
+  authDomain: "sillysausage-8b937.firebaseapp.com",
+  projectId: "sillysausage-8b937",
+  storageBucket: "sillysausage-8b937.firebasestorage.app",
+  messagingSenderId: "497423190774",
+  appId: "1:497423190774:web:569ab18a62421053f97ad7"
+};
+const fb=initializeApp(firebaseConfig);
+const db=initializeFirestore(fb,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()}),experimentalForceLongPolling:true});
+const storage=getStorage(fb);
+const _auth=getAuth(fb);
+const PIN_PAD='hmpin-';                 // invisible padding: 4-digit PIN → 6+ char Firebase password
+const MEL_EMAIL='meltemi@helios.local'; // the one shared account this trip app signs in as
+const D=(k)=>doc(db,'gyrocity',k);
+
+const MEET='2026-07-29';
+const TRIP_END='2026-08-22';
+const NOTE_COLORS=['#F6E7D7','#F4E2E6','#E3EEEF','#F4EDD8','#E8EFE2'];
+
+// ===== itinerary =====
+const ITIN=[
+  {flag:'🇨🇾',place:'Cyprus',events:[
+    {d:'2026-07-29',t:'29 Jul',w:'✈️ Angelos arrives in Cyprus — we\u2019re together'},
+    {d:'2026-07-29',d2:'2026-08-01',t:'29–1 Aug',w:'🌊 Mercure Beach Resort, Larnaca'},
+    {d:'2026-07-30',t:'30 Jul',w:'💒 Sophia & Oli\u2019s Cyprus Wedding'},
+    {d:'2026-07-31',t:'31 Jul',w:'👼🏼 Antigoni christens Mali'},
+    {d:'2026-08-01',d2:'2026-08-04',t:'1–4 Aug',w:'☀️ AYA Adults Only Resort, Ayia Napa'},
+    {d:'2026-08-02',t:'2 Aug',w:'🎤 Antigoni performs at WaterWorld'},
+    {d:'2026-08-04',d2:'2026-08-08',t:'4–8 Aug',w:'🌴 Four Seasons Hotel, Limassol'},
+  ]},
+  {flag:'🇬🇷',place:'Athens',events:[
+    {d:'2026-08-08',t:'8 Aug',w:'✈️ Cyprus Airways · Larnaca → Athens',x:'15:30 – 17:25'},
+    {d:'2026-08-08',d2:'2026-08-09',t:'8 Aug',w:'🏡 Antigoni\u2019s apartment'},
+  ]},
+  {flag:'🇬🇷',place:'Paros',events:[
+    {d:'2026-08-09',t:'9 Aug',w:'⛴️ Ferry · Piraeus → Paros',x:'08:30 – 11:30'},
+    {d:'2026-08-09',d2:'2026-08-12',t:'9–12 Aug',w:'🤍 Sandaya Suites, Naousa'},
+    {d:'2026-08-12',d2:'2026-08-14',t:'12–14 Aug',w:'🌿 Mythic Paros'},
+    {d:'2026-08-14',t:'14 Aug',w:'✈️ Sky Express · Paros → Athens → Chios',x:'08:20–08:55 · 11:15–12:05'},
+  ]},
+  {flag:'🇬🇷',place:'Chios',events:[
+    {d:'2026-08-14',d2:'2026-08-17',t:'14–17 Aug',w:'🕊️ Royal Pearl Island Hotel & Spa'},
+    {d:'2026-08-14',t:'14 Aug',w:'🏖️ Beach day · 🍽️ Dinner with John & his family'},
+    {d:'2026-08-15',t:'15 Aug',w:'⛪ Church in the village · 🥂 Lunch · 🎶 Panigiri'},
+    {d:'2026-08-16',t:'16 Aug',w:'⛵ Boat day'},
+  ]},
+  {flag:'🇬🇷',place:'Samos',events:[
+    {d:'2026-08-17',t:'17 Aug',w:'⛴️ Chios → Samos',x:'09:10 – 12:35'},
+    {d:'2026-08-17',t:'17 Aug',w:'🍋 Lunch & explore Samos'},
+    {d:'2026-08-17',t:'17 Aug',w:'✈️ Samos → Athens (Aegean)',x:'18:40 – 19:30'},
+  ]},
+  {flag:'🇬🇷',place:'Athens, the last stretch',events:[
+    {d:'2026-08-17',d2:'2026-08-22',t:'17–22 Aug',w:'🏡 Antigoni\u2019s apartment'},
+    {d:'2026-08-18',t:'18 Aug',w:'🌺 Wedding pre-party at Bloom Beach Club'},
+    {d:'2026-08-20',t:'20 Aug',w:'💍 John & Vasia\u2019s Wedding'},
+    {d:'2026-08-22',t:'22 Aug',w:'🗽 Fly back to New York ❤️'},
+  ]},
+];
+
+const QOTD=[
+  'What\u2019s a moment from today you don\u2019t want to forget?',
+  'What did you think the first time you saw me?',
+  'What are you most excited to do together on this trip?',
+  'What\u2019s a tiny thing I do that you secretly love?',
+  'If we could teleport anywhere right now for one hour, where?',
+  'What song feels like us right now?',
+  'What\u2019s something you\u2019ve never told me you\u2019re proud of?',
+  'First thing you want to eat together in Cyprus?',
+  'What do you miss most about me today?',
+  'Describe our first summer in three words — guess mine too.',
+  'What\u2019s a fear you want to leave behind this summer?',
+  'Which do you want more on this trip: adventure or stillness?',
+  'What\u2019s the best meal we\u2019ve ever had together?',
+  'What\u2019s something small I did that made you feel loved?',
+  'If our love was a place in Greece, where would it be?',
+  'What are you most nervous about, honestly?',
+  'What\u2019s one thing you want us to do that we\u2019ve never done?',
+  'What did you dream about last night?',
+  'What\u2019s your favorite photo of us and why?',
+  'When did you first know this was real?',
+  'What\u2019s a habit of mine you find funny?',
+  'Sunrise swim or midnight swim?',
+  'What\u2019s one thing you want me to know today?',
+  'What will we be doing exactly one year from today?',
+  'What\u2019s the most beautiful thing you saw today?',
+  'If we opened a little place on an island, what would it be?',
+  'What\u2019s something about my family or world you love?',
+  'What\u2019s a smell that reminds you of me?',
+  'What was your favorite hour of today?',
+  'What\u2019s one way I make your life easier?',
+  'What\u2019s one way I could love you better?',
+  'What are you grateful for right now, this second?',
+  'Which island are you most curious about and why?',
+  'What\u2019s a childhood summer memory this trip brings back?',
+  'What do you hope people say about us as a couple?',
+  'What\u2019s the silliest thing you find attractive about me?',
+  'What\u2019s one promise you want to make for this trip?',
+  'Coffee in bed or breakfast by the water?',
+  'What\u2019s a lyric that\u2019s been stuck in your heart lately?',
+  'What did today taste like?',
+  'What\u2019s one thing you never want us to stop doing?',
+  'If today was a song title, what would it be?',
+  'What\u2019s something you\u2019re still learning about me?',
+  'Where should we go next summer?',
+  'What moment from this trip will we still talk about at 80?',
+  'What are you looking forward to about tomorrow?',
+];
+const qIndexFor=(k)=>parseInt(k.replace(/-/g,''),10)%QOTD.length;
+const relTime=(ts)=>{const s=Math.max(0,Math.floor((Date.now()-ts)/1000));if(s<60)return 'just now';const m=Math.floor(s/60);if(m<60)return m+' min ago';const h2=Math.floor(m/60);if(h2<24)return h2+(h2===1?' hour':' hours')+' ago';const d2=Math.floor(h2/24);return d2+(d2===1?' day':' days')+' ago';};
+const PLACES=[
+  {id:'larnaca',label:'Larnaca',flag:'🇨🇾',ranges:[['2026-07-29','2026-08-01']]},
+  {id:'ayianapa',label:'Ayia Napa',flag:'🇨🇾',ranges:[['2026-08-01','2026-08-04']]},
+  {id:'limassol',label:'Limassol',flag:'🇨🇾',ranges:[['2026-08-04','2026-08-08']]},
+  {id:'athens',label:'Athens',flag:'🇬🇷',ranges:[['2026-08-08','2026-08-09'],['2026-08-17','2026-08-22']]},
+  {id:'paros',label:'Paros',flag:'🇬🇷',ranges:[['2026-08-09','2026-08-14']]},
+  {id:'chios',label:'Chios',flag:'🇬🇷',ranges:[['2026-08-14','2026-08-17']]},
+  {id:'samos',label:'Samos',flag:'🇬🇷',ranges:[['2026-08-17','2026-08-18']]},
+];
+const INTENTS=[['dinner','🍽 dinner'],['beaches','🏖 beaches'],['nightlife','🍸 nightlife'],['experiences','⛵ experiences'],['brunch','☕ brunch & coffee'],['gems','💎 hidden gems']];
+const MISSIONS={
+  10:'Send each other the view from where you\u2019re standing, right now.',
+  9:'Each pick one song for the airport playlist — drop it in Notes.',
+  8:'Name your #1 must-do of the whole trip — put it on Our list.',
+  7:'Voice note. 30 seconds. No topic — just talk.',
+  6:'Find your favorite photo of us and post it as today\u2019s daily photo.',
+  5:'Plan one small surprise for the trip. Don\u2019t say what. Just mark done.',
+  4:'Trade one thing you\u2019re nervous about + one you can\u2019t wait for.',
+  3:'Tell the other one thing you\u2019re packing just for them.',
+  2:'Write a Journal note to tomorrow-you — read it on the plane.',
+  1:'Last goodnight from far away. Make it count. 🌙',
+};
+const dkey=(d)=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const todayKey=()=>dkey(new Date());
+const nowStamp=()=>{const d=new Date();return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' · '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});};
+const TRIP_DAYS=(()=>{const out=[];const d=new Date(MEET+'T12:00:00');while(dkey(d)<=TRIP_END){out.push(dkey(d));d.setDate(d.getDate()+1);}return out;})();
+const MONTHS=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const prettyDay=(k)=>{const[y,m,dd]=k.split('-').map(Number);return new Date(y,m-1,dd).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});};
+const placeOf=(k)=>{
+  for(const leg of ITIN)for(const e of leg.events){const inR=e.d2?(k>=e.d&&k<e.d2):(e.d===k);if(inR)return leg.place.split(',')[0];}
+  return 'The Aegean';
+};
+ITIN.forEach((l,li)=>l.events.forEach((e,ei)=>{e.sid='s'+li+'_'+ei;}));
+const eventsOf=(k)=>ITIN.flatMap(l=>l.events.filter(e=>e.d2?(k>=e.d&&k<e.d2):(e.d===k)));
+
+// ================= ΤΑΒΛΙ engine (pure) =================
+const TV_START=()=>({
+  points:(()=>{const p=new Array(24).fill(0);
+    p[23]=2;p[12]=5;p[7]=3;p[5]=5;
+    p[0]=-2;p[11]=-5;p[16]=-3;p[18]=-5;
+    return p;})(),
+  bar:{A:0,B:0},off:{A:0,B:0},turn:null,rem:[],winner:null
+});
+const tvSgn=(pl)=>pl==='A'?1:-1;
+const tvCnt=(st,i,pl)=>pl==='A'?Math.max(0,st.points[i]):Math.max(0,-st.points[i]);
+const tvBlocked=(st,i,pl)=>{const o=pl==='A'?'B':'A';return tvCnt(st,i,o)>=2;};
+const tvAllHome=(st,pl)=>{
+  if(st.bar[pl]>0)return false;
+  for(let i=0;i<24;i++){
+    const inHome=pl==='A'?(i<=5):(i>=18);
+    if(!inHome&&tvCnt(st,i,pl)>0)return false;
+  }
+  return true;
+};
+const tvHighest=(st,pl)=>{
+  if(pl==='A'){for(let i=5;i>=0;i--)if(tvCnt(st,i,pl)>0)return i;}
+  else{for(let i=18;i<24;i++)if(tvCnt(st,i,pl)>0)return i;}
+  return -1;
+};
+function tvSingleMoves(st,pl,die){
+  const out=[];
+  if(st.bar[pl]>0){
+    const to=pl==='A'?24-die:die-1;
+    if(!tvBlocked(st,to,pl))out.push({from:-1,to,die});
+    return out;
+  }
+  for(let i=0;i<24;i++){
+    if(tvCnt(st,i,pl)===0)continue;
+    const to=pl==='A'?i-die:i+die;
+    if(pl==='A'?to>=0:to<=23){
+      if(!tvBlocked(st,to,pl))out.push({from:i,to,die});
+    }else if(tvAllHome(st,pl)){
+      const exact=pl==='A'?(i-die===-1):(i+die===24);
+      const over=i===tvHighest(st,pl)&&(pl==='A'?die>i+1:die>24-i);
+      if(exact||over)out.push({from:i,to:24,die});
+    }
+  }
+  return out;
+}
+function tvApply(st,pl,mv){
+  const s={points:st.points.slice(),bar:{...st.bar},off:{...st.off},turn:st.turn,rem:st.rem.slice(),winner:st.winner};
+  if(mv.from===-1)s.bar[pl]--; else s.points[mv.from]-=tvSgn(pl);
+  if(mv.to===24){s.off[pl]++;}
+  else{
+    const o=pl==='A'?'B':'A';
+    if(tvCnt(s,mv.to,o)===1){s.points[mv.to]=0;s.bar[o]++;}
+    s.points[mv.to]+=tvSgn(pl);
+  }
+  if(s.off[pl]>=15)s.winner=pl;
+  return s;
+}
+// maximal-sequence firsts over a remaining-dice list (enforces must-play-max + higher-die)
+function tvFirsts(st,pl,rem){
+  let best={len:0,firsts:[]};
+  const seen=new Set();
+  function rec(state,r,depth,first){
+    let any=false;
+    const tried=new Set();
+    for(let di=0;di<r.length;di++){
+      const d=r[di];
+      if(tried.has(d))continue;tried.add(d);
+      for(const mv of tvSingleMoves(state,pl,d)){
+        any=true;
+        const nr=r.slice();nr.splice(di,1);
+        rec(tvApply(state,pl,mv),nr,depth+1,first||mv);
+      }
+    }
+    if(!any){
+      if(depth>best.len)best={len:depth,firsts:[]};
+      if(depth===best.len&&first){
+        const key=first.from+'>'+first.to+'@'+first.die+':'+depth;
+        if(!seen.has(key)){seen.add(key);best.firsts.push(first);}
+      }
+    }
+  }
+  rec(st,rem,0,null);
+  if(best.len===1&&rem.length===2&&rem[0]!==rem[1]){
+    const hi=Math.max(rem[0],rem[1]);
+    const hiF=best.firsts.filter(f=>f.die===hi);
+    if(hiF.length)best.firsts=hiF;
+  }
+  return best;
+}
+
+const Sig=({who,size})=>{
+  const s=size||'15px';
+  const sun=who==='Angelos'||who==='A'||who==='sun';
+  return html`<svg viewBox="0 0 24 24" aria-hidden="true" style=${{width:s,height:s,verticalAlign:'-3px',display:'inline-block',color:sun?'var(--gold2)':'var(--aegean)'}}>
+    ${sun
+      ?html`<g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.1 5.1l1.7 1.7M17.2 17.2l1.7 1.7M18.9 5.1l-1.7 1.7M6.8 17.2l-1.7 1.7"/></g>`
+      :html`<g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 8.5c1.5 1.3 2.9 1.3 4.4 0s2.9-1.3 4.4 0 2.9 1.3 4.4 0 2.9-1.3 4.4 0"/><path d="M2.6 13c1.5 1.3 2.9 1.3 4.4 0s2.9-1.3 4.4 0 2.9 1.3 4.4 0 2.9-1.3 4.4 0"/><path d="M2.6 17.5c1.5 1.3 2.9 1.3 4.4 0s2.9-1.3 4.4 0 2.9 1.3 4.4 0 2.9-1.3 4.4 0"/></g>`}
+  </svg>`;
+};
+const MicMark=()=>html`<svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-2px;display:inline-block">
+  <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="2.9" width="6" height="11" rx="3"/><path d="M5.4 11.2a6.6 6.6 0 0 0 13.2 0"/><path d="M12 17.8v3.3M9 21.1h6"/>
+  </g></svg>`;
+const CardIcon=({id})=>{
+  const P2={fill:'none',stroke:'currentColor','stroke-width':'1.7','stroke-linecap':'round','stroke-linejoin':'round'};
+  return html`<svg class="mi" viewBox="0 0 24 24" aria-hidden="true">
+    ${id==='trip'&&html`<g ...${P2}><path d="M3 6.4 9 4.2l6 2.2 5.4-2v13L15 17.4 9 19.6 3.6 21.4V8.2"/><path d="M9 4.2v15.4M15 6.4v13"/></g>`}
+    ${id==='concierge'&&html`<g ...${P2}><circle cx="12" cy="12" r="8.6"/><path d="M15.2 8.8 10.8 10.8 8.8 15.2 13.2 13.2Z"/></g>`}
+    ${id==='ld'&&html`<g ...${P2}><path d="M12 4.6 13.7 9.4 18.8 9.6 14.8 12.7 16.2 17.6 12 14.7 7.8 17.6 9.2 12.7 5.2 9.6 10.3 9.4Z"/><path d="M18.4 4.2c.9.3 1.4.9 1.6 1.9M4 18c.8-.2 1.4.1 1.9.9"/></g>`}
+    ${id==='list'&&html`<g ...${P2}><path d="M9.2 6.2h10M9.2 12h10M9.2 17.8h10"/><path d="M4.6 6.2 5.6 7.2 7.2 5.2M4.6 12l1 1 1.6-2M4.6 17.8l1 1 1.6-2"/></g>`}
+    ${id==='journal'&&html`<g ...${P2}><path d="M4.2 5.4c2.6-1 5.2-1 7.8.6 2.6-1.6 5.2-1.6 7.8-.6v13c-2.6-1-5.2-1-7.8.6-2.6-1.6-5.2-1.6-7.8-.6Z"/><path d="M12 6v13"/></g>`}
+    ${id==='notes'&&html`<g ...${P2}><rect x="3.4" y="5.6" width="17.2" height="12.8" rx="2.4"/><path d="M3.9 6.6 12 12.8l8.1-6.2"/></g>`}
+    ${id==='game'&&html`<g ...${P2}><path d="M12 20.4 5.8 15A4.3 4.3 0 0 1 12 8.9a4.3 4.3 0 0 1 6.2 6.1Z"/></g>`}
+    ${id==='photos'&&html`<g ...${P2}><rect x="3.2" y="6.6" width="17.6" height="13.4" rx="2.4"/><path d="M7.8 6.6 9.4 4.2h5.2l1.6 2.4"/><circle cx="12" cy="13.2" r="3.3"/></g>`}
+    ${id==='moon'&&html`<g ...${P2}><path d="M20 13.4A8 8 0 1 1 10.6 4a6.4 6.4 0 0 0 9.4 9.4Z"/></g>`}
+    ${id==='lock'&&html`<g ...${P2}><rect x="5" y="10.4" width="14" height="9.6" rx="2.2"/><path d="M8 10.4V7.6a4 4 0 0 1 8 0v2.8"/></g>`}
+    ${id==='pin'&&html`<g ...${P2}><path d="M12 21.4C7.6 16.8 5.4 13.8 5.4 10.4a6.6 6.6 0 0 1 13.2 0c0 3.4-2.2 6.4-6.6 11Z"/><circle cx="12" cy="10.2" r="2.4"/></g>`}
+    ${id==='dice'&&html`<g ...${P2}><rect x="4" y="4" width="16" height="16" rx="3.4"/><circle cx="8.6" cy="8.6" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.4" cy="15.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></g>`}
+    ${id==='beach'&&html`<g ...${P2}><path d="M12 20.4V9.6"/><path d="M12 9.6c-3.4-2.6-6.8-2-8.4.4 3-1 5.6-.2 8.4 2M12 9.6c3.4-2.6 6.8-2 8.4.4-3-1-5.6-.2-8.4 2"/><path d="M6 20.4h12"/></g>`}
+    ${id==='mask'&&html`<g ...${P2}><path d="M4 6.6c3-1 4.4-.4 8 .8 3.6-1.2 5-1.8 8-.8 0 6-2.4 10.4-8 10.4S4 12.6 4 6.6Z"/><circle cx="9" cy="10.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="10.4" r="1.1" fill="currentColor" stroke="none"/></g>`}
+    ${id==='orb'&&html`<g ...${P2}><circle cx="12" cy="10.4" r="6.4"/><path d="M6.6 18.4h10.8"/><path d="M9.4 8.2a3 3 0 0 1 2.6-1.8" stroke-width="1.3"/></g>`}
+    ${id==='word'&&html`<g ...${P2}><rect x="3.4" y="5.4" width="17.2" height="13.2" rx="2.4"/><path d="M7.4 14.6l2-6 2 6M7.9 12.9h3M14 8.6v6a2 2 0 1 0 0-4h-.2" stroke-width="1.4"/></g>`}
+  </svg>`;
+};
+const MNavIcon=({id})=>{
+  const P2={fill:'none',stroke:'currentColor','stroke-width':'1.7','stroke-linecap':'round','stroke-linejoin':'round'};
+  return html`<svg class="ni" viewBox="0 0 24 24" aria-hidden="true">
+    ${id==='home'&&html`<g ...${P2}><path d="M4 11.4 12 4.6l8 6.8"/><path d="M5.7 10v9.4h12.6V10"/><path d="M10 19.4v-4.2a2 2 0 0 1 4 0v4.2"/></g>`}
+    ${id==='trip'&&html`<g ...${P2}><path d="M3.2 15.5c1.6 1.2 3 1.2 4.6 0s3-1.2 4.6 0 3 1.2 4.6 0 3-1.2 4.6 0"/><path d="M12 3.4v8.8"/><path d="M12 5.2 17.2 8 12 10.4 6.8 8 12 5.2Z"/></g>`}
+    ${id==='journal'&&html`<g ...${P2}><path d="M4.2 5.4c2.6-1 5.2-1 7.8.6 2.6-1.6 5.2-1.6 7.8-.6v13c-2.6-1-5.2-1-7.8.6-2.6-1.6-5.2-1.6-7.8-.6Z"/><path d="M12 6v13"/></g>`}
+    ${id==='notes'&&html`<g ...${P2}><rect x="3.4" y="5.6" width="17.2" height="12.8" rx="2.4"/><path d="M3.9 6.6 12 12.8l8.1-6.2"/></g>`}
+    ${id==='game'&&html`<g ...${P2}><path d="M12 20.4 5.8 15A4.3 4.3 0 0 1 12 8.9a4.3 4.3 0 0 1 6.2 6.1Z"/></g>`}
+    ${id==='ld'&&html`<g ...${P2}><circle cx="8.4" cy="8.2" r="2.7"/><circle cx="15.6" cy="8.2" r="2.7"/><path d="M4 19.4c0-2.7 2-4.6 4.4-4.6 1.5 0 2.7.7 3.6 1.8.9-1.1 2.1-1.8 3.6-1.8 2.4 0 4.4 1.9 4.4 4.6"/></g>`}
+  </svg>`;
+};
+function App(){
+  const [authed,setAuthed]=useState(false);
+  const [pinBuf,setPinBuf]=useState('');
+  const [pinMode,setPinMode]=useState('enter');
+  const [firstPin,setFirstPin]=useState('');
+  const [pinBad,setPinBad]=useState(false);
+  const [busy,setBusy]=useState(false);
+  const [meta,setMeta]=useState(null);
+  const [me,setMe]=useState(localStorage.getItem('mel-me')||null);
+  const [picked,setPicked]=useState(false);
+  const [tab,setTab]=useState('home');
+  useEffect(()=>{window.scrollTo({top:0,left:0,behavior:'instant'});},[tab]);
+  const [err,setErr]=useState('');
+  const [toast,setToast]=useState('');
+  const toastT=useRef(null);
+  const [now,setNow]=useState(new Date());
+
+  const [journal,setJournal]=useState(null);
+  const [notes,setNotes]=useState(null);
+  const [photos,setPhotos]=useState(null);
+  const [daysDoc,setDaysDoc]=useState(null);
+  const [qotd,setQotd]=useState(null);
+  const [bucket,setBucket]=useState(null);
+  const [letters,setLetters]=useState(null);
+  const [pings,setPings]=useState(null);
+  const [qAns,setQAns]=useState('');
+  const [liTxt,setLiTxt]=useState('');
+  const [letOpen,setLetOpen]=useState(false);
+  const [letTxt,setLetTxt]=useState('');
+  const [letDate,setLetDate]=useState('2026-08-21');
+  const [tmb,setTmb]=useState(null);
+  const [gscores,setGscores]=useState(null);
+  const [tavli,setTavli]=useState(null);
+  const [ttl,setTtl]=useState(null);       // two truths & the sea
+  const [duel,setDuel]=useState(null);     // in sync
+  const [word,setWord]=useState(null);     // word duel
+  const [tvSel,setTvSel]=useState(null);
+  const [gGame,setGGame]=useState('tavli');
+  const [aiMeta,setAiMeta]=useState(null);
+  const [finds,setFinds]=useState(null);
+  const [gmgn,setGmgn]=useState(null);
+  const [missions,setMissions]=useState(null);
+  const [dailyp,setDailyp]=useState(null);
+  const [missyou,setMissyou]=useState(null);
+  const [cPlace,setCPlace]=useState(null);
+  const [cIntent,setCIntent]=useState('dinner');
+  const [cTxt,setCTxt]=useState('');
+  const [cBusy,setCBusy]=useState(false);
+  const [cRes,setCRes]=useState(null);
+  const [cRaw,setCRaw]=useState('');
+  const [aiKeyIn,setAiKeyIn]=useState('');
+  const [addingDay,setAddingDay]=useState(null);
+  const [dpUp,setDpUp]=useState(false);
+  const [gameOn,setGameOn]=useState(false);
+  const [lastScore,setLastScore]=useState(null);
+  const gref=useRef(null);
+  const gstate=useRef(null);
+  const [jTxt,setJTxt]=useState('');
+  const [jImgs,setJImgs]=useState([]);
+  const [jUp,setJUp]=useState(false); // false | '…' | 'a/b'
+  const [nTxt,setNTxt]=useState('');
+  const [nCol,setNCol]=useState(NOTE_COLORS[0]);
+  const [uploading,setUploading]=useState(false);
+  const [viewImg,setViewImg]=useState(null);   // {url,cap,by,at,del?:{kind,ids}}
+  const [capIn,setCapIn]=useState('');
+  const [armDel,setArmDel]=useState(null);
+  const [tripView,setTripView]=useState('days');
+  const [selDay,setSelDay]=useState(TRIP_DAYS.includes(todayKey())?todayKey():TRIP_DAYS[0]);
+  const [dayUp,setDayUp]=useState(false);
+  const [dNoteTxt,setDNoteTxt]=useState('');
+
+  const flash=(m)=>{setToast(m);clearTimeout(toastT.current);toastT.current=setTimeout(()=>setToast(''),1600);};
+  useEffect(()=>{const t=setInterval(()=>setNow(new Date()),30000);return ()=>clearInterval(t);},[]);
+
+  const srvSeen=useRef({});
+  useEffect(()=>{
+    if(!authed)return; // everything lives behind the login now — subscribe only after the PIN signs us in
+    // A snapshot is TRUSTED only if it came from the server, or is a cache copy of a doc that exists.
+    // A cold-cache "this doc doesn't exist" is never believed, and cache data never replaces loaded data.
+    const sub=(key,apply)=>onSnapshot(D(key),(s)=>{
+      const fromCache=!!(s.metadata&&s.metadata.fromCache);
+      if(fromCache&&srvSeen.current[key])return;            // already have real data — ignore cache echoes
+      if(fromCache&&!s.exists())return;                     // cold cache claiming "empty" — never believe it
+      if(!fromCache)srvSeen.current[key]=true;
+      apply(s);
+    },()=>setErr('No connection.'));
+    const u1=sub('trip_meta',(s)=>setMeta(s.exists()?s.data():{}));
+    const u2=sub('trip_journal',(s)=>setJournal(s.exists()?(s.data().list||[]):[]));
+    const u3=sub('trip_notes',(s)=>setNotes(s.exists()?(s.data().list||[]):[]));
+    const u4=sub('trip_photos',(s)=>setPhotos(s.exists()?(s.data().list||[]):[]));
+    const u5=sub('trip_days',(s)=>setDaysDoc(s.exists()?(s.data().byDay||{}):{}));
+    const u6=sub('trip_qotd',(s)=>setQotd(s.exists()?(s.data().byDate||{}):{}));
+    const u7=sub('trip_list',(s)=>setBucket(s.exists()?(s.data().list||[]):[]));
+    const u8=sub('trip_letters',(s)=>setLetters(s.exists()?(s.data().list||[]):[]));
+    const u9=sub('trip_pings',(s)=>setPings(s.exists()?(s.data().list||[]):[]));
+    const u10=sub('trip_game',(s)=>setGscores(s.exists()?(s.data().list||[]):[]));
+    const u17=sub('trip_tavli',(s)=>setTavli(s.exists()?s.data():{}));
+    const u18=sub('trip_ttl',(s)=>setTtl(s.exists()?(s.data().rounds||[]):[]));
+    const u19=sub('trip_duel',(s)=>setDuel(s.exists()?(s.data().rounds||[]):[]));
+    const u20=sub('trip_word',(s)=>setWord(s.exists()?(s.data().byDate||{}):{}));
+    const u11=sub('helios_ai',(s)=>setAiMeta(s.exists()?s.data():{}));
+    const u12=sub('trip_finds',(s)=>setFinds(s.exists()?(s.data().list||[]):[]));
+    const u13=sub('trip_gmgn',(s)=>setGmgn(s.exists()?(s.data().list||[]):[]));
+    const u14=sub('trip_missions',(s)=>setMissions(s.exists()?(s.data().byDay||{}):{}));
+    const u15=sub('trip_dailyphoto',(s)=>setDailyp(s.exists()?(s.data().byDate||{}):{}));
+    const u16=sub('trip_missyou',(s)=>setMissyou(s.exists()?(s.data().list||[]):[]));
+    return ()=>{u1();u2();u3();u4();u5();u6();u7();u8();u9();u10();u17();u18();u19();u20();u11();u12();u13();u14();u15();u16();};
+  },[authed]);
+
+  const guard=(loaded)=>{if(loaded===null){setErr('Still connecting — try again in a second.');return false;}return true;};
+  const write=(key,data)=>setDoc(D(key),data).catch(e=>setErr('Save failed. '+(e.message||e)));
+
+  useEffect(()=>{
+    if(authed)return;
+    const h=(e)=>{
+      if(/^[0-9]$/.test(e.key)){pressKey(e.key);e.preventDefault();}
+      else if(e.key==='Backspace'){pressKey('back');e.preventDefault();}
+    };
+    window.addEventListener('keydown',h);
+    return ()=>window.removeEventListener('keydown',h);
+  },[authed,pinBuf,pinMode,pinBad,firstPin,meta]);
+  function pressKey(k){
+    if(busy)return;
+    if(pinBad)setPinBad(false);
+    if(k==='back'){setPinBuf(pinBuf.slice(0,-1));return;}
+    if(pinBuf.length>=4)return;
+    const nb=pinBuf+k;setPinBuf(nb);
+    if(nb.length===4)setTimeout(()=>submitPin(nb),120);
+  }
+  // The PIN is our shared account password. First code ever typed sets it; after that,
+  // the right code signs us in and a wrong one is turned away by Firebase.
+  async function submitPin(code){
+    setBusy(true);
+    const pw=PIN_PAD+code;
+    try{
+      await signInWithEmailAndPassword(_auth,MEL_EMAIL,pw);
+      setAuthed(true);setPinBuf('');
+    }catch(e){
+      try{
+        await createUserWithEmailAndPassword(_auth,MEL_EMAIL,pw); // no account yet → this code sets it
+        setAuthed(true);setPinBuf('');
+      }catch(e2){
+        if(e2&&e2.code&&e2.code!=='auth/email-already-in-use'&&e2.code!=='auth/network-request-failed')setErr('Sign-in failed. '+(e2.message||e2));
+        setPinBad(true);setPinBuf('');
+      }
+    }finally{setBusy(false);}
+  }
+  const pickMe=(n)=>{setMe(n);localStorage.setItem('mel-me',n);};
+
+  // ---- trip state ----
+  const tk=todayKey();
+  const meetDate=new Date(MEET+'T00:00:00');
+  const msLeft=meetDate-now;
+  const daysLeft=Math.ceil(msLeft/86400000);
+  const during=tk>=MEET&&tk<=TRIP_END;
+  const after=tk>TRIP_END;
+  const tripDay=during?TRIP_DAYS.indexOf(tk)+1:0;
+
+  // ---- uploads ----
+  function compressImage(file){
+    return new Promise((res,rej)=>{
+      const img=new Image();
+      img.onload=()=>{
+        const max=1800;let w=img.width,h2=img.height;
+        if(w>max||h2>max){const k=max/Math.max(w,h2);w=Math.round(w*k);h2=Math.round(h2*k);}
+        const cv=document.createElement('canvas');cv.width=w;cv.height=h2;
+        cv.getContext('2d').drawImage(img,0,0,w,h2);
+        cv.toBlob(b=>b?res(b):rej(new Error('compress failed')),'image/jpeg',0.85);
+      };
+      img.onerror=()=>rej(new Error('could not read image'));
+      img.src=URL.createObjectURL(file);
+    });
+  }
+  async function uploadBlob(file){
+    const blob=await compressImage(file);
+    const id=Date.now().toString(36)+Math.floor(Math.random()*99);
+    const path=sref(storage,`invoices/trip/${id}.jpg`);
+    await uploadBytes(path,blob,{contentType:'image/jpeg'});
+    const url=await getDownloadURL(path);
+    return {id,url};
+  }
+  const rmStored=(id)=>deleteObject(sref(storage,`invoices/trip/${id}.jpg`)).catch(()=>{});
+
+  // ---- journal ----
+  async function uploadMany(files,onProgress){
+    const out=[];
+    for(let i=0;i<files.length;i++){
+      onProgress(i+1,files.length);
+      out.push(await uploadBlob(files[i]));
+    }
+    return out;
+  }
+  async function attachJImgs(files){
+    setErr('');
+    try{
+      const ims=await uploadMany(files,(a,b)=>setJUp(b>1?`${a}/${b}`:'…'));
+      setJImgs([...jImgs,...ims]);
+    }catch(e){ setErr('Photo failed. ('+(e.message||e)+')'); }
+    setJUp(false);
+  }
+  function addJournal(){
+    if(!guard(journal))return;
+    const t=jTxt.trim();
+    if(!t&&jImgs.length===0){setErr('Write something (or attach a photo) first.');return;}
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setErr('');
+    write('trip_journal',{list:[{id:Date.now().toString(36),by:me,at:nowStamp(),d:tk,txt:t,imgs:jImgs},...journal]});
+    setJTxt('');setJImgs([]);flash('Saved to our story');
+  }
+  function delJournal(j){
+    if(!guard(journal))return;setArmDel(null);
+    if(j.imgId)rmStored(j.imgId);
+    for(const im of (j.imgs||[]))rmStored(im.id);
+    write('trip_journal',{list:journal.filter(x=>x.id!==j.id)});
+  }
+
+  // ---- notes ----
+  function addNote(){
+    if(!guard(notes))return;
+    const t=nTxt.trim();
+    const vN=(vNote&&vNote.for==='note')?vNote:null;
+    if(!t&&!vN){setErr('Write the note — or record one.');return;}
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setErr('');
+    const id=Date.now().toString(36);
+    const rec={id,by:me,at:nowStamp(),txt:t,col:nCol};
+    const finish=(voice)=>{
+      if(voice)rec.voice=voice;
+      write('trip_notes',{list:[rec,...notes]});
+      setNTxt('');discardVoice();flash('Pinned to our wall');
+    };
+    if(vN){
+      flash('Pinning the voice… 🎙');
+      const ext=vN.mime==='audio/mp4'?'m4a':'webm';
+      const path=sref(storage,`invoices/trip/voice-note-${id}.${ext}`);
+      uploadBytes(path,vN.blob).then(()=>getDownloadURL(path)).then(url=>finish({url,sec:vN.sec}))
+        .catch(e=>setErr('Voice upload failed — '+(e.message||e)));
+    }else finish(null);
+  }
+  function delNote(id){if(!guard(notes))return;write('trip_notes',{list:notes.filter(x=>x.id!==id)});}
+
+  // ---- album ----
+  async function uploadPhotos(files){
+    if(!guard(photos))return;
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setErr('');
+    try{
+      const ims=await uploadMany(files,(a,b)=>setUploading(b>1?`${a}/${b}`:true));
+      const recs=ims.map(im=>({id:im.id,url:im.url,by:me,at:nowStamp(),d:tk,cap:capIn.trim()}));
+      write('trip_photos',{list:[...recs,...photos]});
+      setCapIn('');flash(recs.length>1?recs.length+' memories saved':'Memory saved');
+    }catch(e){setErr('Upload failed. ('+(e.message||e)+')');}
+    setUploading(false);
+  }
+  function delPhoto(p){
+    if(!guard(photos))return;
+    setViewImg(null);setArmDel(null);
+    write('trip_photos',{list:photos.filter(x=>x.id!==p.id)});
+    rmStored(p.id);
+  }
+
+  // ---- day pages: photos + notes ----
+  const dayData=(k)=>{
+    const raw=(daysDoc||{})[k]||{};
+    const legacyImgs=(raw.moments||[]).flatMap(m=>(m.imgs||[]));
+    return {photos:[...(raw.photos||[]),...legacyImgs],notes:raw.notes||[],plan:raw.plan||[]};
+  };
+  function saveDayDoc(k,data){
+    if(!guard(daysDoc))return false;
+    write('trip_days',{byDay:{...daysDoc,[k]:{...(daysDoc[k]||{}),...data}}});
+    return true;
+  }
+  const planOf=(k)=>(((daysDoc||{})[k]||{}).plan)||[];
+  function addPlanItem(k,w,x){
+    if(!me){setErr('Tap who you are (top right).');return null;}
+    const id=Date.now().toString(36);
+    if(!saveDayDoc(k,{plan:[...planOf(k),{id,w,x:x||'',by:me}]}))return null;
+    flash('Added to the plan · '+prettyDay(k)+' ✦');
+    return id;
+  }
+
+  const [drag,setDrag]=useState(null); // {li,id,dy,over:{id,before}}
+  const legIndexOf=(k)=>ITIN.findIndex(l=>l.events.some(e=>e.d2?(k>=e.d&&k<e.d2):(e.d===k)));
+  const legDays=(li)=>TRIP_DAYS.filter(k2=>legIndexOf(k2)===li);
+  function legEvents(li){
+    if(li<0)return [];
+    const statics=ITIN[li].events.map(e=>({type:'s',id:e.sid,d:e.d,d2:e.d2,t:e.t,w:e.w,x:e.x}));
+    const customs=legDays(li).flatMap(k2=>planOf(k2).map(p=>({type:'c',id:p.id,d:k2,
+      t:new Date(k2+'T12:00:00').toLocaleDateString(undefined,{day:'numeric',month:'short'}),w:p.w})));
+    const nat=[...statics,...customs].map((e,i2)=>({e,nk:i2+(e.type==='c'?0.5:0),dd:e.d}));
+    nat.sort((a,b)=>a.dd<b.dd?-1:a.dd>b.dd?1:a.nk-b.nk);
+    const ord=((meta||{}).legOrder||{})[li]||[];
+    return nat.map((x,i2)=>({e:x.e,key:ord.indexOf(x.e.id)===-1?1000+i2:ord.indexOf(x.e.id)}))
+      .sort((a,b)=>a.key-b.key).map(x=>x.e);
+  }
+  function dayEvents(k){
+    const li=legIndexOf(k);
+    if(li<0)return planOf(k).map(p=>({type:'c',id:p.id,w:p.w}));
+    return legEvents(li).filter(e=>e.type==='c'?e.d===k:(e.d2?(k>=e.d&&k<e.d2):(e.d===k)));
+  }
+  function reorderLegEvent(li,id,targetId,before){
+    if(id===targetId||li<0)return;
+    if(!guard(meta))return;
+    let ids=legEvents(li).map(e=>e.id).filter(x=>x!==id);
+    const ti=ids.indexOf(targetId);
+    if(ti<0)return;
+    ids.splice(before?ti:ti+1,0,id);
+    write('trip_meta',{...(meta||{}),legOrder:{...((meta||{}).legOrder||{}),[li]:ids}});
+  }
+  // window-listener drag engine — reliable on iOS
+  const dragRef=useRef(null);
+  useEffect(()=>{
+    if(!drag)return;
+    dragRef.current=drag;
+    const mv=(ev)=>{
+      ev.preventDefault();
+      const cur=dragRef.current;if(!cur)return;
+      const el=document.elementFromPoint(ev.clientX,ev.clientY);
+      const row=el&&el.closest?el.closest('[data-oid]'):null;
+      let over=null;
+      if(row&&row.dataset.oli===String(cur.li)&&row.dataset.oid!==cur.id){
+        const r=row.getBoundingClientRect();
+        over={id:row.dataset.oid,before:ev.clientY<r.top+r.height/2};
+      }
+      const next={...cur,dy:ev.clientY-cur.y0,over};
+      dragRef.current=next;setDrag(next);
+    };
+    const up=()=>{
+      const cur=dragRef.current;
+      if(cur&&cur.over)reorderLegEvent(cur.li,cur.id,cur.over.id,cur.over.before);
+      dragRef.current=null;setDrag(null);
+    };
+    window.addEventListener('pointermove',mv,{passive:false});
+    window.addEventListener('pointerup',up);
+    window.addEventListener('pointercancel',up);
+    return ()=>{window.removeEventListener('pointermove',mv);window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',up);};
+  },[drag?drag.id:null]);
+  const startDrag=(li,id)=>(ev)=>{ev.preventDefault();setDrag({li,id,y0:ev.clientY,dy:0,over:null});};
+  const dragRowCls=(li,id)=>{
+    if(!drag||drag.li!==li)return '';
+    if(drag.id===id)return ' dragging';
+    if(drag.over&&drag.over.id===id)return drag.over.before?' dropbefore':' dropafter';
+    return '';
+  };
+  function delPlanItem(k,id){
+    // one write: pull from plan, prune the order, un-badge any note that pointed at it
+    const cur=dayData(k);
+    saveDayDoc(k,{plan:planOf(k).filter(p=>p.id!==id),notes:cur.notes.map(n=>n.planned===id?{...n,planned:null}:n)});
+    // tidy the leg order in its own doc (safe: different document, no dependency)
+    const li=legIndexOf(k);
+    const lo=((meta||{}).legOrder||{})[li];
+    if(li>=0&&lo&&lo.includes(id)&&meta!==null)write('trip_meta',{...meta,legOrder:{...meta.legOrder,[li]:lo.filter(x=>x!==id)}});
+  }
+  function promoteNote(k,n3){
+    const raw=String(n3.txt||'').replace(/^📍\s*/,'');
+    const cut=raw.indexOf(' — ');
+    const w=cut>0?raw.slice(0,cut):raw;
+    const x=cut>0?raw.slice(cut+3):'';
+    if(!me){setErr('Tap who you are (top right).');return;}
+    const id=Date.now().toString(36);
+    const cur=dayData(k);
+    // ONE write: plan gains the item, the note stays and gets its badge
+    if(!saveDayDoc(k,{plan:[...cur.plan,{id,w,x,by:me}],notes:cur.notes.map(n=>n.id===n3.id?{...n,planned:id}:n)}))return;
+    flash('Added to the plan ✦');
+  }
+  async function addDayPhotos(files){
+    if(!guard(daysDoc))return;
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setErr('');
+    try{
+      const ims=await uploadMany(files,(a,b)=>setDayUp(b>1?`${a}/${b}`:true));
+      const cur=dayData(selDay);
+      saveDayDoc(selDay,{photos:[...cur.photos,...ims.map(im=>({...im,by:me}))],notes:cur.notes});
+      flash(ims.length>1?ims.length+' added to this day':'Added to this day');
+    }catch(e){setErr('Photo failed. ('+(e.message||e)+')');}
+    setDayUp(false);
+  }
+  function delDayPhoto(im){
+    if(!guard(daysDoc))return;
+    rmStored(im.id);
+    const cur=dayData(selDay);
+    saveDayDoc(selDay,{photos:cur.photos.filter(x=>x.id!==im.id),notes:cur.notes});
+    setViewImg(null);setArmDel(null);
+  }
+  function addDayNote(){
+    if(!guard(daysDoc))return;
+    const t=dNoteTxt.trim();
+    if(!t){setErr('Write the note first.');return;}
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setErr('');
+    const cur=dayData(selDay);
+    saveDayDoc(selDay,{photos:cur.photos,notes:[...cur.notes,{id:Date.now().toString(36),txt:t,by:me,at:nowStamp()}]});
+    setDNoteTxt('');flash('Noted');
+  }
+  function delDayNote(id){
+    if(!guard(daysDoc))return;
+    const cur=dayData(selDay);
+    saveDayDoc(selDay,{photos:cur.photos,notes:cur.notes.filter(x=>x.id!==id)});
+    setArmDel(null);
+  }
+
+  // ---- bulletproofing: daily auto-backup + manual export ----
+  const bakPacks=()=>({
+    meta:{data:{pin:meta?.pin||''},n:1},
+    journal:{data:{list:journal||[]},n:(journal||[]).length},
+    notes:{data:{list:notes||[]},n:(notes||[]).length},
+    photos:{data:{list:photos||[]},n:(photos||[]).length},
+    days:{data:{byDay:daysDoc||{}},n:Object.values(daysDoc||{}).reduce((s,d3)=>s+((d3.photos||[]).length+(d3.notes||[]).length),0)},
+    list:{data:{list:bucket||[]},n:(bucket||[]).length},
+    letters:{data:{list:letters||[]},n:(letters||[]).length},
+    qotd:{data:{byDate:qotd||{}},n:Object.keys(qotd||{}).length},
+    finds:{data:{list:finds||[]},n:(finds||[]).length},
+    dailyphoto:{data:{byDate:dailyp||{}},n:Object.keys(dailyp||{}).length},
+    missions:{data:{byDay:missions||{}},n:Object.keys(missions||{}).length},
+  });
+  async function runBackup(){
+    try{
+      const packs=bakPacks();
+      for(const [k,v] of Object.entries(packs)){
+        const bref=D('trip_bak_'+k);
+        let prev=-1;
+        try{const g=await getDoc(bref);if(g.exists())prev=g.data().n??-1;}catch(e){}
+        if(v.n>=prev){ // a backup is only ever replaced by an equal-or-bigger one
+          await setDoc(bref,{at:new Date().toISOString(),n:v.n,data:v.data});
+        }
+      }
+    }catch(e){/* backups fail silently; next open retries */}
+  }
+  useEffect(()=>{
+    if(!authed)return;
+    if(meta===null||journal===null||notes===null||photos===null||daysDoc===null||bucket===null||letters===null||qotd===null)return;
+    const today=todayKey();
+    if(localStorage.getItem('mel-bak')===today)return;
+    localStorage.setItem('mel-bak',today);
+    runBackup();
+  },[authed,meta,journal,notes,photos,daysDoc,bucket,letters,qotd]);
+
+  // ---- full-summer export (real ZIP with photo files) ----
+  const [exporting,setExporting]=useState(null);
+  function crc32(u8){
+    if(!crc32.T){crc32.T=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;crc32.T[n]=c>>>0;}}
+    let c=0xFFFFFFFF;
+    for(let i=0;i<u8.length;i++)c=(c>>>8)^crc32.T[(c^u8[i])&0xFF];
+    return (c^0xFFFFFFFF)>>>0;
+  }
+  function zipStore(files){
+    const enc=new TextEncoder();
+    const parts=[];const central=[];let off=0;
+    const u16=(v)=>new Uint8Array([v&255,(v>>8)&255]);
+    const u32=(v)=>new Uint8Array([v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255]);
+    for(const f of files){
+      const name=enc.encode(f.name);
+      const crc=crc32(f.data);
+      const head=[new Uint8Array([80,75,3,4]),u16(20),u16(0x0800),u16(0),u16(0),u16(0x5021),u32(crc),u32(f.data.length),u32(f.data.length),u16(name.length),u16(0)];
+      const headLen=head.reduce((s,a)=>s+a.length,0)+name.length;
+      parts.push(...head,name,f.data);
+      central.push({name,crc,size:f.data.length,off});
+      off+=headLen+f.data.length;
+    }
+    const cstart=off;
+    for(const c of central){
+      parts.push(new Uint8Array([80,75,1,2]),u16(20),u16(20),u16(0x0800),u16(0),u16(0),u16(0x5021),u32(c.crc),u32(c.size),u32(c.size),u16(c.name.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(c.off),c.name);
+      off+=46+c.name.length;
+    }
+    parts.push(new Uint8Array([80,75,5,6]),u16(0),u16(0),u16(central.length),u16(central.length),u32(off-cstart),u32(cstart),u16(0));
+    return new Blob(parts,{type:'application/zip'});
+  }
+  const safeName=(s)=>String(s||'').replace(/[^a-zA-Z0-9-_]/g,'').slice(0,20)||'x';
+  async function exportSummer(){
+    if(exporting)return;
+    const enc=new TextEncoder();
+    const jobs=[];
+    (photos||[]).forEach((p,i)=>jobs.push({name:`photos/album/${String(i+1).padStart(3,'0')}-${safeName(p.by)}${p.d?'-'+p.d:''}.jpg`,url:p.url}));
+    for(const k of Object.keys(daysDoc||{}).sort()){
+      dayData(k).photos.forEach((im,i)=>jobs.push({name:`photos/days/${k}/${String(i+1).padStart(3,'0')}-${safeName(im.by)}.jpg`,url:im.url}));
+    }
+    (journal||[]).forEach(j=>{(j.imgs||[]).forEach((im,i)=>jobs.push({name:`photos/journal/${j.d||'entry'}-${safeName(j.by)}-${i+1}.jpg`,url:im.url}));if(j.img)jobs.push({name:`photos/journal/${j.d||'entry'}-${safeName(j.by)}-0.jpg`,url:j.img});});
+    for(const k of Object.keys(dailyp||{}).sort()){const dp2=dailyp[k];for(const who of ['Angelos','Antigoni'])if(dp2[who])jobs.push({name:`photos/last-days-apart/${k}-${who}.jpg`,url:dp2[who].url});}
+    const files=[];let failed=0;
+    try{
+      for(let i=0;i<jobs.length;i++){
+        setExporting(`saving photo ${i+1} of ${jobs.length}…`);
+        try{
+          const r=await fetch(jobs[i].url);
+          if(!r.ok)throw new Error('fetch');
+          files.push({name:jobs[i].name,data:new Uint8Array(await r.arrayBuffer())});
+        }catch(e){failed++;}
+      }
+      setExporting('writing the book…');
+      const opened=(letters||[]).filter(L=>tk>=L.openAt);
+      const sealedCount=(letters||[]).length-opened.length;
+      const line='\n----------------------------------------\n';
+      const jTx=(journal||[]).slice().reverse().map(j=>`${j.at} — ${j.by}${line}${j.txt||''}${(j.imgs||[]).length?`\n[${j.imgs.length} photo(s) in photos/journal/]`:''}`).join('\n\n');
+      const nTx=(notes||[]).slice().reverse().map(n2=>`${n2.at} — ${n2.by}${line}${n2.txt}`).join('\n\n');
+      const lTx=opened.map(L=>`Sealed ${L.at} by ${L.by} — opened ${L.openAt}${line}${L.txt}`).join('\n\n')+(sealedCount?`\n\n(${sealedCount} letter(s) still sealed — export again after they open.)`:'');
+      const qTx=Object.keys(qotd||{}).sort().map(k=>{const q=qotd[k];if(!(q.Angelos&&q.Antigoni))return '';return `${k} — ${QOTD[qIndexFor(k)]}${line}☀️ Angelos: ${q.Angelos.txt}\n🌊 Antigoni: ${q.Antigoni.txt}`;}).filter(Boolean).join('\n\n');
+      const dTx=Object.keys(daysDoc||{}).sort().map(k=>{const dd4=dayData(k);if(!dd4.notes.length)return '';return `${prettyDay(k)} — ${placeOf(k)}${line}`+dd4.notes.map(n3=>`${n3.by}: ${n3.txt}`).join('\n');}).filter(Boolean).join('\n\n');
+      files.push({name:'our-journal.txt',data:enc.encode(jTx||'(empty)')});
+      files.push({name:'our-notes.txt',data:enc.encode(nTx||'(empty)')});
+      files.push({name:'our-letters.txt',data:enc.encode(lTx||'(none opened yet)')});
+      files.push({name:'questions-and-answers.txt',data:enc.encode(qTx||'(none yet)')});
+      files.push({name:'notes-from-the-days.txt',data:enc.encode(dTx||'(none yet)')});
+      const fTx=PLACES.map(P3=>{const fs2=(finds||[]).filter(f=>f.place===P3.id);if(!fs2.length)return '';return P3.label+line+fs2.map(f=>`${f.name}${f.area?' · '+f.area:''}${f.price?' · '+f.price:''}\n  ${f.why||''}${f.tip?'\n  tip: '+f.tip:''}`).join('\n\n');}).filter(Boolean).join('\n\n\n');
+      files.push({name:'our-saved-places.txt',data:enc.encode(fTx||'(none saved)')});
+      const packs=bakPacks();const out={app:'Meltemi',exportedAt:new Date().toISOString()};
+      for(const [k,v] of Object.entries(packs))if(k!=='letters')out[k]=v.data;
+      out.letters={list:opened};
+      files.push({name:'data.json',data:enc.encode(JSON.stringify(out,null,1))});
+      files.push({name:'README.txt',data:enc.encode('MELTEMI — Angelos & Antigoni, Summer 2026\nOur first summer, in one folder.\n\nphotos/album — the shared album\nphotos/days — every day\u2019s gallery\nphotos/journal — pictures from journal pages\n*.txt — everything we wrote\ndata.json — a full machine-readable copy\n\nKeep this somewhere safe. \ud83c\udf0a\u2600\ufe0f')});
+      const blob=zipStore(files);
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='meltemi-summer-2026.zip';
+      a.click();
+      if(meta!==null)write('trip_meta',{...meta,lastExport:tk});
+      setExporting(null);
+      flash(failed?`Exported — ${failed} photo(s) couldn\u2019t be fetched`:'The whole summer, saved \ud83d\udce6');
+    }catch(e){setExporting(null);setErr('Export failed. ('+(e.message||e)+')');}
+  }
+
+  // ---- restore from backup file (merge-safe: only ever ADDS) ----
+  const [restorePrev,setRestorePrev]=useState(null);
+  const byIdDesc=(arr)=>[...arr].sort((a,b)=>(b.id||'').localeCompare(a.id||''));
+  const mergeLists=(cur,inc)=>{
+    const map=new Map();
+    for(const x of (inc||[]))if(x&&x.id)map.set(x.id,x);
+    for(const x of (cur||[]))if(x&&x.id)map.set(x.id,x); // current data always wins on conflict
+    return byIdDesc([...map.values()]);
+  };
+  function pickRestore(file){
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const d=JSON.parse(r.result);
+        if(!d||typeof d!=='object'||!(d.journal||d.photos||d.notes||d.app==='Meltemi'))throw new Error('not a Meltemi backup');
+        const counts={
+          'journal pages':(d.journal?.list||[]).length,
+          'notes':(d.notes?.list||[]).length,
+          'photo records':(d.photos?.list||[]).length,
+          'day entries':Object.keys(d.days?.byDay||{}).length,
+          'list items':(d.list?.list||[]).length,
+          'letters':(d.letters?.list||[]).length,
+          'answered days':Object.keys(d.qotd?.byDate||{}).length,
+        };
+        setRestorePrev({data:d,counts,when:d.exportedAt||'unknown date'});
+      }catch(e){setErr('That file isn\u2019t a Meltemi backup. ('+(e.message||e)+')');}
+    };
+    r.onerror=()=>setErr('Could not read the file.');
+    r.readAsText(file);
+  }
+  function doRestore(){
+    if(journal===null||notes===null||photos===null||daysDoc===null||bucket===null||letters===null||qotd===null||meta===null){setErr('Still connecting — try again in a second.');return;}
+    const d=restorePrev.data;
+    write('trip_journal',{list:mergeLists(journal,d.journal?.list)});
+    write('trip_notes',{list:mergeLists(notes,d.notes?.list)});
+    write('trip_photos',{list:mergeLists(photos,d.photos?.list)});
+    write('trip_list',{list:mergeLists(bucket,d.list?.list)});
+    write('trip_letters',{list:mergeLists(letters,d.letters?.list)});
+    const mergedDays={};
+    const incD=d.days?.byDay||{};
+    for(const k of new Set([...Object.keys(daysDoc||{}),...Object.keys(incD)])){
+      const cur=(daysDoc||{})[k]||{},inc=incD[k]||{};
+      mergedDays[k]={
+        photos:mergeLists([...(cur.photos||[]),...((cur.moments||[]).flatMap(m=>m.imgs||[]))],inc.photos),
+        notes:mergeLists(cur.notes,inc.notes),
+      };
+    }
+    write('trip_days',{byDay:mergedDays});
+    const mergedQ={};
+    const incQ=d.qotd?.byDate||{};
+    for(const k of new Set([...Object.keys(qotd||{}),...Object.keys(incQ)])){
+      mergedQ[k]={...(incQ[k]||{}),...((qotd||{})[k]||{})};
+    }
+    write('trip_qotd',{byDate:mergedQ});
+    if(!meta.pin&&d.meta?.pin)write('trip_meta',{...meta,pin:d.meta.pin});
+    setRestorePrev(null);
+    flash('Restored — everything merged back \ud83d\udee1');
+  }
+
+  // ---- concierge (AI + live web search) ----
+  const placeNow=useMemo(()=>{
+    for(const p of PLACES)for(const [a,b] of p.ranges)if(tk>=a&&tk<b)return p.id;
+    let best=null,bd=null;
+    for(const p of PLACES)for(const [a] of p.ranges){if(a>=tk&&(bd===null||a<bd)){bd=a;best=p.id;}}
+    return best||'larnaca';
+  },[tk]);
+  const cSel=cPlace||placeNow;
+  function saveAiKey(){
+    if(aiMeta===null){setErr('Still connecting — try again in a second.');return;}
+    if(!aiKeyIn.trim())return;
+    setDoc(D('helios_ai'),{...aiMeta,key:aiKeyIn.trim()}).catch(e=>setErr('Save failed. '+(e.message||e)));
+    setAiKeyIn('');flash('Concierge online');
+  }
+  async function askConcierge(){
+    if(cBusy)return;
+    const key=aiMeta?.key;
+    if(!key){setErr('Add the AI key below first.');return;}
+    const P2=PLACES.find(p=>p.id===cSel);
+    const when=P2.ranges.map(([a,b])=>a.slice(5)+' to '+b.slice(5)).join(' and ');
+    const intent=INTENTS.find(x=>x[0]===cIntent)[1].slice(2);
+    const extra=cTxt.trim();
+    setCBusy(true);setCRes(null);setCRaw('');setErr('');
+    try{
+      const prompt=`You are a sharp local concierge with live web search. Research CURRENT (August 2026) options and recommend 4-6 places.
+WHO: A couple on their first summer trip together — he runs restaurants in NYC (high food standards), she is Greek-Cypriot (absolutely no tourist traps; where locals actually go).
+WHERE: ${P2.label}. WHEN: ${when} (August 2026). LOOKING FOR: ${intent}. ${extra?('SPECIFIC ASK: '+extra):''}
+Search the web for current, open, well-reviewed options. Then output ONLY a JSON array, no other text, no markdown fences:
+[{"name":"...","area":"neighborhood/beach","price":"€|€€|€€€","why":"one sentence on why it fits THIS couple","tip":"one practical tip (booking, timing, what to order)"}]`;
+      const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+        headers:{'x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,
+          tools:[{type:'web_search_20250305',name:'web_search'}],
+          messages:[{role:'user',content:prompt}]})});
+      const j=await r.json();
+      if(j.error)throw new Error(j.error.message||'AI error');
+      const txt=(j.content||[]).filter(b=>b.type==='text').map(b=>b.text||'').join('\n');
+      const s2=txt.indexOf('['),e2=txt.lastIndexOf(']');
+      let parsed=null;
+      if(s2>-1&&e2>s2){try{parsed=JSON.parse(txt.slice(s2,e2+1));}catch(e){}}
+      if(Array.isArray(parsed)&&parsed.length){setCRes(parsed.slice(0,6));}
+      else setCRaw(txt.trim()||'No answer — try again.');
+    }catch(e){setErr('Concierge failed — '+(e.message||e));}
+    setCBusy(false);
+  }
+  function saveFind(f){
+    if(!guard(finds))return;
+    if(finds.some(x=>x.place===cSel&&x.name===f.name)){flash('Already on your list');return;}
+    write('trip_finds',{list:[{id:Date.now().toString(36)+Math.floor(Math.random()*99),place:cSel,by:me||'',at:nowStamp(),name:String(f.name||''),area:String(f.area||''),price:String(f.price||''),why:String(f.why||''),tip:String(f.tip||'')},...finds]});
+    flash('Saved to your '+ (PLACES.find(p=>p.id===cSel)?.label||'') +' list');
+  }
+  function delFind(id){if(!guard(finds))return;write('trip_finds',{list:finds.filter(x=>x.id!==id)});setArmDel(null);}
+  function findToDay(f,k){
+    if(!guard(daysDoc))return;
+    const cur=dayData(k);
+    saveDayDoc(k,{notes:[...cur.notes,{id:Date.now().toString(36),txt:'📍 '+f.name+(f.area?' · '+f.area:'')+(f.tip?' — '+f.tip:(f.why?' — '+f.why:'')),by:me||'',at:nowStamp()}]});
+    setAddingDay(null);flash('Sent to '+prettyDay(k)+' — promote it to the plan from that page');
+  }
+  // ---- ΤΑΒΛΙ ----
+  const tvState=tavli&&tavli.state?tavli.state:null;
+  const tvSeries=(tavli&&tavli.series)||{Angelos:0,Antigoni:0};
+  const tvMode=(tavli&&tavli.mode)||'remote';
+  const tvMe=me==='Angelos'?'A':me==='Antigoni'?'B':null;
+  const tvCanAct=tvState&&!tvState.winner&&(tvMode==='couch'||tvState.turn===tvMe);
+  const tvWrite=(patch)=>write('trip_tavli',{...(tavli||{}),series:tvSeries,mode:tvMode,...patch});
+  function tvNewGame(){
+    if(!guard(tavli===null?null:[]))return;
+    const st=TV_START();
+    st.turn=Math.random()<0.5?'A':'B';
+    tvWrite({state:st});
+    flash((st.turn==='A'?'☀️ Angelos':'🌊 Antigoni')+' opens — roll!');
+  }
+  function tvRoll(){
+    if(!tvState||tvState.rem.length>0||tvState.winner)return;
+    if(!tvCanAct)return;
+    const d1=1+Math.floor(Math.random()*6),d2=1+Math.floor(Math.random()*6);
+    const rem=d1===d2?[d1,d1,d1,d1]:[d1,d2];
+    const st={...tvState,rem,lastRoll:[d1,d2]};
+    const f=tvFirsts(st,st.turn,rem);
+    if(f.len===0){
+      flash('No moves — '+(st.turn==='A'?'☀️':'🌊')+' rolled '+d1+'·'+d2+' and passes');
+      tvWrite({state:{...st,rem:[],turn:st.turn==='A'?'B':'A'}});
+    }else{
+      tvWrite({state:st});
+    }
+    setTvSel(null);
+  }
+  function tvDoMove(mv){
+    if(!tvState||!tvCanAct)return;
+    let ns=tvApply(tvState,tvState.turn,mv);
+    const ri=ns.rem.indexOf(mv.die);ns.rem.splice(ri,1);
+    if(!ns.winner){
+      const f=tvFirsts(ns,ns.turn,ns.rem);
+      if(ns.rem.length===0||f.len===0){
+        if(ns.rem.length>0&&f.len===0)flash('Dice stuck — turn passes');
+        ns={...ns,rem:[],turn:ns.turn==='A'?'B':'A'};
+      }
+    }
+    if(ns.winner){
+      const wName=ns.winner==='A'?'Angelos':'Antigoni';
+      tvWrite({state:ns,series:{...tvSeries,[wName]:(tvSeries[wName]||0)+1}});
+      flash((ns.winner==='A'?'☀️':'🌊')+' '+wName+' WINS! ΝΙΚΗ! 👑');
+    }else tvWrite({state:ns});
+    setTvSel(null);
+  }
+  const tvAllowed=tvState&&tvState.rem.length>0&&!tvState.winner?tvFirsts(tvState,tvState.turn,tvState.rem).firsts:[];
+  const tvTargets=tvSel===null?[]:tvAllowed.filter(f=>f.from===tvSel);
+  // ---- the arcade: two truths & the sea ----
+  const [ttlDraft,setTtlDraft]=useState(null); // {s1,s2,s3,lie}
+  function postTtl(){
+    if(!guard(ttl))return;
+    if(!me){setErr('Tap who you are (top right).');return;}
+    const s=[String(ttlDraft.s1||'').trim(),String(ttlDraft.s2||'').trim(),String(ttlDraft.s3||'').trim()];
+    if(s.some(x=>!x)){setErr('Fill all three statements.');return;}
+    if(ttlDraft.lie===undefined){setErr('Mark which one is the lie.');return;}
+    write('trip_ttl',{rounds:[{id:Date.now().toString(36),by:me,at:nowStamp(),stmts:s,lie:ttlDraft.lie},...ttl].slice(0,40)});
+    setTtlDraft(null);flash('Posted — let them sweat 🤥');
+  }
+  function guessTtl(r,idx){
+    if(!guard(ttl))return;
+    write('trip_ttl',{rounds:ttl.map(x=>x.id===r.id?{...x,guess:{by:me,idx,at:nowStamp()}}:x)});
+    flash(idx===r.lie?'Caught the lie! 🎯':'Fooled you 🤭');
+  }
+  const ttlScore=(who)=>(ttl||[]).filter(r=>r.guess&&r.guess.by===who&&r.guess.idx===r.lie).length;
+
+  // ---- the arcade: in sync ----
+  const [duelBusy,setDuelBusy]=useState(false);
+  async function newDuelQ(){
+    if(duelBusy)return;
+    const key=aiMeta?.key;
+    if(!key){setErr('Add the AI key in the concierge first.');return;}
+    if(!guard(duel))return;
+    setDuelBusy(true);setErr('');
+    try{
+      const recent=(duel||[]).slice(0,8).map(r=>r.q).join(' | ');
+      const prompt=`Generate ONE playful "who is more likely to..." question for a couple (Angelos — NYC restaurant guy, sun emoji; Antigoni — Greek-Cypriot singer, sea emoji). Fun, specific, slightly cheeky, never mean. Not similar to these already used: ${recent||'none'}. Output ONLY JSON, no fences: {"q":"Who is more likely to ..."}`;
+      const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+        headers:{'x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:150,messages:[{role:'user',content:prompt}]})});
+      const j=await r.json();
+      if(j.error)throw new Error(j.error.message||'AI error');
+      const txt=(j.content||[]).map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+      const o=JSON.parse(txt);
+      if(!o.q)throw new Error('bad question');
+      write('trip_duel',{rounds:[{id:Date.now().toString(36),q:String(o.q),at:nowStamp(),ans:{}},...duel].slice(0,60)});
+    }catch(e){setErr('Question failed — '+(e.message||e));}
+    setDuelBusy(false);
+  }
+  function answerDuel(r,pick){
+    if(!guard(duel))return;
+    if(!me)return;
+    write('trip_duel',{rounds:duel.map(x=>x.id===r.id?{...x,ans:{...x.ans,[me]:pick}}:x)});
+  }
+  const duelDone=(r)=>r.ans&&r.ans.Angelos&&r.ans.Antigoni;
+  const duelSyncStreak=(()=>{
+    let n=0;
+    for(const r of (duel||[])){if(!duelDone(r))continue;if(r.ans.Angelos===r.ans.Antigoni)n++;else break;}
+    return n;
+  })();
+
+  // ---- the arcade: word duel ----
+  const WORDS=['ADORE','AGAPE','BEACH','BLISS','BOATS','BREAD','BRINE','CANDY','CHARM','CIDER','COAST','CORAL','CRUSH','DANCE','DREAM','DRIFT','DUNES','FEAST','FERRY','FLAME','GRACE','GRAPE','GREEK','HEART','HONEY','HOTEL','ISLES','KAYAK','LEMON','LIGHT','LOVED','LOVER','MANGO','MELON','MUSIC','NIGHT','OCEAN','OLIVE','OUZOS','PARTY','PEACE','PEARL','PHOTO','PIANO','PLAZA','PRIZE','QUEEN','RADIO','RIVER','ROMAN','ROSES','SAILS','SALTY','SANDS','SHELL','SHINE','SHORE','SIREN','SLEEP','SMILE','SOLAR','SONGS','SPICE','STARS','STONE','STORM','SUGAR','SUITE','SUNNY','SWEET','SWIMS','TANGO','TASTE','TIDES','TOAST','TRIPS','VILLA','VINES','VOICE','WAVES','WHALE','WINES','YACHT','YOURS','ZESTY'];
+  const wordFor=(k)=>{let h2=0;for(const ch of k)h2=(h2*31+ch.charCodeAt(0))>>>0;return WORDS[h2%WORDS.length];};
+  const [wIn2,setWIn2]=useState('');
+  const wToday=(word||{})[tk]||{};
+  const wPartner=me==='Angelos'?'Antigoni':'Angelos';
+  const wMine=me?(wToday[me]||{guesses:[],done:false}):{guesses:[],done:false};
+  const wTheirs=me?(wToday[wPartner]||{guesses:[],done:false}):{guesses:[],done:false};
+  const wTarget=wordFor(tk);
+  const scoreGuess=(g,target)=>{
+    const res=Array(5).fill('a');const t=target.split('');const used=Array(5).fill(false);
+    for(let i2=0;i2<5;i2++)if(g[i2]===t[i2]){res[i2]='c';used[i2]=true;}
+    for(let i2=0;i2<5;i2++){if(res[i2]==='c')continue;
+      for(let j2=0;j2<5;j2++)if(!used[j2]&&g[i2]===t[j2]){res[i2]='p';used[j2]=true;break;}}
+    return res.join('');
+  };
+  function guessWord(){
+    if(!guard(word))return;
+    if(!me){setErr('Tap who you are (top right).');return;}
+    const g=wIn2.trim().toUpperCase();
+    if(!/^[A-Z]{5}$/.test(g)){setErr('Five letters.');return;}
+    if(wMine.done||wMine.guesses.length>=6)return;
+    setErr('');
+    const guesses=[...wMine.guesses,g];
+    const done=g===wTarget;
+    const mine={guesses,done,tries:guesses.length,...(done?{solvedAt:Date.now()}:{})};
+    const byDate={...(word||{}),[tk]:{...wToday,[me]:mine}};
+    const ks=Object.keys(byDate).sort();
+    while(ks.length>40)delete byDate[ks.shift()];
+    write('trip_word',{byDate});
+    setWIn2('');
+    if(done)flash('Solved in '+guesses.length+'! 🔤');
+    else if(guesses.length>=6)flash('Out of guesses — it was '+wTarget);
+  }
+  const wVerdict=(()=>{
+    const mD=wMine.done,tD=wTheirs.done;
+    if(mD&&tD){
+      if(wMine.tries!==wTheirs.tries)return wMine.tries<wTheirs.tries?'👑 You took today':'👑 They took today';
+      return (wMine.solvedAt||0)<(wTheirs.solvedAt||0)?'👑 You took today — by speed':'👑 They took today — by speed';
+    }
+    if(mD&&!tD)return 'Solved — waiting to see if they can match it';
+    if(!mD&&tD)return 'They solved it. No pressure. 👀';
+    return null;
+  })();
+
+  const daysOfPlace=(pid)=>{const P2=PLACES.find(p=>p.id===pid);const out=[];for(const k of TRIP_DAYS)for(const [a,b] of P2.ranges)if(k>=a&&k<b)out.push(k);return out;};
+
+  // ---- long distance ----
+  const tzTime=(tz)=>{try{return new Date().toLocaleTimeString('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit'});}catch(e){return '';}};
+  const tzHour=(tz)=>{try{return +new Date().toLocaleString('en-US',{timeZone:tz,hour:'numeric',hour12:false});}catch(e){return 12;}};
+  function sendGmgn(kind){
+    if(!guard(gmgn))return;
+    if(!me){setErr('Tap who you are (top right).');return;}
+    write('trip_gmgn',{list:[{by:me,kind,at:nowStamp(),ts:Date.now()},...gmgn].slice(0,60)});
+    flash(kind==='gm'?'καλημέρα sent ☀️':'goodnight sent 🌙');
+  }
+  function toggleMission(dayN){
+    if(!guard(missions))return;
+    if(!me){setErr('Tap who you are (top right).');return;}
+    const cur=missions[dayN]||{};
+    write('trip_missions',{byDay:{...missions,[dayN]:{...cur,[me]:!cur[me]}}});
+    if(!cur[me])flash('Mission done ✓');
+  }
+  async function postDailyPhoto(file){
+    if(!guard(dailyp))return;
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setDpUp(true);setErr('');
+    try{
+      const im=await uploadBlob(file);
+      const cur=dailyp[tk]||{};
+      write('trip_dailyphoto',{byDate:{...dailyp,[tk]:{...cur,[me]:{...im,at:nowStamp()}}}});
+      flash('Posted — reveals when you\u2019ve both shared');
+    }catch(e){setErr('Photo failed. ('+(e.message||e)+')');}
+    setDpUp(false);
+  }
+  function sendMiss(){
+    if(!guard(missyou))return;
+    if(!me){setErr('Tap who you are (top right).');return;}
+    write('trip_missyou',{list:[{by:me,ts:Date.now()},...missyou].slice(0,200)});
+    flash('Into the jar 🫙');
+  }
+
+  // ---- JALLA! game engine ----
+  useEffect(()=>{
+    if(!gameOn)return;
+    const cv=gref.current;
+    if(!cv||!cv.getContext)return;
+    const W=360,H=520;
+    cv.width=W;cv.height=H;
+    const ctx=cv.getContext('2d');
+    const st={px:W/2,items:[],score:0,lives:3,t:0,speed:1,dropX:W/2,dropDir:1,over:false,raf:0};
+    gstate.current=st;
+    const isAng=me!=='Antigoni'; // player skin; dropper is the other
+    function head(x,y,s){ctx.fillStyle='#E8B98A';ctx.beginPath();ctx.arc(x,y,10*s,0,7);ctx.fill();}
+    function drawAngelos(x,y,s,walk){
+      // fade + hair
+      head(x,y,s);
+      ctx.fillStyle='#2A2118';ctx.beginPath();ctx.arc(x,y-3*s,10*s,Math.PI,0);ctx.fill();
+      ctx.fillRect(x-10*s,y-3*s,20*s,2.5*s);
+      // beard
+      ctx.strokeStyle='#2A2118';ctx.lineWidth=2.4*s;ctx.beginPath();ctx.arc(x,y+1.5*s,8.4*s,.25*Math.PI,.75*Math.PI);ctx.stroke();
+      // cream tee
+      ctx.fillStyle='#F3EDDF';ctx.fillRect(x-11*s,y+10*s,22*s,16*s);
+      // yellow pants
+      ctx.fillStyle='#F2E8A6';ctx.fillRect(x-9*s,y+26*s,7.5*s,15*s);ctx.fillRect(x+1.5*s,y+26*s,7.5*s,15*s);
+      // sneakers
+      ctx.fillStyle='#fff';ctx.fillRect(x-10*s,y+40*s,9*s,4*s);ctx.fillRect(x+1*s,y+40*s,9*s,4*s);
+      // gold chain
+      ctx.strokeStyle='#D9A441';ctx.lineWidth=1.2*s;ctx.beginPath();ctx.arc(x,y+11*s,4.5*s,0,Math.PI);ctx.stroke();
+      if(walk){ctx.fillStyle='#F2E8A6';ctx.fillRect(x-9*s,y+26*s,7.5*s,15*s);}
+    }
+    function drawAntigoni(x,y,s,walk){
+      // curls behind
+      ctx.fillStyle='#E9C875';
+      for(const [dx,dy,r] of [[-9,2,6],[9,2,6],[-11,12,5.5],[11,12,5.5],[-9,22,5],[9,22,5],[-7,30,4.5],[7,30,4.5]]){
+        ctx.beginPath();ctx.arc(x+dx*s,y+dy*s,r*s,0,7);ctx.fill();
+      }
+      head(x,y,s);
+      ctx.fillStyle='#E9C875';ctx.beginPath();ctx.arc(x,y-4*s,9.5*s,Math.PI*.95,Math.PI*.05);ctx.fill();
+      // sunglasses
+      ctx.fillStyle='#26333D';ctx.fillRect(x-8*s,y-3*s,6.5*s,3.6*s);ctx.fillRect(x+1.5*s,y-3*s,6.5*s,3.6*s);
+      ctx.fillRect(x-2*s,y-2.4*s,4*s,1.2*s);
+      // white wrap top
+      ctx.fillStyle='#FFFDF9';ctx.fillRect(x-9*s,y+10*s,18*s,9*s);
+      // yellow skirt
+      ctx.fillStyle='#F2E8A6';ctx.beginPath();ctx.moveTo(x-9*s,y+19*s);ctx.lineTo(x+9*s,y+19*s);ctx.lineTo(x+12*s,y+40*s);ctx.lineTo(x-12*s,y+40*s);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#fff';ctx.fillRect(x-9*s,y+40*s,7*s,3.5*s);ctx.fillRect(x+2*s,y+40*s,7*s,3.5*s);
+      // cross necklace
+      ctx.strokeStyle='#D9A441';ctx.lineWidth=1.1*s;ctx.beginPath();ctx.moveTo(x,y+11*s);ctx.lineTo(x,y+14*s);ctx.moveTo(x-1.4*s,y+12.4*s);ctx.lineTo(x+1.4*s,y+12.4*s);ctx.stroke();
+    }
+    const drawPlayer=(x,y)=>isAng?drawAngelos(x,y,1.35):drawAntigoni(x,y,1.35);
+    const drawDropper=(x,y)=>isAng?drawAntigoni(x,y,.95,true):drawAngelos(x,y,.95,true);
+    const KINDS=[
+      {e:'🤍',p:.5,v:10},{e:'🧋',p:.2,v:25},{e:'🌻',p:.08,v:50},{e:'🪼',p:.22,v:0,bad:true},
+    ];
+    function spawn(){
+      const r=Math.random();let acc=0,k=KINDS[0];
+      for(const c of KINDS){acc+=c.p;if(r<=acc){k=c;break;}}
+      st.items.push({x:st.dropX,y:64,e:k.e,v:k.v,bad:!!k.bad,vy:(1.7+Math.random()*0.9)*st.speed});
+    }
+    function loop(){
+      if(st.over)return;
+      st.t++;
+      st.speed=1+st.score/400;
+      // dropper walk
+      st.dropX+=st.dropDir*(1.4+st.speed*.4);
+      if(st.dropX>W-34){st.dropDir=-1;} if(st.dropX<34){st.dropDir=1;}
+      if(st.t%Math.max(26,Math.round(52-st.score/30))===0)spawn();
+      // bg
+      ctx.clearRect(0,0,W,H);
+      // sea horizon + sun
+      ctx.fillStyle='rgba(31,112,133,.16)';ctx.fillRect(0,H-96,W,96);
+      ctx.fillStyle='rgba(217,164,65,.5)';ctx.beginPath();ctx.arc(W-52,44,20,0,7);ctx.fill();
+      drawDropper(st.dropX,40);
+      // items
+      for(const it of st.items){
+        it.y+=it.vy;
+        ctx.font='26px serif';ctx.textAlign='center';
+        ctx.fillText(it.e,it.x,it.y);
+      }
+      // player
+      const py=H-78;
+      drawPlayer(st.px,py);
+      // collide
+      st.items=st.items.filter(it=>{
+        if(it.y>py-8&&it.y<py+58&&Math.abs(it.x-st.px)<26){
+          if(it.bad){st.lives--;}else{st.score+=it.v;}
+          return false;
+        }
+        if(it.y>H+20){return false;}
+        return true;
+      });
+      // hud
+      ctx.font='700 15px Inter,sans-serif';ctx.textAlign='left';
+      ctx.fillStyle='#26333D';
+      ctx.fillText('JALLA!  '+st.score,12,24);
+      ctx.textAlign='right';
+      ctx.fillText('🤍'.repeat(Math.max(0,st.lives)),W-12,24);
+      if(st.lives<=0){
+        st.over=true;
+        setLastScore(st.score);
+        saveScore(st.score);
+        setGameOn(false);
+        return;
+      }
+      st.raf=requestAnimationFrame(loop);
+    }
+    const move=(clientX)=>{
+      const r=cv.getBoundingClientRect();
+      st.px=Math.max(24,Math.min(W-24,(clientX-r.left)*(W/r.width)));
+    };
+    const tm=(e)=>{move(e.touches[0].clientX);e.preventDefault();};
+    const mm=(e)=>{if(e.buttons)move(e.clientX);};
+    cv.addEventListener('touchstart',tm,{passive:false});
+    cv.addEventListener('touchmove',tm,{passive:false});
+    cv.addEventListener('mousemove',mm);
+    st.raf=requestAnimationFrame(loop);
+    return ()=>{st.over=true;cancelAnimationFrame(st.raf);cv.removeEventListener('touchstart',tm);cv.removeEventListener('touchmove',tm);cv.removeEventListener('mousemove',mm);};
+  },[gameOn]);
+
+  // ---- romance pack actions ----
+  const other=me==='Angelos'?'Antigoni':'Angelos';
+  function answerQ(){
+    if(!guard(qotd))return;
+    const t=qAns.trim();
+    if(!t){setErr('Write your answer first.');return;}
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setErr('');
+    const cur=qotd[tk]||{};
+    write('trip_qotd',{byDate:{...qotd,[tk]:{...cur,[me]:{txt:t,at:nowStamp()}}}});
+    setQAns('');flash('Answered — sealed until you both have');
+  }
+  function addBucket(){
+    if(!guard(bucket))return;
+    const t=liTxt.trim();
+    if(!t){setErr('Write it first.');return;}
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setErr('');
+    write('trip_list',{list:[...bucket,{id:Date.now().toString(36),txt:t,by:me,done:false}]});
+    setLiTxt('');flash('On the list');
+  }
+  function toggleBucket(it){
+    if(!guard(bucket))return;
+    write('trip_list',{list:bucket.map(x=>x.id===it.id?{...x,done:!x.done,doneAt:!x.done?nowStamp():null,doneBy:!x.done?me:null}:x)});
+    if(!it.done)flash('✓ done together');
+  }
+  function delBucket(id){if(!guard(bucket))return;write('trip_list',{list:bucket.filter(x=>x.id!==id)});setArmDel(null);}
+  const [vRec,setVRec]=useState(null);
+  const [vNote,setVNote]=useState(null);
+  const vTimer=useRef(null);
+  async function startVoice(target){
+    if(vRec)return;
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      const mime=(window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported('audio/mp4'))?'audio/mp4':'audio/webm';
+      const mr=new MediaRecorder(stream,{mimeType:mime});
+      const chunks=[];
+      mr.ondataavailable=(e)=>{if(e.data&&e.data.size)chunks.push(e.data);};
+      mr.onstop=()=>{
+        stream.getTracks().forEach(t=>t.stop());
+        clearInterval(vTimer.current);
+        const blob=new Blob(chunks,{type:mime});
+        setVRec(v=>{
+          setVNote({blob,sec:v?v.sec:0,mime,url:URL.createObjectURL(blob),for:(v&&v.for)||'letter'});
+          return null;
+        });
+      };
+      mr.start();
+      setVRec({mr,sec:0,for:target||'letter'});
+      vTimer.current=setInterval(()=>{
+        setVRec(v=>{
+          if(!v)return v;
+          if(v.sec>=59){try{v.mr.stop();}catch(e){}return v;}
+          return {...v,sec:v.sec+1};
+        });
+      },1000);
+    }catch(e){setErr('Microphone unavailable — check permissions.');}
+  }
+  function stopVoice(){if(vRec){try{vRec.mr.stop();}catch(e){}}}
+  function discardVoice(){if(vNote){URL.revokeObjectURL(vNote.url);}setVNote(null);}
+  function sealLetter(){
+    if(!guard(letters))return;
+    const t=letTxt.trim();
+    const vL=(vNote&&vNote.for==='letter')?vNote:null;
+    if(!t&&!vL){setErr('Write the letter — or record one.');return;}
+    if(!me){setErr('Tap who you are (top right).');return;}
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(letDate)){setErr('Pick an open date (YYYY-MM-DD).');return;}
+    setErr('');
+    const id=Date.now().toString(36);
+    const rec={id,by:me,at:nowStamp(),openAt:letDate,txt:t};
+    const finish=(voice)=>{
+      if(voice)rec.voice=voice;
+      write('trip_letters',{list:[rec,...letters]});
+      setLetTxt('');discardVoice();setLetOpen(false);
+      flash('Sealed 💌 · opens '+letDate.slice(5));
+    };
+    if(vL){
+      flash('Sealing the voice… 🎙');
+      const ext=vL.mime==='audio/mp4'?'m4a':'webm';
+      const path=sref(storage,`invoices/trip/voice-letter-${id}.${ext}`);
+      uploadBytes(path,vL.blob).then(()=>getDownloadURL(path)).then(url=>finish({url,sec:vL.sec}))
+        .catch(e=>setErr('Voice upload failed — '+(e.message||e)));
+    }else finish(null);
+  }
+  function delLetter(id){if(!guard(letters))return;write('trip_letters',{list:letters.filter(x=>x.id!==id)});setArmDel(null);}
+  function sendPing(){
+    if(!guard(pings))return;
+    if(!me){setErr('Tap who you are (top right).');return;}
+    write('trip_pings',{list:[{by:me,at:nowStamp(),ts:Date.now()},...pings].slice(0,40)});
+    flash('Sent 💭 they\u2019ll see it');
+  }
+  function saveScore(sc){
+    if(gscores===null||!me)return;
+    write('trip_game',{list:[{by:me,score:sc,at:nowStamp()},...gscores].sort((a,b)=>b.score-a.score).slice(0,30)});
+  }
+  function takeMeBack(){
+    const pool=[];
+    for(const p of (photos||[]))pool.push({url:p.url,cap:p.cap||'',sub:p.at,by:p.by});
+    for(const k of Object.keys(daysDoc||{}))for(const im of ((daysDoc[k].photos)||[]))pool.push({url:im.url,cap:prettyDay(k),sub:placeOf(k),by:im.by||''});
+    for(const j of (journal||[]))for(const im of (j.imgs||[]))pool.push({url:im.url,cap:j.txt?j.txt.slice(0,60):'',sub:j.at,by:j.by});
+    if(pool.length===0){flash('No memories yet — soon');return;}
+    const pick=pool[Math.floor(Math.random()*pool.length)];
+    setViewImg({url:pick.url,cap:pick.cap,by:pick.by,at:pick.sub});
+  }
+
+  // ================= lock =================
+  if(!authed){
+    const dots=[0,1,2,3].map(i=>html`<div class=${'dot'+(pinBuf.length>i?' f':'')} key=${i}></div>`);
+    return html`
+      <div class="login">
+        <div class="lmark">Mel<em>temi</em></div>
+        <div class="lsub">Angelos & Antigoni · our first summer</div>
+        <div class="ldiv"></div>
+        <div class="soft">
+          ${busy?'Opening…':'Our code'}
+          ${pinBad&&html`<div style="color:#A4442C;font-weight:600;margin-top:5px">Not it — try again</div>`}
+        </div>
+        <div class=${'dots'+(pinBad?' bad':'')}>${dots}</div>
+          <div class="pad">
+            ${[1,2,3,4,5,6,7,8,9].map(k=>html`<button class="key" key=${k} onClick=${()=>pressKey(String(k))}>${k}</button>`)}
+            <span></span>
+            <button class="key" onClick=${()=>pressKey('0')}>0</button>
+            <button class="key ghostk" onClick=${()=>pressKey('back')}>⌫</button>
+          </div>
+      </div>`;
+  }
+
+  if(!picked){
+    return html`
+      <div class="login">
+        <div class="lmark">Mel<em>temi</em></div>
+        <div class="lsub">who\u2019s here?</div>
+        <div class="ldiv"></div>
+        <div class="pick">
+          <button class=${'pcard'+(me==='Angelos'?' hint':'')} onClick=${()=>{pickMe('Angelos');setPicked(true);}}>
+            <span class="pe"><${Sig} who="Angelos" size="30px"/></span>
+            <span><div class="pn2">Angelos</div><div class="ps2">SILLY SAUSAGE</div></span>
+          </button>
+          <button class=${'pcard'+(me==='Antigoni'?' hint':'')} onClick=${()=>{pickMe('Antigoni');setPicked(true);}}>
+            <span class="pe"><${Sig} who="Antigoni" size="30px"/></span>
+            <span><div class="pn2">Antigoni</div><div class="ps2">LITTLE STARFISH</div></span>
+          </button>
+        </div>
+      </div>`;
+  }
+
+  // ================= tabs =================
+  const doneCount=(bucket||[]).filter(x=>x.done).length;
+  const bestAng=Math.max(0,...((gscores||[]).filter(x=>x.by==='Angelos').map(x=>x.score)));
+  const qStreak=(()=>{
+    let n=0;const dd=new Date();
+    const q=qotd||{};
+    if(!(q[dkey(dd)]&&q[dkey(dd)].Angelos&&q[dkey(dd)].Antigoni))dd.setDate(dd.getDate()-1);
+    while(true){
+      const e=q[dkey(dd)];
+      if(e&&e.Angelos&&e.Antigoni){n++;dd.setDate(dd.getDate()-1);}
+      else break;
+      if(n>999)break;
+    }
+    return n;
+  })();
+  const bestAnt=Math.max(0,...((gscores||[]).filter(x=>x.by==='Antigoni').map(x=>x.score)));
+  const lastPingFromThem=(pings||[]).find(p=>p.by!==me);
+  const todaysQ=QOTD[qIndexFor(tk)];
+  const qToday=(qotd||{})[tk]||{};
+  const myA=me?qToday[me]:null;
+  const theirA=me?qToday[other]:null;
+  const savedHere=(finds||[]).filter(f=>f.place===cSel);
+  const conciergeTab=html`
+    <${Fragment}>
+      <div class="eyebrow" style="margin:2px 2px 12px">The concierge suggests</div>
+      <div class="chiprow">
+        ${PLACES.map(p=>html`
+          <button class=${'pchip'+(cSel===p.id?' on':'')+(placeNow===p.id?' now':'')} key=${p.id} onClick=${()=>{setCPlace(p.id);setCRes(null);setCRaw('');}}>${p.flag} ${p.label}</button>`)}
+      </div>
+      <div class="chiprow">
+        ${INTENTS.map(([id,l])=>html`
+          <button class=${'pchip'+(cIntent===id?' on':'')} key=${id} onClick=${()=>setCIntent(id)}>${l}</button>`)}
+      </div>
+      <div class="card" style="padding:14px 15px">
+        <input placeholder='Anything specific… "rooftop dinner for our last night"' value=${cTxt} onInput=${e=>setCTxt(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')askConcierge();}} />
+        ${aiMeta!==null&&!aiMeta.key&&html`
+          <div class="soft" style="margin-top:10px">One-time setup — paste the same AI key you use in HELIOS:</div>
+          <div class="row mt8">
+            <input placeholder="sk-ant-…" value=${aiKeyIn} onInput=${e=>setAiKeyIn(e.target.value)} />
+            <button class="btn" style="flex:0 0 auto" onClick=${saveAiKey}>Save</button>
+          </div>`}
+        ${cBusy
+          ?html`<div class="soft" style="text-align:center;margin-top:12px">🧭 searching the web for you two… 15-30 sec</div>`
+          :html`<button class="btn terra wide mt10" onClick=${askConcierge}>Ask the concierge</button>`}
+      </div>
+      ${cRes&&cRes.map((f,i)=>html`
+        <div class="findc" key=${i}>
+          <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">
+            <div class="fn">${f.name}</div>
+            <span class="soft" style="white-space:nowrap">${f.price||''}</span>
+          </div>
+          ${f.area&&html`<div class="fa">${f.area}</div>`}
+          ${f.why&&html`<div class="fw">${f.why}</div>`}
+          ${f.tip&&html`<div class="ft">${f.tip}</div>`}
+          <button class="btn quiet mt10" style="padding:9px 16px;font-size:12.5px" onClick=${()=>saveFind(f)}>+ save to our ${PLACES.find(p=>p.id===cSel)?.label} list</button>
+        </div>`)}
+      ${cRaw&&html`<div class="card" style="white-space:pre-wrap;font-size:14px;line-height:1.6">${cRaw}</div>`}
+      ${savedHere.length>0&&html`
+        <div class="eyebrow" style="margin:16px 2px 10px">Our ${PLACES.find(p=>p.id===cSel)?.label} list · ${savedHere.length}</div>
+        ${savedHere.map(f=>html`
+          <div class="findc" key=${f.id}>
+            <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">
+              <div class="fn">${f.name}</div>
+              ${armDel===f.id
+                ?html`<span><button class="jx" style="color:#A4442C;font-weight:700" onClick=${()=>delFind(f.id)}>delete?</button> <button class="jx" onClick=${()=>setArmDel(null)}>keep</button></span>`
+                :html`<button class="jx" onClick=${()=>setArmDel(f.id)}>✕</button>`}
+            </div>
+            ${f.area&&html`<div class="fa">${f.area}${f.price?' · '+f.price:''}</div>`}
+            ${f.why&&html`<div class="fw">${f.why}</div>`}
+            ${f.tip&&html`<div class="ft">${f.tip}</div>`}
+            <div class="soft" style="font-size:10.5px;margin-top:7px">saved by ${f.by}</div>
+            ${addingDay===f.id
+              ?html`<div class="chiprow" style="margin-top:9px">
+                  ${daysOfPlace(cSel).map(k=>html`<button class="pchip" key=${k} onClick=${()=>findToDay(f,k)}>${k.slice(5)}</button>`)}
+                  <button class="pchip" onClick=${()=>setAddingDay(null)}>✕</button>
+                </div>`
+              :html`<button class="ghost mt8" style="color:var(--aegean);font-weight:600;font-size:12px" onClick=${()=>setAddingDay(f.id)}>→ send to a day</button>`}
+          </div>`)}`}
+    <//>`;
+
+  const nyH=tzHour('America/New_York'),cyH=tzHour('Asia/Nicosia');
+  const missDay=daysLeft>=1&&daysLeft<=10?daysLeft:null;
+  const mDone=missDay!==null?(missions||{})[missDay]||{}:{};
+  const dpToday=(dailyp||{})[tk]||{};
+  const dpMine=me?dpToday[me]:null;
+  const dpTheirs=me?dpToday[other]:null;
+  const dpPast=Object.keys(dailyp||{}).filter(k=>k!==tk&&(dailyp[k]?.Angelos&&dailyp[k]?.Antigoni)).sort().reverse().slice(0,10);
+  const weekAgo=Date.now()-7*86400000;
+  const missWeek=(missyou||[]).filter(x=>x.ts>weekAgo);
+  const missA=missWeek.filter(x=>x.by==='Angelos').length,missB=missWeek.filter(x=>x.by==='Antigoni').length;
+  const lastGmgnThem=(gmgn||[]).find(g=>g.by!==me);
+  const ldTab=html`
+    <${Fragment}>
+      ${!during&&!after&&html`
+        <div class="clocks">
+          <div class=${'clock '+(nyH>=7&&nyH<21?'dayx':'nightx')}>
+            <div class="ct">${tzTime('America/New_York')}</div>
+            <div class="cl">${nyH>=7&&nyH<21?html`<${Sig} who="Angelos"/>`:html`<span class="notepin" style="color:var(--aegean)"><${CardIcon} id="moon"/></span>`} NEW YORK · ANGELOS</div>
+          </div>
+          <div class=${'clock '+(cyH>=7&&cyH<21?'dayx':'nightx')}>
+            <div class="ct">${tzTime('Asia/Nicosia')}</div>
+            <div class="cl">${cyH>=7&&cyH<21?html`<${Sig} who="Angelos"/>`:html`<span class="notepin" style="color:var(--aegean)"><${CardIcon} id="moon"/></span>`} CYPRUS · ANTIGONI</div>
+          </div>
+        </div>
+        <div class="gmrow">
+          <button class="gmbtn" onClick=${()=>sendGmgn('gm')}>καλημέρα <${Sig} who="Angelos"/></button>
+          <button class="gmbtn" onClick=${()=>sendGmgn('gn')}>goodnight <span class="notepin"><${CardIcon} id="moon"/></span></button>
+        </div>
+        ${lastGmgnThem&&html`<div class="pingline" style="margin:0 0 14px">${lastGmgnThem.by==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} ${lastGmgnThem.by} said ${lastGmgnThem.kind==='gm'?'καλημέρα':'goodnight'} · ${relTime(lastGmgnThem.ts)}</div>`}
+        ${missDay!==null?html`
+          <div class="missionc">
+            <div class="mnum">MISSION · T-MINUS ${missDay} ${missDay===1?'DAY':'DAYS'}</div>
+            <div class="mtext">${MISSIONS[missDay]}</div>
+            <div class="mdone">
+              <button class=${'mdbtn'+(mDone.Angelos?' on':'')} onClick=${()=>me==='Angelos'&&toggleMission(missDay)}><${Sig} who="Angelos"/> Angelos ${mDone.Angelos?'✓':''}</button>
+              <button class=${'mdbtn'+(mDone.Antigoni?' on':'')} onClick=${()=>me==='Antigoni'&&toggleMission(missDay)}><${Sig} who="Antigoni"/> Antigoni ${mDone.Antigoni?'✓':''}</button>
+            </div>
+            ${mDone.Angelos&&mDone.Antigoni&&html`<div class="pingline" style="margin:10px 0 0">mission complete 🤍</div>`}
+          </div>
+        `:html`<div class="empty" style="padding:8px 0 14px">Daily missions unlock at T-minus 10 days.</div>`}
+        <div class="eyebrow" style="margin:4px 2px 10px">Your day in one photo</div>
+        <div class="dpair">
+          ${dpMine
+            ?html`<div class="dph"><img src=${dpMine.url} /><span class="dwho">${me==='Angelos'?html`<${Sig} who="Angelos"/> YOU`:html`<${Sig} who="Antigoni"/> YOU`}</span></div>`
+            :html`<label class="dlock" style="aspect-ratio:1;cursor:pointer">
+                ${dpUp?'uploading…':html`<${CardIcon} id="photos"/><span>post today\u2019s</span>`}
+                <input type="file" accept="image/*" style="display:none" disabled=${dpUp} onChange=${e=>{const f=e.target.files[0];if(f)postDailyPhoto(f);e.target.value='';}} />
+              </label>`}
+          ${dpMine&&dpTheirs
+            ?html`<div class="dph"><img src=${dpTheirs.url} /><span class="dwho">${other==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} ${other.toUpperCase()}</span></div>`
+            :html`<div class="dlock" style="aspect-ratio:1"><${CardIcon} id="lock"/><span>${dpTheirs?'post yours to reveal':other+' hasn\u2019t posted'}</span></div>`}
+        </div>
+        <button class="jarbtn" style="margin:16px 0 4px" onClick=${sendMiss}>i miss you, into the jar 🫙</button>
+        ${missWeek.length>0&&html`
+          <div class="taunt" style="margin-top:10px">${missWeek.length} misses this week — ${missA===missB?html`perfectly even 🤍`:missA>missB?html`<${Sig} who="Angelos"/> Angelos leads ${missA}–${missB}`:html`<${Sig} who="Antigoni"/> Antigoni leads ${missB}–${missA}`}</div>`}
+      `}
+      ${(during||after)&&html`
+        <div class="hero" style="padding:20px 10px 6px">
+          <div class="pre">we made it</div>
+          <div class="big" style="font-size:64px">🫂</div>
+          <div class="un">THE LAST DAYS APART, KEPT BELOW</div>
+        </div>`}
+      ${dpPast.length>0&&html`
+        <div class="eyebrow" style="margin:18px 2px 10px">The last days apart</div>
+        ${dpPast.map(k=>html`
+          <div key=${k}>
+            <div class="soft" style="font-size:11px;letter-spacing:.1em;margin:0 2px 6px">${prettyDay(k).toUpperCase()}</div>
+            <div class="dpair">
+              <div class="dph"><img src=${dailyp[k].Angelos.url} loading="lazy" /><span class="dwho"><${Sig} who="Angelos"/> ANGELOS</span></div>
+              <div class="dph"><img src=${dailyp[k].Antigoni.url} loading="lazy" /><span class="dwho"><${Sig} who="Antigoni"/> ANTIGONI</span></div>
+            </div>
+          </div>`)}`}
+    <//>`;
+
+  const homeTab=html`
+    <${Fragment}>
+      <div class="hero">
+        ${!during&&!after&&html`
+          <div class="pre">until we\u2019re together</div>
+          ${daysLeft>2?html`
+            <div class="big">${daysLeft}<sup>days</sup></div>
+          `:html`
+            <div class="cgrid">
+              <div class="cbox"><div class="n">${Math.max(0,Math.floor(msLeft/86400000))}</div><div class="u">DAYS</div></div>
+              <div class="cbox"><div class="n">${Math.max(0,Math.floor(msLeft/3600000)%24)}</div><div class="u">HOURS</div></div>
+              <div class="cbox"><div class="n">${Math.max(0,Math.floor(msLeft/60000)%60)}</div><div class="u">MIN</div></div>
+            </div>
+          `}
+          <div class="meta">July 29 · Larnaca airport · ✈️ → 🫂</div>
+          <div class="divider"></div>
+        `}
+        ${during&&html`
+          <div class="pre">our first summer</div>
+          <div class="big">${tripDay}<sup>of 25</sup></div>
+          <div class="un">${placeOf(tk).toUpperCase()} · TOGETHER</div>
+          <div class="divider"></div>
+        `}
+        ${after&&html`
+          <div class="pre">that was our first summer</div>
+          <div class="big">∞</div>
+          <div class="un">${(photos||[]).length} MEMORIES · ${(journal||[]).length} PAGES</div>
+          <div class="divider"></div>
+        `}
+      </div>
+      ${during&&html`
+        <button class="card" style="width:100%;text-align:left;cursor:pointer;font-family:inherit;padding:15px 17px" onClick=${()=>setTab('concierge')}>
+          <div class="eyebrow">The concierge suggests</div>
+          <div style="font-family:var(--serif);font-size:15.5px;margin-top:8px">Tonight in <em>${placeOf(tk)}</em> — ask the front desk ›</div>
+        </button>`}
+      <button class="pingbtn" onClick=${sendPing}>💭 thinking of you…</button>
+      ${lastPingFromThem&&html`<div class="pingline">${lastPingFromThem.by==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} ${lastPingFromThem.by} was thinking of you · ${relTime(lastPingFromThem.ts)}</div>`}
+      ${(()=>{
+        const q=(qotd||{})[tk]||{};
+        const mine=q[me];const hers=q[me==='Angelos'?'Antigoni':'Angelos'];
+        if(mine&&hers)return null;
+        return html`<div class="card" style="padding:15px 17px">
+          <div class="eyebrow">This evening</div>
+          <div style="font-family:var(--serif);font-size:15.5px;line-height:1.5;margin-top:8px">
+            ${!mine?html`Tonight’s question is <em>waiting for you</em> — answer it before the goodnight. ✍️`
+                   :html`Your answer is in — <em>hers is on its way</em>. <${Sig} who="Antigoni"/>`}
+          </div>
+        </div>`;
+      })()}
+      <div class="qcard">
+        <div class="qmono">A & A</div>
+        ${during&&html`<div style="text-align:center;font-family:var(--serif);font-style:italic;font-size:13px;color:var(--soft);margin-bottom:4px">tonight, at dinner —</div>`}
+        <div class="eyebrow">Question of the day</div>
+        <div class="qq">${todaysQ}</div>
+        ${!me&&html`<div class="sealwait">Tap who you are (top right) to answer.</div>`}
+        ${me&&!myA&&html`
+          <textarea style="min-height:74px" placeholder="Only revealed once you\u2019ve both answered…" value=${qAns} onInput=${e=>setQAns(e.target.value)}></textarea>
+          <button class="btn terra wide mt10" onClick=${answerQ}>Seal my answer</button>
+        `}
+        ${me&&myA&&!theirA&&html`
+          <div class="qans"><div class="qwho">YOU · SEALED</div><div class="qtxt">${myA.txt}</div></div>
+          <div class="sealwait">Waiting for ${other} to answer… then both reveal 🤍</div>
+        `}
+        ${myA&&theirA&&html`
+          <div class="qans" style="border-left-color:var(--sand)"><div class="qwho"><${Sig} who="Angelos"/> ANGELOS</div><div class="qtxt">${qToday.Angelos.txt}</div></div>
+          <div class="qans" style="border-left-color:var(--aegean2)"><div class="qwho"><${Sig} who="Antigoni"/> ANTIGONI</div><div class="qtxt">${qToday.Antigoni.txt}</div></div>
+        `}
+      </div>
+      <button class="tmbbtn" onClick=${takeMeBack}>↺ take me back to a moment…</button>
+      <div class="menu">
+        <button class="mbtn wide2 c1" onClick=${()=>setTab('trip')}>
+          <div>
+            <${CardIcon} id="trip"/>
+            <div class="mtitle2">The trip</div>
+            <div class="msub">${during?`Day ${tripDay} · ${placeOf(tk)}`:after?'25 days · the whole story':daysLeft+' days to go · Cyprus first'}</div>
+          </div>
+          <span class="marrow">→</span>
+        </button>
+        <button class="mbtn wide2 c3" onClick=${()=>setTab('concierge')}>
+          <div>
+            <${CardIcon} id="concierge"/>
+            <div class="mtitle2">Concierge</div>
+            <div class="msub">${(finds||[]).length?`${finds.length} saved · ask anything, anywhere`:'AI + live search · dinners, beaches, nights'}</div>
+          </div>
+          <span class="marrow">→</span>
+        </button>
+        <button class="mbtn c4" onClick=${()=>setTab('ld')}>
+          <span class="marrow">→</span>
+          <${CardIcon} id="ld"/>
+          <div class="mtitle2">Long distance</div>
+          <div class="msub">${during||after?'we made it 🫂':daysLeft<=10?`t-minus ${daysLeft} · mission live`:'clocks, missions, the jar'}</div>
+        </button>
+        <button class="mbtn c2" onClick=${()=>setTab('list')}>
+          <span class="marrow">→</span>
+          <${CardIcon} id="list"/>
+          <div class="mtitle2">Our list</div>
+          <div class="msub">${(bucket||[]).length?`${doneCount} of ${bucket.length} done`:'start it'}</div>
+        </button>
+        <button class="mbtn c3" onClick=${()=>setTab('journal')}>
+          <span class="marrow">→</span>
+          <${CardIcon} id="journal"/>
+          <div class="mtitle2">Journal</div>
+          <div class="msub">${(journal||[]).length?(journal.length===1?'1 page':journal.length+' pages'):'first page waiting'}</div>
+        </button>
+        <button class="mbtn c4" onClick=${()=>setTab('notes')}>
+          <span class="marrow">→</span>
+          <${CardIcon} id="notes"/>
+          <div class="mtitle2">Notes</div>
+          <div class="msub">${(notes||[]).length+(letters||[]).length?`${(notes||[]).length} notes · ${(letters||[]).length} letters`:'leave the first'}</div>
+        </button>
+        <button class="mbtn c1" onClick=${()=>setTab('game')}>
+          <span class="marrow">→</span>
+          <${CardIcon} id="game"/>
+          <div class="mtitle2">Jalla!</div>
+          <div class="msub">${(gscores||[]).length?(bestAng>=bestAnt?html`<${Sig} who="Angelos"/> leads ${bestAng}`:html`<${Sig} who="Antigoni"/> leads ${bestAnt}`):html`a game of us`}</div>
+        </button>
+        <button class="mbtn c3" onClick=${()=>setTab('photos')}>
+          <span class="marrow">→</span>
+          <${CardIcon} id="photos"/>
+          <div class="mtitle2">Photos</div>
+          <div class="msub">${(photos||[]).length?(photos.length+' memories'):'album opens jul 29'}</div>
+        </button>
+      </div>
+
+      ${during&&dayEvents(tk).length>0&&html`
+        <div class="card">
+          <div class="eyebrow">Today · ${placeOf(tk)}</div>
+          ${dayEvents(tk).map((e,i)=>html`
+            <div class="itiline" key=${e.id}><span class="tick" style=${e.type==='c'?{color:'var(--aegean)'}:{}}>${e.type==='c'?'✦':'●'}</span><span>${e.w}${e.type==='s'&&e.x?html`<div class="soft">${e.x}</div>`:''}</span></div>`)}
+          <button class="btn quiet wide mt10" onClick=${()=>{setSelDay(tk);setTab('trip');setTripView('days');}}>Open today\u2019s page</button>
+        </div>`}
+      ${(notes||[]).length>0&&html`
+        <div class="card" style=${{background:(notes[0].col||NOTE_COLORS[0])}}>
+          <div class="eyebrow">Latest note</div>
+          <div style="font-family:var(--serif);font-size:20px;line-height:1.55;margin-top:8px">${notes[0].txt}</div>
+          <div class="soft" style="margin-top:10px;font-size:11px;letter-spacing:.1em">— ${notes[0].by.toUpperCase()}, ${notes[0].at}</div>
+        </div>`}
+      ${(photos||[]).length>0&&html`
+        <div class="card">
+          <div class="eyebrow" style="margin-bottom:10px">Latest memories</div>
+          <div class="pgrid">
+            ${photos.slice(0,3).map(p=>html`
+              <button class="ph" key=${p.id} onClick=${()=>setViewImg({url:p.url,cap:p.cap,by:p.by,at:p.at,del:{kind:'photo',p}})}>
+                <img src=${p.url} loading="lazy" />
+              </button>`)}
+          </div>
+        </div>`}
+      ${(()=>{
+        const hasContent=(photos||[]).length+(journal||[]).length+(notes||[]).length>0;
+        if(!hasContent||exporting)return '';
+        const le=meta?.lastExport;
+        const dsince=le?Math.round((new Date(tk+'T12:00:00')-new Date(le+'T12:00:00'))/86400000):null;
+        if(le&&dsince<7)return '';
+        return html`<div style="text-align:center;font-size:12.5px;color:var(--terra);font-weight:600;margin:10px 0 0">
+          🛟 ${le?`it\u2019s been ${dsince} days since your last export`:'you haven\u2019t exported yet'} — two taps keeps everything safe forever</div>`;
+      })()}
+      <div style="text-align:center;margin:12px 0 6px;display:flex;flex-direction:column;gap:9px">
+        ${exporting
+          ?html`<div class="soft">📦 ${exporting}</div>`
+          :html`<button class="ghost" style="font-size:12.5px" onClick=${exportSummer}>📦 export the whole summer — photos included</button>`}
+        <label class="ghost" style="font-size:11.5px;cursor:pointer">↩ restore from a backup file
+          <input type="file" accept=".json,application/json" style="display:none" onChange=${e=>{const f=e.target.files[0];if(f)pickRestore(f);e.target.value='';}} />
+        </label>
+      </div>
+      ${restorePrev&&html`
+        <div class="card" style="border-color:var(--terra)">
+          <div class="eyebrow">Restore preview · backup from ${String(restorePrev.when).slice(0,10)}</div>
+          <div style="font-family:var(--serif);font-size:16.5px;line-height:1.7;margin-top:8px">
+            ${Object.entries(restorePrev.counts).filter(([,v])=>v>0).map(([k,v])=>html`<div key=${k}>${v} ${k}</div>`)}
+          </div>
+          <div class="soft" style="margin-top:8px">Restoring only adds back anything missing — it can never overwrite or delete what\u2019s in the app now.</div>
+          <div class="row mt10">
+            <button class="btn terra" onClick=${doRestore}>Restore</button>
+            <button class="ghost" onClick=${()=>setRestorePrev(null)}>cancel</button>
+          </div>
+        </div>`}
+    <//>`;
+
+  // ---- trip: day web + day page + full list ----
+  const dayPage=(k)=>{
+    const evs=eventsOf(k);
+    const dd2=dayData(k);
+    return html`
+      <div class="daypage">
+        <div class="eyebrow">${prettyDay(k)}</div>
+        <div class="place">${placeOf(k)==='The Aegean'?html`the <em>Aegean</em>`:html`<em>${placeOf(k)}</em>`}</div>
+        ${dayEvents(k).length>0&&html`
+          <div class="card mt12">
+            <div class="eyebrow">The plan</div>
+            ${dayEvents(k).map((e,pi)=>html`
+              <div class=${'itiline'+dragRowCls(legIndexOf(k),e.id)} data-oid=${e.id} data-oli=${legIndexOf(k)} key=${e.id}
+                style=${drag&&drag.id===e.id?{transform:'translateY('+drag.dy+'px)'}:{}}>
+                <span class="tick" style=${e.type==='c'?{color:'var(--aegean)'}:{}}>${e.type==='c'?'✦':'●'}</span>
+                <span style="flex:1">${e.w}${e.type==='s'&&e.x?html`<div class="soft">${e.x}</div>`:''}</span>
+                ${e.type==='c'&&html`<button class="jx" style="padding:0 4px" onClick=${()=>delPlanItem(k,e.id)}>✕</button>`}
+                ${dayEvents(k).length>1&&html`<span class="dragh" onPointerDown=${startDrag(legIndexOf(k),e.id)}>≡</span>`}
+              </div>`)}
+          </div>`}
+
+        <div class="eyebrow" style="margin:18px 2px 10px">This day in photos ${dd2.photos.length>0?`· ${dd2.photos.length}`:''}</div>
+        <label class="btn wide" style=${{opacity:dayUp?0.6:1,display:'block',textAlign:'center',marginBottom:'12px'}}>
+          ${dayUp?(dayUp===true?'Uploading…':`Uploading ${dayUp}…`):'📷 Add photos to this day'}
+          <input type="file" accept="image/*" multiple style="display:none" disabled=${!!dayUp} onChange=${e=>{const fs=Array.from(e.target.files||[]);if(fs.length)addDayPhotos(fs);e.target.value='';}} />
+        </label>
+        ${dd2.photos.length===0&&html`<div class="empty" style="padding:10px 0 16px">Every photo you add lands here —<br/>the whole day, together.</div>`}
+        ${dd2.photos.length>0&&html`
+          <div class="pgrid" style="margin-bottom:6px">
+            ${dd2.photos.map(im=>html`
+              <button class="ph" key=${im.id} onClick=${()=>setViewImg({url:im.url,cap:prettyDay(k),by:im.by||'',at:'',del:{kind:'day',im}})}>
+                <img src=${im.url} loading="lazy" />
+              </button>`)}
+          </div>`}
+
+        <div class="eyebrow" style="margin:18px 2px 10px">Notes from the day</div>
+        <div class="card" style="padding:14px 15px">
+          <div class="row">
+            <input placeholder="Something worth remembering…" value=${dNoteTxt} onInput=${e=>setDNoteTxt(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')addDayNote();}} />
+            <button class="btn terra" style="flex:0 0 auto" onClick=${addDayNote}>Save</button>
+          </div>
+        </div>
+        ${dd2.notes.map(n3=>html`
+          <div class="jentry" style="margin-bottom:14px" key=${n3.id}>
+            <div style="display:flex;justify-content:space-between;align-items:baseline">
+              <span class="jdate">${n3.at} · <span class="jby">${n3.by}</span></span>
+              ${armDel===n3.id
+                ?html`<span><button class="jx" style="color:#A4442C;font-weight:700" onClick=${()=>delDayNote(n3.id)}>delete?</button> <button class="jx" onClick=${()=>setArmDel(null)}>keep</button></span>`
+                :html`<button class="jx" onClick=${()=>setArmDel(n3.id)}>✕</button>`}
+            </div>
+            <div class="jtxt" style="font-size:17px">${/^📍/.test(n3.txt||'')?html`<span class="notepin" style="color:var(--aegean)"><${CardIcon} id="pin"/></span> ${String(n3.txt).replace(/^📍\s*/,'')}`:n3.txt}</div>
+            ${n3.planned&&planOf(k).some(p=>p.id===n3.planned)
+              ?html`<div class="mt8" style="font-size:12px;font-weight:600;color:var(--aegean)">✦ in this day\u2019s plan</div>`
+              :html`<button class="ghost mt8" style="color:var(--aegean);font-weight:600;font-size:12px" onClick=${()=>promoteNote(k,n3)}>✦ add to this day\u2019s plan</button>`}
+          </div>`)}
+      </div>`;
+  };
+
+  const tripTab=html`
+    <${Fragment}>
+      <div class="pass">
+        <div class="ptop">
+          <div class="route">
+            <div><div class="code">JFK</div><div class="city">New York</div></div>
+            <div class="plane">··· ✈ ···</div>
+            <div style="text-align:right"><div class="code">LCA</div><div class="city">Larnaca</div></div>
+          </div>
+        </div>
+        <div class="perf"></div>
+        <div class="pbot">
+          <div><span>Traveller</span><b>Angelos</b></div>
+          <div><span>Date</span><b>${new Date(MEET+'T12:00:00').toLocaleDateString(undefined,{day:'numeric',month:'long'})}</b></div>
+          <div style="text-align:right"><span>Return</span><b>ATH · ${new Date(TRIP_END+'T12:00:00').toLocaleDateString(undefined,{day:'numeric',month:'short'})}</b></div>
+        </div>
+      </div>
+      <div class="viewtog">
+        <button class=${tripView==='days'?'on':''} onClick=${()=>setTripView('days')}>Day by day</button>
+        <button class=${tripView==='list'?'on':''} onClick=${()=>setTripView('list')}>The whole plan</button>
+      </div>
+      ${tripView==='days'?html`
+        <div class="dweb">
+          ${TRIP_DAYS.map(k=>{
+            const[,m,dd]=k.split('-').map(Number);
+            const evc=eventsOf(k).length;
+            const dd3=dayData(k);
+            const ntc=dd3.notes.length;
+            const phc=dd3.photos.length;
+            return html`
+              <button class=${'dcell'+(selDay===k?' sel':'')+(k===tk?' today2':'')+(phc>0?' hasph':'')} key=${k}
+                style=${phc>0?{backgroundImage:`url(${dd3.photos[0].url})`}:{}}
+                onClick=${()=>{setSelDay(k);setDNoteTxt('');setArmDel(null);}}>
+                <div class="dn">${dd}</div>
+                <div class="dm">${MONTHS[m-1]}</div>
+                <div class="dd">
+                  ${evc>0&&html`<span class="dot2" style="background:var(--sand)"></span>`}
+                  ${ntc>0&&html`<span class="dot2" style="background:var(--terra)"></span>`}
+                  ${phc>0&&html`<span class="dot2" style="background:var(--aegean2)"></span>`}
+                </div>
+              </button>`;
+          })}
+        </div>
+        ${dayPage(selDay)}
+      `:html`
+        ${ITIN.map((leg,li)=>({...leg,li,events:legEvents(li).map(e=>({...e,w:e.type==='c'?'✦ '+e.w:e.w}))})).map(leg=>html`
+          <div style="margin-bottom:20px" key=${leg.place}>
+            <div style="display:flex;align-items:baseline;gap:10px;margin:0 2px 10px">
+              <span style="font-size:20px">${leg.flag}</span>
+              <span style="font-family:var(--serif);font-size:26px;font-weight:500">${leg.place}</span>
+            </div>
+            <div class="card" style="padding:6px 18px">
+              ${leg.events.map((e,i)=>{
+                const isNow=e.d2?(tk>=e.d&&tk<e.d2):(e.d===tk);
+                const isPast=(e.d2||e.d)<tk;
+                return html`
+                  <div class=${'itiline'+dragRowCls(leg.li,e.id)} data-oid=${e.id} data-oli=${leg.li} key=${e.id}
+                    style=${{...(isPast?{opacity:.5}:{}),...(drag&&drag.id===e.id?{transform:'translateY('+drag.dy+'px)'}:{})}}>
+                    <span style="min-width:56px;font-size:11px;font-weight:700;color:var(--aegean);padding-top:3px">${e.t}</span>
+                    <span style="flex:1">${e.w}${e.x?html`<div class="soft">${e.x}</div>`:''}${isNow?html` <span style="color:var(--terra);font-size:10px;font-weight:700;letter-spacing:.14em">· NOW</span>`:''}</span>
+                    ${leg.events.length>1&&html`<span class="dragh" onPointerDown=${startDrag(leg.li,e.id)}>≡</span>`}
+                  </div>`;})}
+            </div>
+          </div>`)}
+      `}
+    <//>`;
+
+  const journalTab=html`
+    <${Fragment}>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:10px">Today\u2019s page</div>
+        <textarea placeholder="What happened, what it felt like, what you never want to forget…" value=${jTxt} onInput=${e=>setJTxt(e.target.value)}></textarea>
+        <div class="attachrow" style="flex-wrap:wrap">
+          ${jImgs.map(im=>html`
+            <div class="stagedimg" key=${im.id}><img src=${im.url} /><button onClick=${()=>{rmStored(im.id);setJImgs(jImgs.filter(x=>x.id!==im.id));}}>✕</button></div>`)}
+          <label class="attach">${jUp?(jUp==='…'?'Uploading…':`Uploading ${jUp}…`):jImgs.length?'+ more':'📷 Attach photos'}
+            <input type="file" accept="image/*" multiple style="display:none" disabled=${!!jUp} onChange=${e=>{const fs=Array.from(e.target.files||[]);if(fs.length)attachJImgs(fs);e.target.value='';}} />
+          </label>
+          <button class="btn" style="margin-left:auto" onClick=${addJournal}>Add to our story</button>
+        </div>
+      </div>
+      ${journal===null&&html`<div class="empty">opening the book…</div>`}
+      ${journal!==null&&journal.length===0&&html`<div class="empty">The first page is waiting.<br/>Start tonight — future you will thank you.</div>`}
+      ${(journal||[]).map(j=>html`
+        <div class="jentry" key=${j.id}>
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <span class="jdate">${j.at} · <span class="jby">${j.by}</span></span>
+            ${armDel===j.id
+              ?html`<span><button class="jx" style="color:#A4442C;font-weight:700" onClick=${()=>delJournal(j)}>delete?</button> <button class="jx" onClick=${()=>setArmDel(null)}>keep</button></span>`
+              :html`<button class="jx" onClick=${()=>setArmDel(j.id)}>✕</button>`}
+          </div>
+          ${j.txt&&html`<div class="jtxt">${j.txt}</div>`}
+          ${j.img&&html`<img class="jimg" src=${j.img} loading="lazy" onClick=${()=>setViewImg({url:j.img,cap:'',by:j.by,at:j.at})} />`}
+          ${(j.imgs||[]).length===1&&html`<img class="jimg" src=${j.imgs[0].url} loading="lazy" onClick=${()=>setViewImg({url:j.imgs[0].url,cap:'',by:j.by,at:j.at})} />`}
+          ${(j.imgs||[]).length>1&&html`
+            <div class="pgrid" style="margin-top:12px;grid-template-columns:1fr 1fr">
+              ${j.imgs.map(im=>html`
+                <button class="ph" key=${im.id} onClick=${()=>setViewImg({url:im.url,cap:'',by:j.by,at:j.at})}>
+                  <img src=${im.url} loading="lazy" />
+                </button>`)}
+            </div>`}
+          <div class="jrule"></div>
+        </div>`)}
+    <//>`;
+
+  const notesTab=html`
+    <${Fragment}>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:10px">Leave a little note</div>
+        <textarea style="min-height:70px" placeholder="Something sweet, something silly, something only we get…" value=${nTxt} onInput=${e=>setNTxt(e.target.value)}></textarea>
+        <div class="swatches">
+          ${NOTE_COLORS.map(c=>html`<button class=${'sw'+(nCol===c?' on':'')} style=${{background:c}} key=${c} onClick=${()=>setNCol(c)}></button>`)}
+        </div>
+        <div class="row mt8" style="align-items:center;gap:8px">
+          ${vRec&&vRec.for==='note'?html`
+            <button class="btn terra" onClick=${stopVoice}>◼ ${vRec.sec}s — stop</button>
+          `:vNote&&vNote.for==='note'?html`
+            <span style="display:flex;align-items:center;gap:8px;flex:1">
+              <audio controls src=${vNote.url} style="height:32px;max-width:160px"></audio>
+              <button class="jx" onClick=${discardVoice}>✕</button>
+            </span>
+          `:html`
+            <button class="btn quiet" onClick=${()=>startVoice('note')}><${MicMark}/> voice note</button>
+          `}
+          <button class="btn terra" style="flex:1" onClick=${addNote}>Pin it to our wall</button>
+        </div>
+      </div>
+      ${notes!==null&&notes.length===0&&html`<div class="empty">An empty wall is a dare.</div>`}
+      <div class="rule" style="margin:22px 0 16px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:0 2px 10px">
+        <div class="eyebrow">Sealed letters</div>
+        ${!letOpen&&html`<button class="ghost" style="color:var(--terra);font-weight:600" onClick=${()=>setLetOpen(true)}>+ write one</button>`}
+      </div>
+      ${letOpen&&html`
+        <div class="card">
+          <textarea placeholder="A letter for later — sealed for both of us until the day it opens…" value=${letTxt} onInput=${e=>setLetTxt(e.target.value)}></textarea>
+          <div class="eyebrow" style="margin:12px 0 8px">Opens on</div>
+          <div class="row mb10" style="flex-wrap:wrap;gap:7px">
+            ${[['2026-08-21','Last night in Athens'],['2026-08-22','The flight home'],['2027-07-29','One year from July 29']].map(([d3,l])=>html`
+              <button class=${'ghost'} style=${{flex:'0 0 auto',padding:'8px 13px',border:'1px solid '+(letDate===d3?'var(--ink)':'var(--hair)'),borderRadius:'999px',color:letDate===d3?'var(--ink)':'var(--soft)',fontWeight:600,fontSize:'12px'}} key=${d3} onClick=${()=>setLetDate(d3)}>${l}</button>`)}
+          </div>
+          <input placeholder="YYYY-MM-DD" value=${letDate} onInput=${e=>setLetDate(e.target.value)} />
+          <div class="row mt10">
+            ${vRec?html`
+              <button class="btn terra" onClick=${stopVoice}>◼ ${vRec.sec}s — stop</button>
+            `:vNote&&vNote.for==='letter'?html`
+              <span style="display:flex;align-items:center;gap:8px;flex:1">
+                <audio controls src=${vNote.url} style="height:34px;max-width:170px"></audio>
+                <button class="jx" onClick=${discardVoice}>✕</button>
+              </span>
+            `:html`
+              <button class="btn quiet" onClick=${()=>startVoice('letter')}><${MicMark}/> voice</button>
+            `}
+            <button class="btn" onClick=${sealLetter}>Seal it 💌</button>
+            <button class="ghost" onClick=${()=>setLetOpen(false)}>cancel</button>
+          </div>
+        </div>`}
+      ${letters!==null&&letters.length===0&&!letOpen&&html`<div class="empty" style="padding:12px 0 18px">Write something now<br/>for a night that hasn\u2019t happened yet.</div>`}
+      ${(letters||[]).map(L=>{
+        const openNow=tk>=L.openAt;
+        return html`
+          <div class=${'letter '+(openNow?'open2':'sealed')} key=${L.id}>
+            ${openNow?html`
+              <div class="lfrom">FROM ${L.by.toUpperCase()} · SEALED ${L.at} · OPENED ${L.openAt.slice(5)}</div>
+              ${L.txt&&html`<div class="ltxt">${L.txt}</div>`}
+              ${L.voice&&html`
+                <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+                  <span style="color:var(--aegean)"><${MicMark}/></span>
+                  <audio controls src=${L.voice.url} style="height:36px;width:100%"></audio>
+                </div>`}
+            `:html`
+              <div class="seal">💌</div>
+              <div class="lfrom">FROM ${L.by==='Angelos'?html`<${Sig} who="Angelos"/> ANGELOS`:html`<${Sig} who="Antigoni"/> ANTIGONI`}</div>
+              <div class="lopens">sealed until ${L.openAt}${L.voice?' · carries a voice':''}</div>
+              ${L.by===me&&(armDel===L.id
+                ?html`<div class="mt8"><button class="jx" style="color:#A4442C;font-weight:700" onClick=${()=>delLetter(L.id)}>delete?</button> <button class="jx" onClick=${()=>setArmDel(null)}>keep</button></div>`
+                :html`<div class="mt8"><button class="jx" onClick=${()=>setArmDel(L.id)}>unseal & discard</button></div>`)}
+            `}
+          </div>`;})}
+      <div class="rule" style="margin:20px 0 16px"></div>
+      <div class="eyebrow" style="margin:0 2px 10px">The wall</div>
+      <div class="wall">
+        ${(notes||[]).map(n2=>html`
+          <div class="note" style=${{background:n2.col||NOTE_COLORS[0]}} key=${n2.id}>
+            <button class="nx" onClick=${()=>delNote(n2.id)}>✕</button>
+            ${n2.txt}
+            ${n2.voice&&html`
+              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+                <span style="color:var(--aegean)"><${MicMark}/></span>
+                <audio controls src=${n2.voice.url} style="height:30px;width:100%"></audio>
+              </div>`}
+            <div class="by2">— ${n2.by.toUpperCase()}</div>
+          </div>`)}
+      </div>
+    <//>`;
+
+  const listTab=html`
+    <${Fragment}>
+      <div class="hero" style="padding:20px 10px 6px">
+        <div class="pre">things we said we\u2019d do</div>
+        ${(bucket||[]).length>0&&html`<div class="un" style="margin-top:8px">${doneCount} OF ${bucket.length} · DONE TOGETHER</div>`}
+      </div>
+      <div class="card" style="padding:14px 15px">
+        <div class="row">
+          <input placeholder="Freddo on every island…" value=${liTxt} onInput=${e=>setLiTxt(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')addBucket();}} />
+          <button class="btn terra" style="flex:0 0 auto" onClick=${addBucket}>Add</button>
+        </div>
+      </div>
+      ${bucket!==null&&bucket.length===0&&html`<div class="empty">Start the list —<br/>swims, plates, tiny missions.</div>`}
+      ${(bucket||[]).length>0&&html`
+        <div class="card" style="padding:8px 16px">
+          ${[...bucket].sort((a,b)=>(a.done===b.done)?0:(a.done?1:-1)).map(it=>html`
+            <div class="bk" key=${it.id}>
+              <button class=${'bkc'+(it.done?' on':'')} onClick=${()=>toggleBucket(it)}>${it.done?'✓':''}</button>
+              <div style="flex:1">
+                <div class=${'bkt'+(it.done?' done':'')}>${it.txt}</div>
+                <div class="bksub">${it.done?('✓ '+(it.doneAt||'')+(it.doneBy?' · checked by '+it.doneBy:'')):('added by '+it.by)}</div>
+              </div>
+              ${armDel===it.id
+                ?html`<span><button class="jx" style="color:#A4442C;font-weight:700" onClick=${()=>delBucket(it.id)}>delete?</button> <button class="jx" onClick=${()=>setArmDel(null)}>keep</button></span>`
+                :html`<button class="jx" onClick=${()=>setArmDel(it.id)}>✕</button>`}
+            </div>`)}
+        </div>`}
+    <//>`;
+
+  const gameTab=html`
+    <${Fragment}>
+      <div class="chiprow" style="justify-content:center;margin-bottom:12px">
+        <button class=${'pchip'+(gGame==='tavli'?' on':'')} onClick=${()=>setGGame('tavli')}><${CardIcon} id="dice"/> ΤΑΒΛΙ</button>
+        <button class=${'pchip'+(gGame==='jalla'?' on':'')} onClick=${()=>{setGGame('jalla');}}><${CardIcon} id="beach"/> JALLA!</button>
+        <button class=${'pchip'+(gGame==='ttl'?' on':'')} onClick=${()=>setGGame('ttl')}><${CardIcon} id="mask"/> TRUTHS</button>
+        <button class=${'pchip'+(gGame==='duel'?' on':'')} onClick=${()=>setGGame('duel')}><${CardIcon} id="orb"/> IN SYNC</button>
+        <button class=${'pchip'+(gGame==='word'?' on':'')} onClick=${()=>setGGame('word')}><${CardIcon} id="word"/> WORD</button>
+      </div>
+      ${gGame==='ttl'&&html`
+        <${Fragment}>
+          <div class="card" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:var(--serif);font-size:17px">Two Truths & <em>the Sea</em></span>
+            <span class="soft" style="font-size:11px">🎯 <${Sig} who="Angelos"/> ${ttlScore('Angelos')} · <${Sig} who="Antigoni"/> ${ttlScore('Antigoni')}</span>
+          </div>
+          ${ttlDraft===null?html`
+            <button class="btn terra wide" style="margin-bottom:14px" onClick=${()=>setTtlDraft({})}>+ post two truths & a lie</button>
+          `:html`
+            <div class="card">
+              ${[1,2,3].map(n5=>html`
+                <div class="row mt8" style="align-items:center;gap:8px" key=${n5}>
+                  <input style="flex:1" placeholder=${'Statement '+n5+'…'} value=${ttlDraft['s'+n5]||''} onInput=${e=>setTtlDraft({...ttlDraft,['s'+n5]:e.target.value})} />
+                  <button class=${'pchip'+(ttlDraft.lie===n5-1?' on':'')} style="flex:0 0 auto" onClick=${()=>setTtlDraft({...ttlDraft,lie:n5-1})}>lie</button>
+                </div>`)}
+              <div class="row mt10">
+                <button class="btn" onClick=${postTtl}>Post it 🤥</button>
+                <button class="btn quiet" onClick=${()=>setTtlDraft(null)}>Cancel</button>
+              </div>
+            </div>`}
+          ${(ttl||[]).slice(0,8).map(r=>html`
+            <div class="card" key=${r.id}>
+              <div class="soft" style="font-size:10.5px;letter-spacing:.14em;margin-bottom:8px">${r.by==='Angelos'?html`<${Sig} who="Angelos"/> ANGELOS`:html`<${Sig} who="Antigoni"/> ANTIGONI`} · ${r.at}</div>
+              ${r.stmts.map((s5,i5)=>{
+                const revealed=!!r.guess;
+                const isLie=i5===r.lie;
+                const canGuess=!revealed&&r.by!==me&&me;
+                return html`
+                  <button key=${i5} disabled=${!canGuess}
+                    onClick=${()=>canGuess&&guessTtl(r,i5)}
+                    style=${{display:'block',width:'100%',textAlign:'left',fontFamily:'inherit',fontSize:'14px',lineHeight:'1.5',
+                      padding:'10px 12px',marginTop:'6px',borderRadius:'12px',cursor:canGuess?'pointer':'default',
+                      border:'1px solid '+(revealed?(isLie?'var(--gold)':'var(--hair)'):'var(--hair)'),
+                      background:revealed?(isLie?'rgba(198,161,91,.12)':'var(--card)'):(canGuess?'var(--card)':'#FBF6EC'),
+                      color:'var(--ink)'}}>
+                    ${s5}${revealed&&isLie?'  🤥 the lie':''}${revealed&&r.guess.idx===i5&&!isLie?'  ← guessed':''}
+                  </button>`;})}
+              <div class="soft" style="font-size:11px;margin-top:8px">
+                ${r.guess
+                  ?(r.guess.idx===r.lie?`${r.guess.by==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} caught the lie 🎯`:`${r.guess.by==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} got fooled 🤭`)
+                  :(r.by===me?'waiting for them to guess…':'tap the one you think is the lie')}
+              </div>
+            </div>`)}
+          ${ttl!==null&&ttl.length===0&&ttlDraft===null&&html`<div class="empty">Two truths, one lie.<br/>Who knows who better?</div>`}
+        <//>`}
+      ${gGame==='duel'&&html`
+        <${Fragment}>
+          <div class="card" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:var(--serif);font-size:17px">In <em>Sync</em></span>
+            <span class="soft" style="font-size:11px">✦ streak ${duelSyncStreak}</span>
+          </div>
+          <button class="btn terra wide" style=${{marginBottom:'14px',opacity:duelBusy?.6:1}} onClick=${newDuelQ}>${duelBusy?'Summoning a question…':'🔮 new question'}</button>
+          ${(duel||[]).slice(0,6).map(r=>{
+            const mineA=me?r.ans[me]:null;
+            const done=duelDone(r);
+            return html`
+              <div class="card" key=${r.id}>
+                <div style="font-family:var(--serif);font-size:17px;line-height:1.45;margin-bottom:10px">${r.q}</div>
+                ${!mineA&&me&&html`
+                  <div class="row">
+                    <button class="btn quiet" style="flex:1" onClick=${()=>answerDuel(r,'Angelos')}><${Sig} who="Angelos"/> Angelos</button>
+                    <button class="btn quiet" style="flex:1" onClick=${()=>answerDuel(r,'Antigoni')}><${Sig} who="Antigoni"/> Antigoni</button>
+                  </div>`}
+                ${mineA&&!done&&html`<div class="soft" style="font-size:12px">You said ${mineA==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} — waiting for their answer…</div>`}
+                ${done&&html`
+                  <div style="font-size:13.5px">
+                    <${Sig} who="Angelos"/> said <b>${r.ans.Angelos==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`}</b> · <${Sig} who="Antigoni"/> said <b>${r.ans.Antigoni==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`}</b><br/>
+                    ${r.ans.Angelos===r.ans.Antigoni
+                      ?html`<span style="color:var(--aegean);font-weight:700">✦ IN SYNC</span>`
+                      :html`<span style="color:var(--gold2);font-weight:700">clash — someone’s in denial 😄</span>`}
+                  </div>`}
+              </div>`;})}
+          ${duel!==null&&duel.length===0&&html`<div class="empty">One question. Two secret answers.<br/>How in sync are you really?</div>`}
+        <//>`}
+      ${gGame==='word'&&html`
+        <${Fragment}>
+          <div class="card" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:var(--serif);font-size:17px">The <em>Word</em></span>
+            <span class="soft" style="font-size:11px">same word · first to crack it</span>
+          </div>
+          <div class="card">
+            ${wMine.guesses.map((g,i6)=>{
+              const sc=scoreGuess(g,wTarget);
+              return html`
+                <div style="display:flex;gap:5px;justify-content:center;margin-bottom:5px" key=${i6}>
+                  ${g.split('').map((ch,j6)=>html`
+                    <span key=${j6} style=${{width:'44px',height:'44px',display:'flex',alignItems:'center',justifyContent:'center',
+                      borderRadius:'9px',fontWeight:'700',fontSize:'19px',fontFamily:'var(--sans)',
+                      background:sc[j6]==='c'?'var(--aegean)':sc[j6]==='p'?'var(--gold)':'#EAE2D2',
+                      color:sc[j6]==='a'?'var(--soft)':'#FFFDF8'}}>${ch}</span>`)}
+                </div>`;})}
+            ${!wMine.done&&wMine.guesses.length<6&&html`
+              <div class="row mt10" style="align-items:center">
+                <input style="flex:1;text-transform:uppercase;letter-spacing:.2em;text-align:center;font-weight:700" maxlength="5" placeholder="•••••"
+                  value=${wIn2} onInput=${e=>setWIn2(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')guessWord();}} />
+                <button class="btn" onClick=${guessWord}>guess</button>
+              </div>
+              <div class="soft" style="font-size:10.5px;text-align:center;margin-top:8px">${6-wMine.guesses.length} guesses left · <span style="color:var(--aegean)">■ right spot</span> · <span style="color:var(--gold2)">■ wrong spot</span></div>`}
+            ${wMine.done&&html`<div style="text-align:center;font-family:var(--serif);font-size:17px;margin-top:8px">Solved in <b>${wMine.tries}</b> ✨</div>`}
+            ${!wMine.done&&wMine.guesses.length>=6&&html`<div style="text-align:center;font-family:var(--serif);font-size:16px;margin-top:8px">It was <b>${wTarget}</b> — tomorrow, revenge.</div>`}
+          </div>
+          <div class="card" style="padding:13px 16px">
+            <div class="soft" style="font-size:12px">
+              ${(()=>{const S=other==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`;return wTheirs.done?html`${S} ${other} solved it in ${wTheirs.tries}`:wTheirs.guesses&&wTheirs.guesses.length>0?html`${S} ${other} is ${wTheirs.guesses.length} guess${wTheirs.guesses.length===1?'':'es'} in…`:html`${S} ${other} hasn’t started today’s word`;})()}
+            </div>
+            ${wVerdict&&html`<div style="font-family:var(--serif);font-size:15px;margin-top:6px">${wVerdict}</div>`}
+          </div>
+        <//>`}
+      ${gGame==='tavli'&&html`
+        <${Fragment}>
+          <div class="card" style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:var(--serif);font-size:16px"><${Sig} who="Angelos"/> ${tvSeries.Angelos||0} <span class="soft">—</span> ${tvSeries.Antigoni||0} <${Sig} who="Antigoni"/></span>
+            <button class="pchip" onClick=${()=>tvWrite({mode:tvMode==='couch'?'remote':'couch'})}>${tvMode==='couch'?'🛋 couch':'🌍 remote'}</button>
+          </div>
+          ${!tvState?html`
+            <div class="card" style="text-align:center;padding:26px 18px">
+              <div style="font-family:var(--serif);font-size:24px">Το <em>τάβλι</em> μας</div>
+              <div class="soft" style="margin:8px 0 14px">The kafeneio classic — one move at a time,<br/>from anywhere on earth.</div>
+              <button class="btn terra" onClick=${tvNewGame}>Set the board 🎲</button>
+            </div>
+          `:html`
+            <${Fragment}>
+              <div class="card" style="padding:10px 12px">
+                ${(()=>{
+                  const st=tvState;
+                  const W=480,H=380,BAR=16,PW=(W-BAR)/12,TRI=150;
+                  const colX=(i)=>{ // point index -> column x (left edge)
+                    if(i<=5)return W-PW*(i+1);            // bottom right
+                    if(i<=11)return (W-BAR)/2-PW*(i-5);   // bottom left
+                    if(i<=17)return PW*(i-12);            // top left
+                    return (W+BAR)/2+PW*(i-18);           // top right
+                  };
+                  const isTop=(i)=>i>=12;
+                  const tris=[];
+                  for(let i=0;i<24;i++){
+                    const x=colX(i),top=isTop(i);
+                    tris.push(html`<polygon key=${'t'+i}
+                      points=${top?`${x},0 ${x+PW},0 ${x+PW/2},${TRI}`:`${x},${H} ${x+PW},${H} ${x+PW/2},${H-TRI}`}
+                      fill=${i%2===0?'#EADFC9':'#DCC9A8'} stroke="#CFBD9C" stroke-width="0.5"/>`);
+                  }
+                  const chips=[];
+                  for(let i=0;i<24;i++){
+                    const n=Math.abs(st.points[i]);
+                    if(!n)continue;
+                    const pl=st.points[i]>0?'A':'B';
+                    const x=colX(i)+PW/2,top=isTop(i);
+                    const show=Math.min(n,5);
+                    for(let c=0;c<show;c++){
+                      const y=top?20+c*27:H-20-c*27;
+                      chips.push(html`<circle key=${'c'+i+'-'+c} cx=${x} cy=${y} r="12.5"
+                        fill=${pl==='A'?'#C6A15B':'#155E73'} stroke=${pl==='A'?'#9E7C3B':'#0C3D4C'} stroke-width="1.5"/>`);
+                      if(c===show-1&&n>5)chips.push(html`<text key=${'n'+i} x=${x} y=${top?20+c*27+4:H-20-c*27+4} text-anchor="middle" font-size="11" font-weight="700" fill=${pl==='A'?'#3A2B10':'#EAF4F6'}>${n}</text>`);
+                    }
+                  }
+                  const rings=[];
+                  if(tvSel!==null){
+                    for(const t of tvTargets){
+                      if(t.to===24)continue;
+                      const x=colX(t.to)+PW/2,top=isTop(t.to);
+                      const n=Math.abs(st.points[t.to]);
+                      const y=top?20+Math.min(n,4)*27+(n?27:0):H-20-Math.min(n,4)*27-(n?27:0);
+                      rings.push(html`<circle key=${'r'+t.to} cx=${x} cy=${top?Math.min(y,TRI-8):Math.max(y,H-TRI+8)} r="12" fill="none" stroke="#1E7A93" stroke-width="3" stroke-dasharray="4 3"/>`);
+                    }
+                  }
+                  const selMark=tvSel!==null&&tvSel>=0?html`<rect x=${colX(tvSel)} y=${isTop(tvSel)?0:H-TRI} width=${PW} height=${TRI} fill="rgba(198,161,91,.18)"/>`:null;
+                  const hitCols=[];
+                  for(let i=0;i<24;i++){
+                    hitCols.push(html`<rect key=${'h'+i} x=${colX(i)} y=${isTop(i)?0:H/2} width=${PW} height=${H/2} fill="transparent" style="cursor:pointer"
+                      onClick=${()=>{
+                        if(!tvCanAct||tvState.rem.length===0)return;
+                        const tgt=tvTargets.find(t=>t.to===i);
+                        if(tgt){tvDoMove(tgt);return;}
+                        if(tvAllowed.some(f=>f.from===i))setTvSel(tvSel===i?null:i);
+                        else setTvSel(null);
+                      }}/>`);
+                  }
+                  return html`
+                    <svg viewBox=${'0 0 '+W+' '+H} style="width:100%;display:block;background:#F3EAD7;border-radius:14px;border:1px solid var(--hair)">
+                      <rect x=${(W-BAR)/2} y="0" width=${BAR} height=${H} fill="#CDBB97"/>
+                      ${tris}${selMark}${chips}${rings}${hitCols}
+                    </svg>`;
+                })()}
+                <div class="row mt8" style="align-items:center;gap:10px;flex-wrap:wrap">
+                  ${tvState.bar[tvState.turn]>0&&tvAllowed.some(f=>f.from===-1)&&html`
+                    <button class="pchip on" onClick=${()=>setTvSel(tvSel===-1?null:-1)}>${tvState.turn==='A'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} on the bar — tap, then the entry point</button>`}
+                  ${tvSel===-1&&tvTargets.map(t=>html`
+                    <button class="pchip" key=${'bt'+t.to} onClick=${()=>tvDoMove(t)}>enter ${t.to+1}</button>`)}
+                  ${tvTargets.some(t=>t.to===24)&&html`
+                    <button class="btn terra" style="padding:8px 14px;font-size:12px" onClick=${()=>tvDoMove(tvTargets.find(t=>t.to===24))}>bear off ✦</button>`}
+                </div>
+                <div class="row mt8" style="justify-content:space-between;align-items:center">
+                  <span style="font-family:var(--serif);font-size:15px">
+                    ${tvState.winner
+                      ?html`👑 ${tvState.winner==='A'?html`<${Sig} who="Angelos"/> Angelos`:html`<${Sig} who="Antigoni"/> Antigoni`} — <em>νίκη!</em>`
+                      :html`${tvState.turn==='A'?html`<${Sig} who="Angelos"/> Angelos`:html`<${Sig} who="Antigoni"/> Antigoni`}${tvState.rem.length?html` · dice <b>${tvState.rem.join(' · ')}</b>`:html` <em>to roll</em>`}`}
+                  </span>
+                  ${!tvState.winner&&tvState.rem.length===0&&(tvCanAct
+                    ?html`<button class="btn" style="padding:9px 18px" onClick=${tvRoll}>🎲 roll</button>`
+                    :html`<span class="soft" style="font-size:12px">waiting for ${tvState.turn==='A'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`}…</span>`)}
+                  ${tvState.winner&&html`<button class="btn terra" style="padding:9px 18px" onClick=${tvNewGame}>rematch 🎲</button>`}
+                </div>
+              </div>
+              ${!tvState.winner&&html`
+                <div style="text-align:center;margin-top:2px">
+                  <button class="jx" style="color:#A4442C" onClick=${()=>{
+                    if(!confirm('Resign this game?'))return;
+                    const wn=tvMe==='A'?'B':'A';const wName=wn==='A'?'Angelos':'Antigoni';
+                    tvWrite({state:{...tvState,winner:wn},series:{...tvSeries,[wName]:(tvSeries[wName]||0)+1}});
+                  }}>resign</button>
+                </div>`}
+            <//>`}
+        <//>`}
+      ${gGame==='jalla'&&html`
+        <${Fragment}>
+      <div class="gwrap">
+        ${gameOn?html`
+          <canvas ref=${gref} style="aspect-ratio:360/520"></canvas>
+        `:html`
+          <div style="aspect-ratio:360/520"></div>
+          <div class="gover">
+            <div class="gtitle">JALLA<em>!</em></div>
+            <div class="gsub">${me==='Antigoni'?'ANGELOS DROPS · YOU CATCH':'ANTIGONI DROPS · YOU CATCH'}</div>
+            ${lastScore!==null&&html`<div class="gscore">${lastScore}</div>`}
+            <div class="soft" style="max-width:250px">Catch 🤍 hearts, 🧋 freddos and rare 🌻 sunflowers. Dodge the 🪼 jellyfish. Slide your finger to move.</div>
+            <button class="btn terra" style="margin-top:8px" onClick=${()=>{setLastScore(null);setGameOn(true);}}>${lastScore!==null?'Run it back':'Play'}</button>
+          </div>
+        `}
+      </div>
+      ${(bestAng>0||bestAnt>0)&&html`
+        <div class="taunt">
+          ${bestAng===bestAnt?html`Dead even. This cannot stand.`:bestAng>bestAnt?html`<${Sig} who="Angelos"/> Angelos leads ${bestAng} – ${bestAnt}${me==='Antigoni'?' … jalla, catch up':''}`:html`<${Sig} who="Antigoni"/> Antigoni leads ${bestAnt} – ${bestAng}${me==='Angelos'?' … jalla, catch up':''}`}
+        </div>`}
+      ${(gscores||[]).length>0&&html`
+        <div class="card mt10" style="padding:8px 16px">
+          ${gscores.slice(0,10).map((s2,i)=>html`
+            <div class="lb" key=${i}>
+              <span><span class="r">${i+1}.</span> ${s2.by==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} ${s2.by}</span>
+              <span><b>${s2.score}</b> <span class="soft" style="font-size:11px">· ${s2.at}</span></span>
+            </div>`)}
+        </div>`}
+        <//>`}
+    <//>`;
+
+  function buildBook(){
+    const fmt=(k)=>new Date(k+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+    const esc=(s)=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const qKeys=Object.keys(qotd||{}).sort();
+    const qHtml=qKeys.map(k=>{
+      const e=(qotd||{})[k]||{};
+      if(!e.Angelos&&!e.Antigoni)return '';
+      return `<div class="entry">
+        <div class="edate">${fmt(k)}</div>
+        <div class="eq">“${esc(QOTD[qIndexFor(k)])}”</div>
+        <div class="ea"><b>☀️ Angelos</b> — ${e.Angelos?esc(e.Angelos.txt):'<i>never answered… suspicious.</i>'}</div>
+        <div class="ea"><b>🌊 Antigoni</b> — ${e.Antigoni?esc(e.Antigoni.txt):'<i>never answered… suspicious.</i>'}</div>
+      </div>`;
+    }).filter(Boolean).join('');
+    const jHtml=(journal||[]).slice().reverse().map(j=>`<div class="entry">
+      <div class="edate">${esc(j.at||j.d||'')} · ${j.by==='Angelos'?'☀️':'🌊'} ${esc(j.by)}</div>
+      <div class="ej">${esc(j.txt)}</div>
+      ${(j.imgs||[]).map(im=>`<img class="jimg" src="${im.url}"/>`).join('')}
+    </div>`).join('');
+    const opened=(letters||[]).filter(L=>tk>=L.openAt);
+    const sealedN=(letters||[]).length-opened.length;
+    const lHtml=opened.map(L=>`<div class="entry letterp">
+      <div class="edate">From ${L.by==='Angelos'?'☀️ Angelos':'🌊 Antigoni'} · sealed ${esc(L.at)} · opened ${esc(L.openAt)}</div>
+      ${L.txt?`<div class="ej">${esc(L.txt)}</div>`:''}
+      ${L.voice?`<div class="ea"><i>🎙 this one was spoken aloud — ${L.voice.sec||''}s of voice, kept safe in the app.</i></div>`:''}
+    </div>`).join('')+(sealedN?`<div class="entry"><i>…and ${sealedN} letter${sealedN===1?'':'s'} still sealed, waiting for their day.</i></div>`:'');
+    const phHtml=(photos||[]).slice(0,60).map(p=>`<figure><img src="${p.url}"/><figcaption>${esc(p.cap||'')}${p.by?` — ${p.by==='Angelos'?'☀️':'🌊'}`:''}</figcaption></figure>`).join('');
+    const doc2=`<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Meltemi — The First Summer</title>
+      <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+      <style>
+        @page{size:A4;margin:16mm}
+        *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+        body{margin:0;background:#F8F2E7;color:#1E2A33;font-family:Inter,sans-serif;font-size:12.5px;line-height:1.6}
+        .pg{page-break-after:always;padding:28px 22px}
+        .cover{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+        .wm{font-family:Fraunces,serif;font-size:14px;letter-spacing:.4em;text-transform:uppercase}
+        .rule{width:64px;height:1px;background:#C6A15B;margin:22px auto}
+        .title{font-family:Fraunces,serif;font-weight:300;font-style:italic;font-size:58px;line-height:1.1}
+        .mono{font-family:Fraunces,serif;font-style:italic;font-size:18px;color:#B08D45;letter-spacing:.12em;margin-top:24px}
+        .route{margin-top:10px;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#9A9184}
+        h2{font-family:Fraunces,serif;font-weight:400;font-size:30px;margin:6px 0 2px}
+        h2 em{font-style:italic;color:#155E73}
+        .sec{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#B08D45;font-weight:600}
+        .sec::after{content:'';display:block;width:28px;height:1px;background:#C6A15B;margin:6px 0 18px}
+        .entry{break-inside:avoid;background:#FFFDF8;border:1px solid #E8DECC;border-radius:14px;padding:14px 16px;margin-bottom:12px}
+        .edate{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#9A9184;font-weight:600;margin-bottom:7px}
+        .eq{font-family:Fraunces,serif;font-size:16px;line-height:1.45;margin-bottom:9px}
+        .ea{margin:4px 0}
+        .ej{font-family:Fraunces,serif;font-size:14.5px;line-height:1.6;white-space:pre-wrap}
+        .jimg{max-width:46%;max-height:180px;border-radius:10px;margin:8px 6px 0 0;border:1px solid #E8DECC}
+        .letterp{background:linear-gradient(#FFFDF8,#FFFDF8) padding-box,linear-gradient(120deg,#C6A15B,#EAD9AF,#C6A15B) border-box;border:1.5px solid transparent}
+        .grid{display:flex;flex-wrap:wrap;gap:10px}
+        figure{break-inside:avoid;margin:0;width:31%}
+        figure img{width:100%;border-radius:10px;border:1px solid #E8DECC}
+        figcaption{font-size:9.5px;color:#9A9184;margin-top:4px}
+        .back{min-height:88vh;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Fraunces,serif;font-style:italic;font-size:22px;color:#4A5A64}
+      </style></head><body>
+      <div class="pg cover">
+        <div class="wm">Meltemi</div>
+        <div class="rule"></div>
+        <div class="title">The First<br/>Summer</div>
+        <div class="mono">A &amp; A</div>
+        <div class="route">New York · Larnaca · Athens — Summer 2026</div>
+      </div>
+      <div class="pg"><div class="sec">Volume I</div><h2>The <em>questions</em></h2><p style="color:#9A9184;font-style:italic">One a day, both of us, no matter the ocean.</p>${qHtml||'<div class="entry"><i>The questions begin…</i></div>'}</div>
+      <div class="pg"><div class="sec">Volume II</div><h2>The <em>pages</em></h2>${jHtml||'<div class="entry"><i>The journal awaits its first page.</i></div>'}</div>
+      <div class="pg"><div class="sec">Volume III</div><h2>The <em>letters</em></h2>${lHtml||'<div class="entry"><i>All still sealed.</i></div>'}</div>
+      <div class="pg"><div class="sec">Volume IV</div><h2>The <em>album</em></h2><div class="grid">${phHtml||'<i>Photos to come.</i>'}</div></div>
+      <div class="pg back">“the meltemi carried us home.”<br/>☀️ 🌊</div>
+      </body></html>`;
+    const blob=new Blob([doc2],{type:'text/html'});
+    const url=URL.createObjectURL(blob);
+    const w=window.open(url,'_blank');
+    if(!w){
+      const a=document.createElement('a');a.href=url;a.download='meltemi-first-summer.html';a.click();
+      flash('Book downloaded 📖 open it, then Print → Save as PDF');
+    }else{
+      flash('📖 Share → Print → Save as PDF to keep it forever');
+    }
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }
+  const photosTab=html`
+      <div class="qcard" style="margin-bottom:16px;text-align:center">
+        <div class="qmono">A & A</div>
+        <div style="font-family:var(--serif);font-size:20px;margin:6px 0 4px">The <em>First Summer</em> Book</div>
+        <div class="soft" style="margin-bottom:12px">Every question, page, letter and photo — pressed into a keepsake you can print.</div>
+        <button class="btn terra" onClick=${buildBook}>📖 Press the summer into pages</button>
+      </div>
+
+    <${Fragment}>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:10px">Add a memory</div>
+        <input placeholder="Caption (optional) — 'first swim'" value=${capIn} onInput=${e=>setCapIn(e.target.value)} class="mb10" />
+        <label class="btn wide" style=${{opacity:uploading?0.6:1,display:'block',textAlign:'center'}}>
+          ${uploading?(uploading===true?'Uploading…':`Uploading ${uploading}…`):'📷 Upload photos'}
+          <input type="file" accept="image/*" multiple style="display:none" disabled=${!!uploading} onChange=${e=>{const fs=Array.from(e.target.files||[]);if(fs.length)uploadPhotos(fs);e.target.value='';}} />
+        </label>
+      </div>
+      ${photos!==null&&photos.length===0&&html`<div class="empty">The album opens July 29.<br/>(Nothing stopping an early one though.)</div>`}
+      <div class="pgrid">
+        ${(photos||[]).map(p=>html`
+          <button class="ph" key=${p.id} onClick=${()=>setViewImg({url:p.url,cap:p.cap,by:p.by,at:p.at,del:{kind:'photo',p}})}>
+            <img src=${p.url} loading="lazy" />
+          </button>`)}
+      </div>
+    <//>`;
+
+  return html`
+    <${Fragment}>
+      <div class="hdr"><div class="hdr-in">
+        <div class="hrow" style=${tab==='home'?{paddingBottom:'12px'}:{}}>
+          <div class="wordmark">Mel<em>temi</em></div>
+          <button class="me" onClick=${()=>pickMe(me==='Angelos'?'Antigoni':'Angelos')}>
+            ${me?html`${me==='Angelos'?'☀️':'🌊'} ${me}`:'who are you?'}
+          </button>
+        </div>
+        ${tab!=='home'&&html`
+          <div class="backrow">
+            <button class="backbtn" onClick=${()=>{setTab('home');setArmDel(null);setGameOn(false);}}>←</button>
+            <span class="btitle">${tab==='trip'?html`The <em>trip</em>`:tab==='list'?html`Our <em>list</em>`:tab==='journal'?html`Our <em>journal</em>`:tab==='notes'?html`Notes <em>& letters</em>`:tab==='game'?html`JALLA<em>!</em>`:tab==='concierge'?html`The <em>concierge</em>`:tab==='ld'?html`Long <em>distance</em>`:html`The <em>album</em>`}</span>
+          </div>`}
+      </div></div>
+      <div class="wrap">
+        ${err&&html`<div class="banner err" onClick=${()=>setErr('')}>${err}</div>`}
+        ${tab==='home'?homeTab:tab==='trip'?tripTab:tab==='concierge'?conciergeTab:tab==='ld'?ldTab:tab==='list'?listTab:tab==='journal'?journalTab:tab==='notes'?notesTab:tab==='game'?gameTab:photosTab}
+      </div>
+      ${viewImg&&html`
+        <div class="viewer" onClick=${e=>{if(e.target.classList.contains('viewer'))setViewImg(null);}}>
+          <img src=${viewImg.url} />
+          ${viewImg.cap&&html`<div class="cap">${viewImg.cap}</div>`}
+          ${(viewImg.by||viewImg.at)&&html`<div class="vby">${viewImg.by?viewImg.by.toUpperCase():''}${viewImg.at?' · '+viewImg.at:''}</div>`}
+          <div class="row mt12" style="width:auto;gap:12px">
+            ${viewImg.del&&(armDel==='view'
+              ?html`<button class="btn terra" onClick=${()=>{if(viewImg.del.kind==='photo')delPhoto(viewImg.del.p);else delDayPhoto(viewImg.del.im);setArmDel(null);}}>Really delete</button><button class="ghost" style="color:#fff" onClick=${()=>setArmDel(null)}>keep</button>`
+              :html`<button class="ghost" style="color:rgba(250,246,239,.6)" onClick=${()=>setArmDel('view')}>delete</button>`)}
+            <button class="ghost" style="color:#FAF6EF" onClick=${()=>{setViewImg(null);setArmDel(null);}}>close</button>
+          </div>
+        </div>`}
+      <div class="bnav">
+        ${[['home','Home'],['trip','Trip'],['notes','Notes'],['game','Jalla'],['ld','Us']].map(([id,l])=>html`
+          <button key=${id} class=${tab===id?'on':''} onClick=${()=>setTab(id)}><${MNavIcon} id=${id}/><span class="cap">${l}</span></button>`)}
+      </div>
+      ${toast&&html`<div class="toast">${toast}</div>`}
+    <//>`;
+}
+
+// Render straight away — the PIN screen is what signs us in now, so we no longer wait on auth.
+render(html`<${App} />`, document.getElementById('app'));
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{});});}
+</script>
+</body>
+</html>

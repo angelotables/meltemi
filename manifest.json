@@ -1,0 +1,13 @@
+{
+  "name": "Meltemi",
+  "short_name": "Meltemi",
+  "description": "Our summer — the countdown, the plan, the two of us.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FBF1E6",
+  "theme_color": "#FBF1E6",
+  "icons": [
+    { "src": "meltemi-icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "meltemi-icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
