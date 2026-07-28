@@ -1,5 +1,5 @@
 // Meltemi service worker — offline shell + resilient CDN caching
-const VERSION='meltemi-v1';
+const VERSION='meltemi-v2';
 const CORE=['./','index.html','manifest.json','apple-touch-icon.png','meltemi-icon-192.png','meltemi-icon-512.png'];
 self.addEventListener('install',(e)=>{
   e.waitUntil(caches.open(VERSION).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));

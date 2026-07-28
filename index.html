@@ -142,6 +142,15 @@
   .cbox{min-width:82px;padding:14px 8px;border:1px solid var(--hair);border-radius:18px;background:var(--card);box-shadow:var(--sh)}
   .cbox .n{font-family:var(--serif);font-size:42px;font-weight:300;line-height:1;color:var(--ink);font-variant-numeric:lining-nums}
   .cbox .u{font-size:9px;letter-spacing:.3em;color:var(--soft);margin-top:6px;font-weight:600}
+  /* ---------- link-up day ---------- */
+  .maz{font-family:var(--serif);font-size:96px;font-weight:300;line-height:1;margin:6px 0 0;letter-spacing:.02em;
+    background:linear-gradient(100deg,var(--gold2),var(--aegean2) 35%,#C97B5A 65%,var(--gold2));background-size:220% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;animation:mazshine 4.5s linear infinite}
+  @keyframes mazshine{to{background-position:220% 0}}
+  .hero.fete{background:radial-gradient(420px 240px at 50% 0%,rgba(198,161,91,.16),transparent 70%);border-radius:0 0 40px 40px}
+  .confetti{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
+  .cf{position:absolute;top:-14px;width:7px;height:12px;border-radius:2px;opacity:.8;animation:cfall linear infinite}
+  @keyframes cfall{0%{transform:translateY(-3vh) rotate(0deg)}100%{transform:translateY(106vh) rotate(560deg)}}
 
   /* ---------- day web ---------- */
   .viewtog{display:flex;gap:18px;margin:4px 2px 14px}
@@ -361,6 +370,7 @@ const MEL_EMAIL='meltemi@helios.local'; // the one shared account this trip app 
 const D=(k)=>doc(db,'gyrocity',k);
 
 const MEET='2026-07-29';
+const MEET_AT=Date.UTC(2026,6,29,6,30,0); // touchdown 09:30 Cyprus time (UTC+3) — the moment he lands
 const TRIP_END='2026-08-22';
 const NOTE_COLORS=['#F6E7D7','#F4E2E6','#E3EEEF','#F4EDD8','#E8EFE2'];
 
@@ -774,12 +784,18 @@ function App(){
 
   // ---- trip state ----
   const tk=todayKey();
-  const meetDate=new Date(MEET+'T00:00:00');
-  const msLeft=meetDate-now;
+  const msLeft=MEET_AT-now;
   const daysLeft=Math.ceil(msLeft/86400000);
   const during=tk>=MEET&&tk<=TRIP_END;
   const after=tk>TRIP_END;
   const tripDay=during?TRIP_DAYS.indexOf(tk)+1:0;
+  const linkday=tk===MEET&&msLeft<=0; // the day we link up — celebrate
+  // final 48h: tick every second so the touchdown countdown is real
+  useEffect(()=>{
+    if(!(msLeft>0&&msLeft<172800000))return;
+    const t=setInterval(()=>setNow(new Date()),1000);
+    return ()=>clearInterval(t);
+  },[msLeft>0&&msLeft<172800000]);
 
   // ---- uploads ----
   function compressImage(file){
@@ -1864,22 +1880,29 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
 
   const homeTab=html`
     <${Fragment}>
-      <div class="hero">
-        ${!during&&!after&&html`
+      <div class=${'hero'+(linkday?' fete':'')}>
+        ${msLeft>0&&!after&&html`
           <div class="pre">until we\u2019re together</div>
           ${daysLeft>2?html`
             <div class="big">${daysLeft}<sup>days</sup></div>
           `:html`
             <div class="cgrid">
               <div class="cbox"><div class="n">${Math.max(0,Math.floor(msLeft/86400000))}</div><div class="u">DAYS</div></div>
-              <div class="cbox"><div class="n">${Math.max(0,Math.floor(msLeft/3600000)%24)}</div><div class="u">HOURS</div></div>
+              <div class="cbox"><div class="n">${Math.max(0,Math.floor(msLeft/3600000)%24)}</div><div class="u">HRS</div></div>
               <div class="cbox"><div class="n">${Math.max(0,Math.floor(msLeft/60000)%60)}</div><div class="u">MIN</div></div>
+              <div class="cbox"><div class="n">${Math.max(0,Math.floor(msLeft/1000)%60)}</div><div class="u">SEC</div></div>
             </div>
           `}
-          <div class="meta">July 29 · Larnaca airport · ✈️ → 🫂</div>
+          <div class="meta">July 29 · wheels down 9:30am · Larnaca · ✈️ → 🫂</div>
           <div class="divider"></div>
         `}
-        ${during&&html`
+        ${linkday&&html`
+          <div class="pre">the wait is over</div>
+          <div class="maz">μαζί</div>
+          <div class="un">DAY 1 · LARNACA · OUR FIRST SUMMER</div>
+          <div class="divider"></div>
+        `}
+        ${during&&msLeft<=0&&!linkday&&html`
           <div class="pre">our first summer</div>
           <div class="big">${tripDay}<sup>of 25</sup></div>
           <div class="un">${placeOf(tk).toUpperCase()} · TOGETHER</div>
@@ -2717,6 +2740,16 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         ${[['home','Home'],['trip','Trip'],['notes','Notes'],['game','Jalla'],['ld','Us']].map(([id,l])=>html`
           <button key=${id} class=${tab===id?'on':''} onClick=${()=>setTab(id)}><${MNavIcon} id=${id}/><span class="cap">${l}</span></button>`)}
       </div>
+      ${linkday&&html`
+        <div class="confetti" aria-hidden="true">
+          ${[...Array(22)].map((_,i)=>html`<span key=${i} class="cf" style=${{
+            left:((i*47)%100)+'%',
+            background:['#C6A15B','#B4854F','#1E7A93','#E9C4CC','#C97B5A'][i%5],
+            animationDuration:(5.5+((i*29)%35)/10)+'s',
+            animationDelay:(((i*77)%60)/10)+'s',
+            width:(5+(i*13)%5)+'px',height:(9+(i*17)%7)+'px'
+          }}></span>`)}
+        </div>`}
       ${toast&&html`<div class="toast">${toast}</div>`}
     <//>`;
 }
