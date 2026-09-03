@@ -248,6 +248,14 @@
   .ph{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:1;background:#F1E9DB;border:none;padding:0;cursor:pointer;
     box-shadow:var(--sh)}
   .ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .ph video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+  .pv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;
+    text-shadow:0 2px 10px rgba(0,0,0,.55);pointer-events:none}
+  .viewer video{max-width:100%;max-height:68vh;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.6);background:#000}
+  .vnav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(250,246,239,.1);border:none;color:#FAF6EF;
+    font-size:24px;width:42px;height:58px;border-radius:12px;cursor:pointer;z-index:2}
+  .vnav:active{background:rgba(250,246,239,.22)}
+  .vcount{color:rgba(250,246,239,.5);font-size:11px;letter-spacing:.16em;margin-top:9px}
   .viewer{position:fixed;inset:0;background:rgba(24,30,36,.94);z-index:200;display:flex;flex-direction:column;align-items:center;
     justify-content:center;padding:22px;animation:vfade .25s ease}
   @keyframes vfade{from{opacity:0}to{opacity:1}}
@@ -461,8 +469,73 @@ const QOTD=[
   'Where should we go next summer?',
   'What moment from this trip will we still talk about at 80?',
   'What are you looking forward to about tomorrow?',
+  'What’s one thing you’d grab if our place caught fire (I’m already safe)?',
+  'Which of my outfits is your favorite — and which one has to go?',
+  'What would our couple documentary be called?',
+  'What’s the pettiest thing you’ve ever been jealous about?',
+  'If I cooked you one dish perfectly forever, what should it be?',
+  'What’s a compliment I gave you that you still think about?',
+  'Beach day: am I the one who swims out too far or falls asleep in the sun?',
+  'What’s a rule our future house will absolutely have?',
+  'What’s the first thing you notice when I walk into a room?',
+  'Which song would you put on to fix my bad mood?',
+  'What’s something you were embarrassed about early on that’s funny now?',
+  'If we got matching tattoos (relax — hypothetically), what would they be?',
+  'What’s my most Greek quality? And my most New York one?',
+  'What tiny tradition should we start this week and never stop?',
+  'When do you feel proudest to be seen with me?',
+  'What’s a conversation we’ve had that changed you a little?',
+  'If tonight had a menu, what’s the dessert called?',
+  'What do I do when I think no one’s watching that you’ve noticed?',
+  'Which fictional couple are we closest to — honestly?',
+  'What’s something you want to be forgiven for that I never even counted?',
+  'What’s the best text I’ve ever sent you?',
+  'If we had a boat, what would we name her?',
+  'What part of my laugh do you like best?',
+  'What’s one thing distance taught you about us?',
+  'What smell will forever equal this summer?',
+  'Who’s the better flirt — and prove it right now?',
+  'What’s a moment you wanted to kiss me but didn’t?',
+  'If our love had a color that isn’t on any flag, describe it.',
+  'What’s the most at-peace you’ve ever felt next to me?',
+  'What would 15-year-old you say about who’s next to you now?',
+  'What’s one thing I believe about myself that you know isn’t true?',
+  'Which photo of me on your phone do you look at most?',
+  'What’s our unofficial anthem for this exact week?',
+  'If we hosted a dinner party tonight, who are the five seats for?',
+  'What’s the bravest thing you’ve watched me do?',
+  'What little thing did you do today just because of me?',
+  'Where on the map should we get lost on purpose?',
+  'What’s one question you’ve been scared to ask me? Ask it.',
+  'What does my voice sound like when you replay it in your head?',
+  'What’s the funniest miscommunication we’ve ever had?',
+  'If I was a drink at a kafeneio, what exactly would I be?',
+  'What’s something of mine you’d steal if we ever broke up? (We won’t.)',
+  'What’s a moment I made you feel completely safe?',
+  'Which grandma’s recipe do we need to learn before it’s too late?',
+  'What’s the most ridiculous thing we could do tomorrow that we’d actually do?',
+  'When did you last brag about me when I wasn’t there?',
+  'What’s one thing about us nobody else would believe?',
+  'If this evening was a scene in our movie, what’s the stage direction?',
+  'What do you want us to be doing when we’re old and sunburnt?',
+  'What’s my superpower that I don’t take seriously enough?',
+  'What tiny gift could I bring you tomorrow that would wreck you (happy tears)?',
+  'What’s a word or phrase that’s only ours?',
+  'Whose family dinner is louder — and who thrives in it more?',
+  'What’s the best decision we’ve made together so far?',
+  'What are you still shy about with me, even now?',
+  'If you could bottle one hour of this summer, which one?',
+  'What’s something I do better than anyone else you’ve ever met?',
+  'What promise do you want to hear me say out loud tonight?',
+  'Describe me in emojis only. I’ll grade it.',
 ];
-const qIndexFor=(k)=>parseInt(k.replace(/-/g,''),10)%QOTD.length;
+// Old dates keep the original dealing so answered days still show their real question.
+// From Jul 29 on, we walk the whole deck in a scrambled order — no repeats for 107 days.
+const qIndexFor=(k)=>{
+  if(k<'2026-07-29')return parseInt(k.replace(/-/g,''),10)%47;
+  const days=Math.round((new Date(k+'T12:00:00')-new Date('2026-07-29T12:00:00'))/86400000);
+  return ((days*67+13)%QOTD.length+QOTD.length)%QOTD.length;
+};
 const relTime=(ts)=>{const s=Math.max(0,Math.floor((Date.now()-ts)/1000));if(s<60)return 'just now';const m=Math.floor(s/60);if(m<60)return m+' min ago';const h2=Math.floor(m/60);if(h2<24)return h2+(h2===1?' hour':' hours')+' ago';const d2=Math.floor(h2/24);return d2+(d2===1?' day':' days')+' ago';};
 const PLACES=[
   {id:'larnaca',label:'Larnaca',flag:'🇨🇾',ranges:[['2026-07-29','2026-08-01']]},
@@ -661,6 +734,7 @@ function App(){
   const [qAns,setQAns]=useState('');
   const [liTxt,setLiTxt]=useState('');
   const [letOpen,setLetOpen]=useState(false);
+  const [noteView,setNoteView]=useState('wall'); // 'wall' | 'letters' — letters live on their own page now
   const [letTxt,setLetTxt]=useState('');
   const [letDate,setLetDate]=useState('2026-08-21');
   const [tmb,setTmb]=useState(null);
@@ -696,7 +770,8 @@ function App(){
   const [nTxt,setNTxt]=useState('');
   const [nCol,setNCol]=useState(NOTE_COLORS[0]);
   const [uploading,setUploading]=useState(false);
-  const [viewImg,setViewImg]=useState(null);   // {url,cap,by,at,del?:{kind,ids}}
+  const [viewImg,setViewImg]=useState(null);   // {url,cap,by,at,v?,del?} OR {list:[…those],idx} for swipeable sets
+  const vSwipe=useRef(null);
   const [capIn,setCapIn]=useState('');
   const [armDel,setArmDel]=useState(null);
   const [tripView,setTripView]=useState('days');
@@ -813,14 +888,22 @@ function App(){
     });
   }
   async function uploadBlob(file){
-    const blob=await compressImage(file);
     const id=Date.now().toString(36)+Math.floor(Math.random()*99);
+    if((file.type||'').startsWith('video/')){
+      if(file.size>150*1024*1024)throw new Error('that video is over 150MB — trim it a little first');
+      const ext=file.type.includes('quicktime')?'mov':file.type.includes('webm')?'webm':'mp4';
+      const path=sref(storage,`invoices/trip/${id}.${ext}`);
+      await uploadBytes(path,file,{contentType:file.type||'video/mp4'});
+      const url=await getDownloadURL(path);
+      return {id,url,v:1,ext};
+    }
+    const blob=await compressImage(file);
     const path=sref(storage,`invoices/trip/${id}.jpg`);
     await uploadBytes(path,blob,{contentType:'image/jpeg'});
     const url=await getDownloadURL(path);
     return {id,url};
   }
-  const rmStored=(id)=>deleteObject(sref(storage,`invoices/trip/${id}.jpg`)).catch(()=>{});
+  const rmStored=(id,ext)=>deleteObject(sref(storage,`invoices/trip/${id}.${ext||'jpg'}`)).catch(()=>{});
 
   // ---- journal ----
   async function uploadMany(files,onProgress){
@@ -851,7 +934,7 @@ function App(){
   function delJournal(j){
     if(!guard(journal))return;setArmDel(null);
     if(j.imgId)rmStored(j.imgId);
-    for(const im of (j.imgs||[]))rmStored(im.id);
+    for(const im of (j.imgs||[]))rmStored(im.id,im.ext);
     write('trip_journal',{list:journal.filter(x=>x.id!==j.id)});
   }
 
@@ -887,7 +970,7 @@ function App(){
     setErr('');
     try{
       const ims=await uploadMany(files,(a,b)=>setUploading(b>1?`${a}/${b}`:true));
-      const recs=ims.map(im=>({id:im.id,url:im.url,by:me,at:nowStamp(),d:tk,cap:capIn.trim()}));
+      const recs=ims.map(im=>({...im,by:me,at:nowStamp(),d:tk,cap:capIn.trim()}));
       write('trip_photos',{list:[...recs,...photos]});
       setCapIn('');flash(recs.length>1?recs.length+' memories saved':'Memory saved');
     }catch(e){setErr('Upload failed. ('+(e.message||e)+')');}
@@ -897,7 +980,7 @@ function App(){
     if(!guard(photos))return;
     setViewImg(null);setArmDel(null);
     write('trip_photos',{list:photos.filter(x=>x.id!==p.id)});
-    rmStored(p.id);
+    rmStored(p.id,p.ext);
   }
 
   // ---- day pages: photos + notes ----
@@ -1018,7 +1101,7 @@ function App(){
   }
   function delDayPhoto(im){
     if(!guard(daysDoc))return;
-    rmStored(im.id);
+    rmStored(im.id,im.ext);
     const cur=dayData(selDay);
     saveDayDoc(selDay,{photos:cur.photos.filter(x=>x.id!==im.id),notes:cur.notes});
     setViewImg(null);setArmDel(null);
@@ -2026,9 +2109,9 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         <div class="card">
           <div class="eyebrow" style="margin-bottom:10px">Latest memories</div>
           <div class="pgrid">
-            ${photos.slice(0,3).map(p=>html`
-              <button class="ph" key=${p.id} onClick=${()=>setViewImg({url:p.url,cap:p.cap,by:p.by,at:p.at,del:{kind:'photo',p}})}>
-                <img src=${p.url} loading="lazy" />
+            ${photos.slice(0,3).map((p,i4)=>html`
+              <button class="ph" key=${p.id} onClick=${()=>setViewImg({list:photos.slice(0,3).map(x=>({url:x.url,cap:x.cap,by:x.by,at:x.at,v:x.v,del:{kind:'photo',p:x}})),idx:i4})}>
+                ${p.v?html`<video src=${p.url} preload="metadata" muted playsinline></video><span class="pv">▶</span>`:html`<img src=${p.url} loading="lazy" />`}
               </button>`)}
           </div>
         </div>`}
@@ -2086,15 +2169,15 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
 
         <div class="eyebrow" style="margin:18px 2px 10px">This day in photos ${dd2.photos.length>0?`· ${dd2.photos.length}`:''}</div>
         <label class="btn wide" style=${{opacity:dayUp?0.6:1,display:'block',textAlign:'center',marginBottom:'12px'}}>
-          ${dayUp?(dayUp===true?'Uploading…':`Uploading ${dayUp}…`):'📷 Add photos to this day'}
-          <input type="file" accept="image/*" multiple style="display:none" disabled=${!!dayUp} onChange=${e=>{const fs=Array.from(e.target.files||[]);if(fs.length)addDayPhotos(fs);e.target.value='';}} />
+          ${dayUp?(dayUp===true?'Uploading…':`Uploading ${dayUp}…`):'📷 Add photos & videos to this day'}
+          <input type="file" accept="image/*,video/*" multiple style="display:none" disabled=${!!dayUp} onChange=${e=>{const fs=Array.from(e.target.files||[]);if(fs.length)addDayPhotos(fs);e.target.value='';}} />
         </label>
         ${dd2.photos.length===0&&html`<div class="empty" style="padding:10px 0 16px">Every photo you add lands here —<br/>the whole day, together.</div>`}
         ${dd2.photos.length>0&&html`
           <div class="pgrid" style="margin-bottom:6px">
-            ${dd2.photos.map(im=>html`
-              <button class="ph" key=${im.id} onClick=${()=>setViewImg({url:im.url,cap:prettyDay(k),by:im.by||'',at:'',del:{kind:'day',im}})}>
-                <img src=${im.url} loading="lazy" />
+            ${dd2.photos.map((im,i4)=>html`
+              <button class="ph" key=${im.id} onClick=${()=>setViewImg({list:dd2.photos.map(x=>({url:x.url,cap:prettyDay(k),by:x.by||'',at:'',v:x.v,del:{kind:'day',im:x}})),idx:i4})}>
+                ${im.v?html`<video src=${im.url} preload="metadata" muted playsinline></video><span class="pv">▶</span>`:html`<img src=${im.url} loading="lazy" />`}
               </button>`)}
           </div>`}
 
@@ -2218,7 +2301,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
           ${(j.imgs||[]).length>1&&html`
             <div class="pgrid" style="margin-top:12px;grid-template-columns:1fr 1fr">
               ${j.imgs.map(im=>html`
-                <button class="ph" key=${im.id} onClick=${()=>setViewImg({url:im.url,cap:'',by:j.by,at:j.at})}>
+                <button class="ph" key=${im.id} onClick=${()=>setViewImg({list:(j.imgs||[]).map(x=>({url:x.url,cap:'',by:j.by,at:j.at,v:x.v})),idx:(j.imgs||[]).findIndex(x=>x.id===im.id)})}>
                   <img src=${im.url} loading="lazy" />
                 </button>`)}
             </div>`}
@@ -2228,6 +2311,11 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
 
   const notesTab=html`
     <${Fragment}>
+      <div class="row" style="gap:8px;margin-bottom:14px">
+        ${[['wall','🗒 The wall'],['letters','💌 Sealed letters'+((letters||[]).length?' · '+(letters||[]).length:'')]].map(([v5,l5])=>html`
+          <button key=${v5} class="ghost" style=${{flex:1,padding:'10px 8px',border:'1px solid '+(noteView===v5?'var(--ink)':'var(--hair)'),borderRadius:'999px',color:noteView===v5?'var(--ink)':'var(--soft)',fontWeight:600,fontSize:'12.5px'}} onClick=${()=>{setNoteView(v5);setArmDel(null);}}>${l5}</button>`)}
+      </div>
+      ${noteView==='wall'&&html`
       <div class="card">
         <div class="eyebrow" style="margin-bottom:10px">Leave a little note</div>
         <textarea style="min-height:70px" placeholder="Something sweet, something silly, something only we get…" value=${nTxt} onInput=${e=>setNTxt(e.target.value)}></textarea>
@@ -2249,8 +2337,9 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         </div>
       </div>
       ${notes!==null&&notes.length===0&&html`<div class="empty">An empty wall is a dare.</div>`}
-      <div class="rule" style="margin:22px 0 16px"></div>
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:0 2px 10px">
+      `}
+      ${noteView==='letters'&&html`
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:6px 2px 10px">
         <div class="eyebrow">Sealed letters</div>
         ${!letOpen&&html`<button class="ghost" style="color:var(--terra);font-weight:600" onClick=${()=>setLetOpen(true)}>+ write one</button>`}
       </div>
@@ -2300,6 +2389,8 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
                 :html`<div class="mt8"><button class="jx" onClick=${()=>setArmDel(L.id)}>unseal & discard</button></div>`)}
             `}
           </div>`;})}
+      `}
+      ${noteView==='wall'&&html`
       <div class="rule" style="margin:20px 0 16px"></div>
       <div class="eyebrow" style="margin:0 2px 10px">The wall</div>
       <div class="wall">
@@ -2315,6 +2406,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
             <div class="by2">— ${n2.by.toUpperCase()}</div>
           </div>`)}
       </div>
+      `}
     <//>`;
 
   const listTab=html`
@@ -2692,15 +2784,15 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         <div class="eyebrow" style="margin-bottom:10px">Add a memory</div>
         <input placeholder="Caption (optional) — 'first swim'" value=${capIn} onInput=${e=>setCapIn(e.target.value)} class="mb10" />
         <label class="btn wide" style=${{opacity:uploading?0.6:1,display:'block',textAlign:'center'}}>
-          ${uploading?(uploading===true?'Uploading…':`Uploading ${uploading}…`):'📷 Upload photos'}
-          <input type="file" accept="image/*" multiple style="display:none" disabled=${!!uploading} onChange=${e=>{const fs=Array.from(e.target.files||[]);if(fs.length)uploadPhotos(fs);e.target.value='';}} />
+          ${uploading?(uploading===true?'Uploading…':`Uploading ${uploading}…`):'📷 Upload photos & videos'}
+          <input type="file" accept="image/*,video/*" multiple style="display:none" disabled=${!!uploading} onChange=${e=>{const fs=Array.from(e.target.files||[]);if(fs.length)uploadPhotos(fs);e.target.value='';}} />
         </label>
       </div>
       ${photos!==null&&photos.length===0&&html`<div class="empty">The album opens July 29.<br/>(Nothing stopping an early one though.)</div>`}
       <div class="pgrid">
-        ${(photos||[]).map(p=>html`
-          <button class="ph" key=${p.id} onClick=${()=>setViewImg({url:p.url,cap:p.cap,by:p.by,at:p.at,del:{kind:'photo',p}})}>
-            <img src=${p.url} loading="lazy" />
+        ${(photos||[]).map((p,i4)=>html`
+          <button class="ph" key=${p.id} onClick=${()=>setViewImg({list:(photos||[]).map(x=>({url:x.url,cap:x.cap,by:x.by,at:x.at,v:x.v,del:{kind:'photo',p:x}})),idx:i4})}>
+            ${p.v?html`<video src=${p.url} preload="metadata" muted playsinline></video><span class="pv">▶</span>`:html`<img src=${p.url} loading="lazy" />`}
           </button>`)}
       </div>
     <//>`;
@@ -2724,18 +2816,26 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         ${err&&html`<div class="banner err" onClick=${()=>setErr('')}>${err}</div>`}
         ${tab==='home'?homeTab:tab==='trip'?tripTab:tab==='concierge'?conciergeTab:tab==='ld'?ldTab:tab==='list'?listTab:tab==='journal'?journalTab:tab==='notes'?notesTab:tab==='game'?gameTab:photosTab}
       </div>
-      ${viewImg&&html`
-        <div class="viewer" onClick=${e=>{if(e.target.classList.contains('viewer'))setViewImg(null);}}>
-          <img src=${viewImg.url} />
-          ${viewImg.cap&&html`<div class="cap">${viewImg.cap}</div>`}
-          ${(viewImg.by||viewImg.at)&&html`<div class="vby">${viewImg.by?viewImg.by.toUpperCase():''}${viewImg.at?' · '+viewImg.at:''}</div>`}
+      ${viewImg&&(()=>{
+        const V=viewImg.list?viewImg.list[viewImg.idx]:viewImg;
+        const nav=(d5)=>{if(!viewImg.list)return;const n2=viewImg.idx+d5;if(n2>=0&&n2<viewImg.list.length){setViewImg({...viewImg,idx:n2});setArmDel(null);}};
+        return html`
+        <div class="viewer" onClick=${e=>{if(e.target.classList.contains('viewer'))setViewImg(null);}}
+          onTouchStart=${e=>{vSwipe.current=e.touches[0].clientX;}}
+          onTouchEnd=${e=>{const x0=vSwipe.current;vSwipe.current=null;if(x0===null||x0===undefined||!viewImg.list)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)nav(dx<0?1:-1);}}>
+          ${viewImg.list&&viewImg.idx>0&&html`<button class="vnav" style="left:6px" onClick=${()=>nav(-1)}>‹</button>`}
+          ${viewImg.list&&viewImg.idx<viewImg.list.length-1&&html`<button class="vnav" style="right:6px" onClick=${()=>nav(1)}>›</button>`}
+          ${V.v?html`<video key=${V.url} src=${V.url} controls autoplay playsinline></video>`:html`<img key=${V.url} src=${V.url} />`}
+          ${V.cap&&html`<div class="cap">${V.cap}</div>`}
+          ${(V.by||V.at)&&html`<div class="vby">${V.by?V.by.toUpperCase():''}${V.at?' · '+V.at:''}</div>`}
+          ${viewImg.list&&viewImg.list.length>1&&html`<div class="vcount">${viewImg.idx+1} / ${viewImg.list.length} — swipe</div>`}
           <div class="row mt12" style="width:auto;gap:12px">
-            ${viewImg.del&&(armDel==='view'
-              ?html`<button class="btn terra" onClick=${()=>{if(viewImg.del.kind==='photo')delPhoto(viewImg.del.p);else delDayPhoto(viewImg.del.im);setArmDel(null);}}>Really delete</button><button class="ghost" style="color:#fff" onClick=${()=>setArmDel(null)}>keep</button>`
+            ${V.del&&(armDel==='view'
+              ?html`<button class="btn terra" onClick=${()=>{if(V.del.kind==='photo')delPhoto(V.del.p);else delDayPhoto(V.del.im);setArmDel(null);}}>Really delete</button><button class="ghost" style="color:#fff" onClick=${()=>setArmDel(null)}>keep</button>`
               :html`<button class="ghost" style="color:rgba(250,246,239,.6)" onClick=${()=>setArmDel('view')}>delete</button>`)}
             <button class="ghost" style="color:#FAF6EF" onClick=${()=>{setViewImg(null);setArmDel(null);}}>close</button>
           </div>
-        </div>`}
+        </div>`;})()}
       <div class="bnav">
         ${[['home','Home'],['trip','Trip'],['notes','Notes'],['game','Jalla'],['ld','Us']].map(([id,l])=>html`
           <button key=${id} class=${tab===id?'on':''} onClick=${()=>setTab(id)}><${MNavIcon} id=${id}/><span class="cap">${l}</span></button>`)}
