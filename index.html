@@ -731,7 +731,7 @@ import htm from 'https://esm.sh/htm@3.1.1';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, onSnapshot, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { getStorage, ref as sref, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, updatePassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
 const html = htm.bind(h);
 
@@ -749,7 +749,14 @@ const storage=getStorage(fb);
 const _auth=getAuth(fb);
 const PIN_PAD='hmpin-';                 // invisible padding: 4-digit PIN → 6+ char Firebase password
 const MEL_PEOPLE=[['Angelos','angelos@helios.local'],['Antigoni','antigoni@helios.local']]; // each PIN belongs to one person
-const MEL_SHARED='meltemi@helios.local'; // the original shared Meltemi code still opens the house, then asks once who you are
+const MEL_SHARED='meltemi@helios.local'; // the shared Meltemi account: one code for the house, then it asks once who you are
+// EARLY ACCESS: while GATE_ON is true there is exactly one wall. The page shows the "coming" message
+// and only the early access code opens it; that code is the shared account's real password (kept
+// here only as a hash, to turn other codes away before they reach Firebase). Personal PINs are
+// not accepted until GATE_ON is set to false, which brings the normal PIN screen back.
+const GATE_ON=true,GATE_KEY='mel-gate',GATE_HASH='1o9gy5d';
+const gateHash=c=>{let h=2166136261;for(const ch of 'meltemi:'+c){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return (h>>>0).toString(36);};
+const gateOpen=()=>{try{return localStorage.getItem(GATE_KEY)===GATE_HASH;}catch(e){return false;}};
 const D=(k)=>doc(db,'gyrocity',k);
 
 const MEET='2026-07-29';
@@ -2764,6 +2771,9 @@ function App(){
   const [me,setMe]=useState(null); // set by the PIN you sign in with
   const [picked,setPicked]=useState(false);
   const [authReady,setAuthReady]=useState(false);
+  const [gateAsk,setGateAsk]=useState(false);
+  const [gateStage,setGateStage]=useState('code');
+  const [gateCode,setGateCode]=useState('');
   const [tab,setTab]=useState('home');
   useEffect(()=>{window.scrollTo({top:0,left:0,behavior:'instant'});},[tab]);
   const [err,setErr]=useState('');
@@ -2906,9 +2916,9 @@ function App(){
     };
     window.addEventListener('keydown',h);
     return ()=>window.removeEventListener('keydown',h);
-  },[authed,pinBuf,pinMode,pinBad,firstPin,meta]);
+  },[authed,pinBuf,pinMode,pinBad,firstPin,meta,gateStage,gateAsk,busy]);
   function pressKey(k){
-    if(busy)return;
+    if(busy||(GATE_ON&&gateStage==='code'&&!gateAsk))return;
     if(pinBad)setPinBad(false);
     if(k==='back'){setPinBuf(pinBuf.slice(0,-1));return;}
     if(pinBuf.length>=4)return;
@@ -2920,16 +2930,31 @@ function App(){
   // Each person has their own PIN. Whichever account it opens is who you are, no choosing.
   async function submitPin(code){
     setBusy(true);
-    const pw=PIN_PAD+code;let who=null,net=false;
-    for(const [name,email] of MEL_PEOPLE){
-      try{await signInWithEmailAndPassword(_auth,email,pw);who=name;break;}
-      catch(e){if(e&&e.code==='auth/network-request-failed')net=true;}
+    const pw=PIN_PAD+code;let net=false;
+    const tryAcc=async(email,p)=>{try{await signInWithEmailAndPassword(_auth,email,p);return true;}catch(e){if(e&&e.code==='auth/network-request-failed')net=true;return false;}};
+    const tryPeople=async()=>{for(const [name,email] of MEL_PEOPLE){if(await tryAcc(email,pw))return name;}return null;};
+    const enter=(w)=>{if(w)pickMe(w);else{const m=savedMe();if(m)setMe(m);}setAuthed(true);setPinBuf('');setGateStage('code');};
+    const fail=()=>{if(net)setErr('No connection, try again.');setPinBad(true);setPinBuf('');};
+    if(GATE_ON&&gateStage==='code'){
+      // the one wall: only the early access code gets any further
+      if(gateHash(code)!==GATE_HASH)fail();
+      else if(await tryAcc(MEL_SHARED,pw)){try{localStorage.setItem(GATE_KEY,GATE_HASH);}catch(e){}enter(null);}
+      else if(net)fail();
+      else{
+        try{localStorage.setItem(GATE_KEY,GATE_HASH);}catch(e){}
+        const u=_auth.currentUser,p=u&&MEL_PEOPLE.find(x=>x[1]===u.email);
+        if(u&&(p||u.email===MEL_SHARED))enter(p?p[0]:null);       // this phone is already signed in
+        else{setGateCode(code);setGateStage('old');setPinBuf('');} // the account still has its old code: ask for it once and switch it over
+      }
+    }else if(GATE_ON){
+      if(await tryAcc(MEL_SHARED,pw)){
+        if(gateCode){try{await updatePassword(_auth.currentUser,PIN_PAD+gateCode);}catch(e){setErr('You’re in, but the new code could not be saved. '+(e.message||e));}}
+        enter(null);
+      }else{const who=await tryPeople();if(who)enter(who);else fail();}
+    }else{
+      const who=await tryPeople();
+      if(who)enter(who);else if(await tryAcc(MEL_SHARED,pw))enter(null);else fail();
     }
-    let shared=false;
-    if(!who){try{await signInWithEmailAndPassword(_auth,MEL_SHARED,pw);shared=true;}catch(e){if(e&&e.code==='auth/network-request-failed')net=true;}}
-    if(who){pickMe(who);setAuthed(true);setPinBuf('');}
-    else if(shared){const m=savedMe();if(m)setMe(m);setAuthed(true);setPinBuf('');}
-    else{if(net)setErr('No connection, try again.');setPinBad(true);setPinBuf('');}
     setBusy(false);
   }
   const pickMe=(n)=>{setMe(n);try{localStorage.setItem('mel-me',n);}catch(e){}};
@@ -2939,7 +2964,7 @@ function App(){
     let first=true;const done=()=>setAuthReady(true),tm=setTimeout(done,3000);
     const un=onAuthStateChanged(_auth,(u)=>{
       if(!first)return;first=false;clearTimeout(tm);
-      if(u&&u.email){const p=MEL_PEOPLE.find(x=>x[1]===u.email);
+      if(u&&u.email&&(!GATE_ON||gateOpen())){const p=MEL_PEOPLE.find(x=>x[1]===u.email);
         if(p){setMe(p[0]);setAuthed(true);}
         else if(u.email===MEL_SHARED){const m=savedMe();if(m)setMe(m);setAuthed(true);}}
       done();});
@@ -3918,13 +3943,19 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   if(!authed&&!authReady)return html`<div class="login"><div class="lmark">Mel<em>temi</em></div></div>`;
   if(!authed){
     const dots=[0,1,2,3].map(i=>html`<div class=${'dot'+(pinBuf.length>i?' f':'')} key=${i}></div>`);
+    const coming=GATE_ON&&gateStage==='code';
+    if(coming&&!gateAsk)return html`
+      <div class="login" style="justify-content:center;text-align:center">
+        <div style="font-family:var(--serif);font-size:40px;line-height:1.35;color:var(--ink)">A whole new<br/>Meltemi is coming</div>
+        <button class="gatelink" onClick=${()=>setGateAsk(true)}>I have a code</button>
+      </div>`;
     return html`
       <div class="login">
-        <div class="lmark">Mel<em>temi</em></div>
-        <div class="lsub">Angelos & Antigoni · our first summer</div>
-        <div class="ldiv"></div>
-        <div class="soft">
-          ${busy?'Opening…':'Your Meltemi PIN, just this once'}
+        ${coming?html`<div style="font-family:var(--serif);font-size:26px;line-height:1.35;color:var(--ink);text-align:center">A whole new<br/>Meltemi is coming</div>`
+          :html`<div class="lmark">Mel<em>temi</em></div><div class="lsub">Angelos & Antigoni · our first summer</div>`}
+        <div class="ldiv" style=${coming?'margin-top:18px':''}></div>
+        <div class="soft" style="text-align:center;max-width:260px">
+          ${busy?'Opening…':coming?'Early access code':GATE_ON?'One time only: type your old Meltemi code, and it switches to the new one':'Your Meltemi PIN'}
           ${pinBad&&html`<div style="color:#A4442C;font-weight:600;margin-top:5px">Not it, try again</div>`}
         </div>
         <div class=${'dots'+(pinBad?' bad':'')}>${dots}</div>
@@ -5264,46 +5295,7 @@ const PausedScreen=()=>html`
       A whole new<br/>Meltemi is coming
     </div>
   </div>`;
-// GATE: a soft lock in front of the whole app. Until the entry code has been typed once on a
-// device, the page shows only the "coming" message, no login, nothing loads. The code is kept
-// as a hash, not in plain text. To open Meltemi to everyone, set GATE_ON to false.
-let gateJust=false;
-const GATE_ON=true,GATE_KEY='mel-gate',GATE_HASH='1o9gy5d';
-const gateHash=c=>{let h=2166136261;for(const ch of 'meltemi:'+c){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return (h>>>0).toString(36);};
-const gateOpen=()=>{try{return localStorage.getItem(GATE_KEY)===GATE_HASH;}catch(e){return false;}};
-function Gate(){
-  const [open,setOpen]=useState(!GATE_ON||gateOpen());
-  const [ask,setAsk]=useState(false);
-  const [buf,setBuf]=useState('');
-  const [bad,setBad]=useState(false);
-  if(open)return html`<${App} />`;
-  const press=k=>{
-    if(bad)return;
-    if(k==='back'){setBuf(buf.slice(0,-1));return;}
-    const n=(buf+k).slice(0,4);setBuf(n);
-    if(n.length<4)return;
-    if(gateHash(n)===GATE_HASH){try{localStorage.setItem(GATE_KEY,GATE_HASH);}catch(e){}gateJust=true;setOpen(true);}
-    else{setBad(true);setTimeout(()=>{setBad(false);setBuf('');},650);}
-  };
-  return html`
-    <div class="login" style="justify-content:center;text-align:center">
-      <div style=${{fontFamily:'var(--serif)',fontSize:ask?'26px':'40px',lineHeight:1.35,color:'var(--ink)',transition:'font-size .25s'}}>
-        A whole new<br/>Meltemi is coming
-      </div>
-      ${ask?html`
-        <div class="ldiv" style="margin-top:18px"></div>
-        <div class="soft">${bad?html`<span style="color:#A4442C;font-weight:600">Not it, try again</span>`:'Early access code'}</div>
-        <div class=${'dots'+(bad?' bad':'')}>${[0,1,2,3].map(i=>html`<div class=${'dot'+(buf.length>i?' f':'')} key=${i}></div>`)}</div>
-        <div class="pad">
-          ${[1,2,3,4,5,6,7,8,9].map(k=>html`<button class="key" key=${k} onClick=${()=>press(String(k))}>${k}</button>`)}
-          <span></span>
-          <button class="key" onClick=${()=>press('0')}>0</button>
-          <button class="key ghostk" onClick=${()=>press('back')}>⌫</button>
-        </div>`:html`
-        <button class="gatelink" onClick=${()=>setAsk(true)}>I have a code</button>`}
-    </div>`;
-}
-render(PAUSED?html`<${PausedScreen} />`:html`<${Gate} />`, document.getElementById('app'));
+render(PAUSED?html`<${PausedScreen} />`:html`<${App} />`, document.getElementById('app'));
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{});});}
 </script>
 </body>
