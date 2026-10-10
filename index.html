@@ -1563,11 +1563,14 @@ function buildWorld(T,wrap,opts){
       
       [.116,-.116].forEach(x=>{mesh(new T.TorusGeometry(.024,.0045,6,16),gold,x,1.555,.005).rotation.y=Math.PI/2;});
       mesh(new T.SphereGeometry(.128,16,12,0,Math.PI*2,0,Math.PI*.5),hair,0,1.61,-.015).rotation.x=-.3;
-      const c1=[],c2=[],c3=[];
-      for(let r=0;r<10;r++){const y=1.71-r*.062,rad=.122+Math.sin(Math.min(1,r/5)*Math.PI/2)*.075-(r>6?(r-6)*.012:0),n=r<1?8:13,wrap=y>1.5?.6:.8;
-        for(let i=0;i<n;i++){const a=-Math.PI*wrap+Math.PI*2*wrap*(i/(n-1))+(r%2)*.12,sz=.04+((i*7+r*3)%5)*.004,sp=new T.SphereGeometry(sz,7,5);
-          sp.translate(Math.sin(a)*rad,y+(((i+r)%3)-1)*.01,-Math.cos(a)*rad*.9-.025);[c1,c2,c3][(i*2+r)%3].push(sp);}}
-      for(let i=0;i<9;i++){const a=i/9*Math.PI*2,sp=new T.SphereGeometry(.05,7,5);sp.translate(Math.cos(a)*.075,1.722+(i%2)*.012,Math.sin(a)*.075-.035);[c1,c2,c3][i%3].push(sp);}
+      const c1=[],c2=[],c3=[];let hs=7;const hr=()=>{hs=(Math.imul(hs,1664525)+1013904223)>>>0;return hs/4294967296;},sm3=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
+      mesh(new T.SphereGeometry(.15,16,12),hair3,0,1.5,-.045).scale.set(1.02,1.3,.78);
+      // ringlets: each strand leaves the crown smooth, then coils looser and wider as it falls to the shoulders
+      const strand=(a,len,amp,turns,ph,y0,r0)=>{const pts=[];for(let k=0;k<=26;k++){const t=k/26,y=y0-len*Math.pow(t,1.08),R=r0+(.128-r0)*sm3(0,.22,t)+.034*Math.sin(Math.PI*Math.min(1,t*1.15)),h=amp*sm3(.08,.34,t)*(1+.35*t),f=ph+t*turns*6.2832,rr=R+h*Math.cos(f);
+          pts.push(new T.Vector3(Math.sin(a)*rr+Math.cos(a)*h*Math.sin(f),y,-Math.cos(a)*rr*.94-.02+Math.sin(a)*h*Math.sin(f)));}
+        return new T.TubeGeometry(new T.CatmullRomCurve3(pts),40,.0105+hr()*.004,5,false);};
+      for(let i=0;i<46;i++){const a=-2.35+4.7*(i+.5)/46+(hr()-.5)*.09,side=Math.abs(a)/2.35,len=.33+hr()*.13-side*.05;[c1,c2,c3][i%3].push(strand(a,len,.017+hr()*.012,3.2+hr()*2.2,hr()*6.28,1.722-hr()*.012,.03+hr()*.05));}
+      for(let i=0;i<16;i++){const a=-2.1+4.2*(i+.5)/16+(hr()-.5)*.2;[c2,c3,c1][i%3].push(strand(a,.2+hr()*.1,.014+hr()*.008,2.2+hr()*1.5,hr()*6.28,1.705,.085+hr()*.02));}
       g.add(new T.Mesh(mergeGeos(c1),hair));g.add(new T.Mesh(mergeGeos(c2),hair2));g.add(new T.Mesh(mergeGeos(c3),hair3));
       g.scale.setScalar(.985);
     }else{
@@ -1575,7 +1578,6 @@ function buildWorld(T,wrap,opts){
       const foot=(j,l)=>{mesh(new T.SphereGeometry(.078,10,8),shoe,0,-l-.03,.035,j).scale.set(.95,.58,1.75);};
       L1=limb(.088,.86,pants,pants,.4,.4,.082,.068,foot);L2=limb(-.088,.86,pants,pants,.4,.4,.082,.068,foot);
       body=mesh(new T.CapsuleGeometry(.152,.36,6,16),shirt,0,1.15,0);body.scale.set(1.1,1,.74);
-      mesh(new T.CapsuleGeometry(.1,.3,4,10),tee,0,1.15,.034).scale.set(.52,1,.9);
       mesh(new T.SphereGeometry(.172,16,12),pants,0,.89,0).scale.set(1,.6,.78);
       const hand=(j,l)=>{mesh(new T.SphereGeometry(.045,10,8),skin,0,-l-.025,0,j);};
       A1=limb(.2,1.375,shirt,shirt,.27,.25,.052,.045,hand);A2=limb(-.2,1.375,shirt,shirt,.27,.25,.052,.045,hand);
