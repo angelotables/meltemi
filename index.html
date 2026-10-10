@@ -1206,10 +1206,10 @@ function buildWorld(T,wrap,opts){
   sunDisc.position.copy(sunDir).multiplyScalar(300);if(NIGHT)sunDisc.position.set(120,150,-220);scene.add(sunDisc);
 
   // ---------- materials (each can be cut away between the camera and the player) ----------
-  const CUT={uCutP:{value:new T.Vector3(0,0,-5)},uCutR:{value:1.2},uCamW:{value:cam.matrixWorld},uLift:{value:0},uLiftH:{value:1.25},uPl:{value:new T.Vector3()},uFwd:{value:new T.Vector2(0,-1)}};let LIFT=false;
-  const cutShader=(sh)=>{sh.uniforms.uCutP=CUT.uCutP;sh.uniforms.uCutR=CUT.uCutR;sh.uniforms.uCamW=CUT.uCamW;sh.uniforms.uLift=CUT.uLift;sh.uniforms.uLiftH=CUT.uLiftH;sh.uniforms.uPl=CUT.uPl;sh.uniforms.uFwd=CUT.uFwd;
-    sh.fragmentShader='uniform vec3 uCutP;uniform float uCutR;uniform mat4 uCamW;uniform float uLift;uniform float uLiftH;uniform vec3 uPl;uniform vec2 uFwd;\n'+sh.fragmentShader.replace('#include <clipping_planes_fragment>',
-      '#include <clipping_planes_fragment>\n{vec3 cf=-vViewPosition;float cpp=dot(uCutP,uCutP);if(uCutR>0.0&&cpp>1.4){float ct=dot(cf,uCutP)/cpp;if(ct>0.02&&ct<0.95){float cd=length(cf-uCutP*ct);float cn=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453);float cr=uCutR*clamp((0.97-ct)*2.6,0.28,1.0);if(cd<cr*(0.96+0.04*cn))discard;}}\nif(uLift>0.5){vec3 wp=(uCamW*vec4(cf,1.0)).xyz;if(wp.y>uLiftH&&abs(wp.x)<6.8&&abs(wp.z)<4.8&&dot(wp.xz-uPl.xz,uFwd)<-0.45)discard;}}');};
+  const CUT={uCutP:{value:new T.Vector3(0,0,-5)},uCutR:{value:1.2},uCamW:{value:cam.matrixWorld},uLift:{value:0},uLiftH:{value:1.25},uBox:{value:[0,1,2,3,4,5,6,7].map(()=>new T.Vector4(0,0,0,0))},uBoxH:{value:[99,99,99,99,99,99,99,99]},uPl:{value:new T.Vector3()},uFwd:{value:new T.Vector2(0,-1)}};let LIFT=false;
+  const cutShader=(sh)=>{sh.uniforms.uCutP=CUT.uCutP;sh.uniforms.uCutR=CUT.uCutR;sh.uniforms.uCamW=CUT.uCamW;sh.uniforms.uLift=CUT.uLift;sh.uniforms.uLiftH=CUT.uLiftH;sh.uniforms.uBox=CUT.uBox;sh.uniforms.uBoxH=CUT.uBoxH;sh.uniforms.uPl=CUT.uPl;sh.uniforms.uFwd=CUT.uFwd;
+    sh.fragmentShader='uniform vec3 uCutP;uniform float uCutR;uniform mat4 uCamW;uniform float uLift;uniform float uLiftH;uniform vec4 uBox[8];uniform float uBoxH[8];uniform vec3 uPl;uniform vec2 uFwd;\n'+sh.fragmentShader.replace('#include <clipping_planes_fragment>',
+      '#include <clipping_planes_fragment>\n{vec3 cf=-vViewPosition;float cpp=dot(uCutP,uCutP);if(uCutR>0.0&&cpp>1.4){float ct=dot(cf,uCutP)/cpp;if(ct>0.02&&ct<0.95){float cd=length(cf-uCutP*ct);float cn=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453);float cr=uCutR*clamp((0.97-ct)*2.6,0.28,1.0);if(cd<cr*(0.96+0.04*cn))discard;}}\nif(uLift>0.5){vec3 wp=(uCamW*vec4(cf,1.0)).xyz;for(int i=0;i<8;i++){vec4 b=uBox[i];if(wp.y>uBoxH[i]&&wp.x>b.x&&wp.x<b.z&&wp.z>b.y&&wp.z<b.w)discard;}}}');};
   const mk=(o,ws,ud)=>{const m=new T.MeshStandardMaterial(Object.assign({roughness:.85,metalness:0,envMapIntensity:1.25},o));if(ws)m.userData.ws=ws;if(ud)Object.assign(m.userData,ud);m.onBeforeCompile=cutShader;return m;};
   const col=(c,r,ex,ud)=>mk(Object.assign({color:c,roughness:r===undefined?.85:r},ex||{}),0,ud);
   const fab=(c)=>mk({color:c,roughness:.95},1/.6,{soft:1});
@@ -1380,12 +1380,13 @@ function buildWorld(T,wrap,opts){
     if(out){const sw=w/2-.03;
       if(ax==='x'){shutter('x',o.s-sw/2-.02,cy,f+out*.135,sw,h);shutter('x',o.e+sw/2+.02,cy,f+out*.135,sw,h);B(w+.2,.05,.2,M.white,mid,o.sill-.03,f+out*.17);}
       else{shutter('z',o.s-sw/2-.02,cy,f+out*.135,sw,h);shutter('z',o.e+sw/2+.02,cy,f+out*.135,sw,h);B(.2,.05,w+.2,M.white,f+out*.17,o.sill-.03,mid);}}};
-  const wall=(ax,f,a,b,ops,out)=>{
+  const wallRuns=[];
+  const wall=(ax,f,a,b,ops,out)=>{const run=ax==='x'?{x1:a,x2:b,z1:f-TH/2,z2:f+TH/2,a:0}:{x1:f-TH/2,x2:f+TH/2,z1:a,z2:b,a:0};wallRuns.push(run);
     const seg=(s,e,y0,y1,c)=>{if(e-s<.02||y1-y0<.02)return;const len=e-s,mid=(s+e)/2;
       if(ax==='x')B(len,y1-y0,TH,M.plaster,mid,(y0+y1)/2,f);else B(TH,y1-y0,len,M.plaster,f,(y0+y1)/2,mid);
       if(c&&y0===0){if(ax==='x')B(len+.03,.09,TH+.03,M.white,mid,.045,f);else B(TH+.03,.09,len+.03,M.white,f,.045,mid);}
       if(y1===H){if(ax==='x'){B(len,.07,TH+.07,M.white,mid,H-.035,f);B(len,.05,TH+.14,M.white,mid,H-.025,f);}else{B(TH+.07,.07,len,M.white,f,H-.035,mid);B(TH+.14,.05,len,M.white,f,H-.025,mid);}}
-      if(c){const bl=ax==='x'?block(s,f-TH/2,e,f+TH/2,1):block(f-TH/2,s,f+TH/2,e,1);if(y1<H)bl.top=y1;}};
+      if(c){const bl=ax==='x'?block(s,f-TH/2,e,f+TH/2,1):block(f-TH/2,s,f+TH/2,e,1);if(y1<H)bl.top=y1;bl.run=run;}};
     let cur=a;ops=(ops||[]).slice().sort((p,q)=>p.s-q.s);
     for(const o of ops){seg(cur,o.s,0,H,1);if(o.sill>0)seg(o.s,o.e,0,o.sill,1);seg(o.s,o.e,o.head,H,0);if(o.win)windowAt(ax,f,o,out||0);
       else if(!out){const fw=.07,fd=TH+.06;if(ax==='x'){B(fw,o.head,fd,M.white,o.s+fw/2,o.head/2,f);B(fw,o.head,fd,M.white,o.e-fw/2,o.head/2,f);B(o.e-o.s,fw,fd,M.white,(o.s+o.e)/2,o.head-fw/2,f);}
@@ -1750,7 +1751,7 @@ function buildWorld(T,wrap,opts){
   const seen=(x,y,z)=>{if(LIFT&&C.pitch>1.05)return true;let ox=cam.position.x,oy=cam.position.y,oz=cam.position.z;if(!LIFT&&anyCut){ox=P.x;oy=P.y+1.5;oz=P.z;}
     const fx=CUT.uFwd.value.x,fz=CUT.uFwd.value.y;
     for(const c of camBlocks){if(!c.on)continue;const t=hitT(ox,oy,oz,x,y,z,c,0);if(t>1)continue;
-      if(LIFT){const hx=ox+(x-ox)*t,hz=oz+(z-oz)*t;if((hx-P.x)*fx+(hz-P.z)*fz<-.45&&hitT(ox,oy,oz,x,y,z,c,0,1.25)>1)continue;}
+      if(LIFT&&c.run&&c.run.a>.5&&hitT(ox,oy,oz,x,y,z,c,0,1.25)>1)continue;
       return false;}
     return true;};
   const addActive=(o)=>{o.sp=spriteOf(o.plain?chipTex(o.e):badgeTex(o.e),o.size||.82);o.sp.material.depthTest=false;o.vis=1;o.sp.position.set(o.x,o.y,o.z);
@@ -1798,9 +1799,9 @@ function buildWorld(T,wrap,opts){
     if(out.length&&!grid[gj(tz)*GN+gi(tx)])out[out.length-1]={x:tx,z:tz};return out.length?out:null;};
   const walkTo=(x,z,after)=>{const p=findPath(P.x,P.z,x,z);if(!p)return false;P.path=p;P.after=after||null;P.stuck=0;const e=p[p.length-1];goalRing.position.set(e.x,.035,e.z);goalRing.visible=true;return true;};
   const _iv=new T.Matrix4();
-  let liftA=0;
+  let liftA=0,cutT=0;const LSAMP=[[0,1.2,0],[1.5,.3,0],[-1.5,.3,0],[0,.3,1.5],[0,.3,-1.5],[1.1,.3,1.1],[-1.1,.3,1.1],[1.1,.3,-1.1],[-1.1,.3,-1.1]],tvRun=wallRuns.find(r=>r.z2<-4.3&&r.x2-r.x1>5)||null;
   const applyCam=(dt)=>{dt=dt||.016;const ty=P.y+1.45,cp=Math.cos(C.pitch),dx=Math.sin(C.yaw)*cp,dy=Math.sin(C.pitch),dz=Math.cos(C.yaw)*cp,rx=Math.cos(C.yaw),rz=-Math.sin(C.yaw);
-    let want=C.dist;if(!cine&&ty+dy*C.dist+.1<H-.1){let tm=1;const ex=P.x+dx*C.dist,ey=ty+dy*C.dist+.1,ez=P.z+dz*C.dist;for(const c of camBlocks){if(!c.on)continue;const q=hitT(P.x,ty,P.z,ex,ey,ez,c,.14,H);if(q<tm)tm=q;}if(tm<1)want=Math.max(.85,tm*C.dist-.32);}
+    let want=C.dist;if(!cine&&ty+dy*C.dist+.1<H-.1){let tm=1;const ex=P.x+dx*C.dist,ey=ty+dy*C.dist+.1,ez=P.z+dz*C.dist;for(const c of camBlocks){if(!c.on)continue;const q=hitT(P.x,ty,P.z,ex,ey,ez,c,.14,H);if(q<tm)tm=q;}if(tm<1)want=Math.max(.22,tm*C.dist-.32);}
     C.cur+=(want-C.cur)*Math.min(1,dt*(want<C.cur?22:5));C.tx+=(P.x-C.tx)*Math.min(1,dt*16);C.tz+=(P.z-C.tz)*Math.min(1,dt*16);
     const sh=.42*Math.max(0,1-C.pitch/.8)*Math.min(1,C.cur/2.6);
     let cx=C.tx+dx*C.cur+rx*sh,cz=C.tz+dz*C.cur+rz*sh;const cy=Math.max(.35,ty+dy*C.cur+.1);
@@ -1809,8 +1810,13 @@ function buildWorld(T,wrap,opts){
     cam.updateMatrixWorld();CUT.uCutP.value.set(P.x,P.y+1.05,P.z).applyMatrix4(_iv.copy(cam.matrixWorld).invert());
     const lift=inHouse(P.x,P.z)&&cam.position.y>H-.1;liftA+=((lift?1:0)-liftA)*Math.min(1,dt*7);if(Math.abs((lift?1:0)-liftA)<.012)liftA=lift?1:0;
     for(const m of roofMeshes)m.visible=liftA<.02;av.g.visible=C.cur>.7;
-    let hx=P.x-cam.position.x,hz=P.z-cam.position.z;const hl=Math.hypot(hx,hz)||1;hx/=hl;hz/=hl;LIFT=lift;CUT.uLift.value=liftA>.02?1:0;CUT.uLiftH.value=1.25+(H+.7-1.25)*Math.pow(1-liftA,2);CUT.uCutR.value=liftA>.5?0:1.2;CUT.uPl.value.set(P.x,P.y,P.z);CUT.uFwd.value.set(hx,hz);
-    tv.visible=!(liftA>.6&&((tv.position.x-P.x)*hx+(tv.position.z-P.z)*hz)<-.45);};
+    let hx=P.x-cam.position.x,hz=P.z-cam.position.z;const hl=Math.hypot(hx,hz)||1;hx/=hl;hz/=hl;LIFT=lift;{let n=0,any=0;const cx=cam.position.x,cy=cam.position.y,cz=cam.position.z;
+      // a wall comes down only if it really stands between the camera and where you are standing
+      for(const r of wallRuns){let oc=false;if(lift)for(const q of LSAMP){if(q[0]*hx+q[2]*hz>.3)continue;if(hitT(cx,cy,cz,P.x+q[0],P.y+q[1],P.z+q[2],r,.03,H)<=1){oc=true;break;}}
+        r.a+=((oc?1:0)-r.a)*Math.min(1,dt*(oc?8:3.5));if(r.a<.012)r.a=0;if(r.a>.988&&oc)r.a=1;
+        if(r.a>0&&n<8){CUT.uBox.value[n].set(r.x1-.3,r.z1-.3,r.x2+.3,r.z2+.3);CUT.uBoxH.value[n]=1.25+(H+.7-1.25)*Math.pow(1-r.a,2);n++;any=1;}}
+      for(let i=n;i<8;i++)CUT.uBoxH.value[i]=99;CUT.uLift.value=any;}{let bl=false;if(liftA<.5)for(const c of camBlocks){if(c.on&&hitT(cam.position.x,cam.position.y,cam.position.z,P.x,P.y+1.05,P.z,c,0,H)<=1){bl=true;break;}}anyCut=bl;cutT+=((bl?1.2:0)-cutT)*Math.min(1,dt*10);if(cutT<.03)cutT=0;CUT.uCutR.value=cutT;}CUT.uPl.value.set(P.x,P.y,P.z);CUT.uFwd.value.set(hx,hz);
+    tv.visible=!(tvRun&&tvRun.a>.6);};
   // ---------- depth and glow: a contact shadow in every corner, a soft bloom where the sun lands ----------
   let fx=null,fxOn=false;
   if(opts.FX&&(renderer.extensions.has('EXT_color_buffer_half_float')||renderer.extensions.has('EXT_color_buffer_float'))){try{const F=opts.FX,comp=new F.EffectComposer(renderer,new T.WebGLRenderTarget(4,4,{type:T.HalfFloatType,samples:4}));comp.addPass(new F.RenderPass(scene,cam));
@@ -1925,7 +1931,6 @@ function buildWorld(T,wrap,opts){
     if(seaM.normalMap){seaM.normalMap.offset.x=t*.000012;seaM.normalMap.offset.y=t*.000008;}foam.material.opacity=.4+Math.sin(t*.0012)*.15;
     if(goalRing.visible)goalRing.scale.setScalar(1+Math.sin(t*.008)*.15);
     WIND.value=t*.001;if(duck){duck.position.set(-9.25+Math.sin(t*.0003)*.5,.012+Math.sin(t*.002)*.012,-2.9+Math.cos(t*.00037)*.8);duck.rotation.y=t*.0002;}
-    anyCut=false;for(const c of camBlocks){if(c.on&&hitT(cam.position.x,cam.position.y,cam.position.z,P.x,P.y+1.05,P.z,c,0,H)<=1){anyCut=true;break;}}
     for(const o of actives){if(o.off)continue;const pulse=1+Math.sin(t*.004+o.ph)*.07,big=o.key===nearKey?1.3:1;o.sp.position.y=o.by+Math.sin(t*.0025+o.ph)*.06;o.sp.scale.setScalar((o.size||.82)*pulse*big);const cd=cam.position.distanceTo(o.sp.position);o.vis+=((seen(o.x,o.by,o.z)?1:0)-o.vis)*Math.min(1,dt*9);o.sp.material.opacity=cine?0:o.vis*(cd<2?Math.max(0,cd-1):1)*(Math.hypot(o.x-P.x,o.z-P.z)<1.25&&o.y<2.2?.4:1);}
     tag.material.opacity=partnerSpot.vis;
     for(const p of parts){if(p.life<=0)continue;p.life-=dt;p.s.position.x+=p.vx*dt;p.s.position.y+=p.vy*dt;p.s.position.z+=p.vz*dt;p.s.material.opacity=Math.max(0,Math.min(1,p.life*1.4));if(p.life<=0)p.s.visible=false;}
