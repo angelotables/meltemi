@@ -281,6 +281,14 @@
   .h3d{position:fixed;inset:0;z-index:150;background:#CDEBF6;overflow:hidden;touch-action:none;overscroll-behavior:none;
     user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-family:var(--sans)}
   .h3d.off{display:none}
+  .h3d .cbar{position:absolute;left:0;right:0;height:9vh;background:#000;z-index:7;pointer-events:none;transition:transform .7s ease}
+  .h3d .cbar.t{top:0;transform:translateY(-101%)}.h3d .cbar.b{bottom:0;transform:translateY(101%)}
+  .h3d.cine .cbar{transform:none}
+  .h3d.cine>*:not(.h3dcanvas):not(.h3dinput):not(.cbar):not(.ctitle):not(.hload):not(.h3dfade){opacity:0!important;pointer-events:none!important;transition:opacity .35s}
+  .ctitle{position:absolute;left:0;right:0;top:31%;text-align:center;z-index:7;opacity:0;transition:opacity 1.3s ease;pointer-events:none;text-shadow:0 2px 34px rgba(0,0,0,.5)}
+  .ctitle.on{opacity:1}
+  .ctitle .wm{font-family:var(--serif);font-size:60px;line-height:1;color:#fff}.ctitle .wm em{font-style:italic;color:#FFDCA6}
+  .ctitle .cs{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.92);margin-top:14px;font-weight:600}
   .h3dcanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
   .h3dinput{position:absolute;inset:0;touch-action:none}
   .h3dfade{position:absolute;inset:0;background:#FBF7EE;opacity:0;pointer-events:none;transition:opacity .16s}
@@ -1555,13 +1563,29 @@ function buildWorld(T,wrap,opts){
   const fit=()=>{const w=W(),h=HH();renderer.setPixelRatio(prEff());renderer.setSize(w,h,false);if(fx){fx.comp.setPixelRatio(prEff());fx.comp.setSize(w,h);}cam.aspect=w/h;cam.fov=w/h<.8?80:w/h<1.2?70:58;cam.updateProjectionMatrix();};
   fit();
 
+  // ---------- the arrival: three shots, cut on motion — a crane in over the water, an orbit, a dolly up the path ----------
+  let cine=null;const _cl=new T.Vector3(),_ce=new T.Vector3(),beamMesh=meshOf.get(M.beam);
+  const gameFov=()=>{const a=W()/HH();return a<.8?80:a<1.2?70:58;};
+  const endCine=()=>{if(!cine)return;cine=null;CUT.uCutR.value=1.2;cam.fov=gameFov();cam.updateProjectionMatrix();if(beamMesh)beamMesh.visible=true;tag.visible=true;C.manual=-1e9;applyCam(1);if(opts.onCine)opts.onCine(0);};
+  const startCine=()=>{if(cine)return;P.x=0;P.z=8.3;P.y=0;P.vx=P.vz=P.vy=0;P.path=null;P.after=null;goalRing.visible=false;P.face=Math.PI;C.yaw=0;C.pitch=.24;C.dist=C.cur=3.8;C.tx=P.x;C.tz=P.z;C.preset=0;joyReset();ptrs.clear();
+    cine={t:0,shot:-1};CUT.uCutR.value=0;if(opts.onCine)opts.onCine(1);};
+  const cineCam=(dt)=>{cine.t+=dt;const t=cine.t,fa=W()/HH()<.8?50:34;let px,py,pz,fov=fa,shot;
+    if(t<3.4){shot=0;const u=t/3.4;px=3-1.5*u;py=1.4+1.9*u;pz=52-21*u;_cl.set(0,2.2,2);}
+    else if(t<7){shot=1;const u=(t-3.4)/3.6,a=-1.9+1.15*u;px=-1.5+Math.sin(a)*19;py=5.6-.9*u;pz=-.5+Math.cos(a)*19;_cl.set(-2,1.4,0);}
+    else if(t<10.4){shot=2;let u=(t-7)/3.4;u=1-Math.pow(1-u,3);_ce.copy(cam.position);const sh=.42*Math.max(0,1-C.pitch/.8)*Math.min(1,C.cur/2.6);
+      px=1.2+(_ce.x-1.2)*u;py=1.25+(_ce.y-1.25)*u;pz=21+(_ce.z-21)*u;_cl.set(sh*u,1.8+(P.y+1.5-1.8)*u,4.5+(P.z-4.5)*u);fov=fa+(gameFov()-fa)*u*u;}
+    else{endCine();return;}
+    if(shot!==cine.shot){cine.shot=shot;if(opts.onCine)opts.onCine(shot+1);}
+    cam.position.set(px,py,pz);cam.lookAt(_cl);if(Math.abs(cam.fov-fov)>.01){cam.fov=fov;cam.updateProjectionMatrix();}cam.updateMatrixWorld();
+    for(const m of roofMeshes)m.visible=true;av.g.visible=true;if(beamMesh)beamMesh.visible=false;tag.visible=false;};
+
   // ---------- input: joystick, drag-look, pinch-zoom, tap ----------
   const joy={on:false,id:null,cx:0,cy:0,dx:0,dy:0,t0:0,mv:0},keys={},ptrs=new Map();let pinch=null,tapOK=false,t0=0,mvd=0;
   const ringEl=wrap.querySelector('.joyring'),nubEl=wrap.querySelector('.joynub');
   const inJoy=(e,r)=>{if(e.pointerType==='mouse'){if(!ringEl)return false;const b=ringEl.getBoundingClientRect();return Math.hypot(e.clientX-(b.left+b.width/2),e.clientY-(b.top+b.height/2))<b.width*.75;}
     return (e.clientX-r.left)<r.width*.46&&(e.clientY-r.top)>r.height*.42;};
   const joyReset=()=>{joy.on=false;joy.dx=joy.dy=0;[ringEl,nubEl].forEach(el=>{if(el){el.style.left='';el.style.top='';el.style.bottom='';}});};
-  const down=(e)=>{const r=wrap.getBoundingClientRect();
+  const down=(e)=>{if(cine){endCine();return;}const r=wrap.getBoundingClientRect();
     if(!joy.on&&ptrs.size===0&&inJoy(e,r)){joy.on=true;joy.id=e.pointerId;joy.cx=e.clientX-r.left;joy.cy=e.clientY-r.top;joy.dx=joy.dy=0;joy.t0=performance.now();joy.mv=0;
       if(ringEl){ringEl.style.left=(joy.cx-56)+'px';ringEl.style.top=(joy.cy-56)+'px';ringEl.style.bottom='auto';}
       if(nubEl){nubEl.style.left=(joy.cx-24)+'px';nubEl.style.top=(joy.cy-24)+'px';nubEl.style.bottom='auto';}}
@@ -1614,7 +1638,7 @@ function buildWorld(T,wrap,opts){
   function step(dt,t){
     let f=0,s=0;if(joy.on){f=-joy.dy;s=joy.dx;}
     if(keys.w||keys.arrowup)f+=1;if(keys.s||keys.arrowdown)f-=1;if(keys.a||keys.arrowleft)s-=1;if(keys.d||keys.arrowright)s+=1;
-    let len=Math.hypot(f,s);if(len>1){f/=len;s/=len;len=1;}
+    if(cine){f=0;s=0;}let len=Math.hypot(f,s);if(len>1){f/=len;s/=len;len=1;}
     const fx=-Math.sin(C.yaw),fz=-Math.cos(C.yaw),rx=Math.cos(C.yaw),rz=-Math.sin(C.yaw),SPEED=1.5+2.3*len*len;
     let tx=0,tz=0;
     if(len>.06){tx=(fx*f+rx*s)/len*SPEED;tz=(fz*f+rz*s)/len*SPEED;if(P.path){P.path=null;P.after=null;goalRing.visible=false;}}
@@ -1633,12 +1657,12 @@ function buildWorld(T,wrap,opts){
     const pool=inPool(P.x,P.z);if(pool&&!wasPool)burst('drop',P.x,.4,P.z,8);wasPool=pool;
     const a=animate(av,dt,sp,t);P.face+=a.spin;av.g.position.set(P.x,P.y+a.lift,P.z);av.g.rotation.y=P.face;av.blob.visible=P.y>-.2&&P.y<.05;
     const pa=animate(partner,dt,0,t);partner.g.position.y=pa.lift;partner.g.rotation.y=PP.face+Math.sin(t*.0006)*.12;
-    applyCam(dt);
+    applyCam(dt);if(cine)cineCam(dt);
     doorAmt+=(doorTarget-doorAmt)*Math.min(1,dt*3.2);doorG.rotation.y=-doorAmt*1.9;doorCol.on=doorAmt<.5;
     if(seaM.normalMap){seaM.normalMap.offset.x=t*.000012;seaM.normalMap.offset.y=t*.000008;}foam.material.opacity=.4+Math.sin(t*.0012)*.15;
     if(goalRing.visible)goalRing.scale.setScalar(1+Math.sin(t*.008)*.15);
     WIND.value=t*.001;if(duck){duck.position.set(-9.25+Math.sin(t*.0003)*.5,.012+Math.sin(t*.002)*.012,-2.9+Math.cos(t*.00037)*.8);duck.rotation.y=t*.0002;}
-    for(const o of actives){if(o.off)continue;const pulse=1+Math.sin(t*.004+o.ph)*.07,big=o.key===nearKey?1.3:1;o.sp.position.y=o.by+Math.sin(t*.0025+o.ph)*.06;o.sp.scale.setScalar((o.size||.82)*pulse*big);const cd=cam.position.distanceTo(o.sp.position);o.sp.material.opacity=cd<2?Math.max(0,cd-1):1;}
+    for(const o of actives){if(o.off)continue;const pulse=1+Math.sin(t*.004+o.ph)*.07,big=o.key===nearKey?1.3:1;o.sp.position.y=o.by+Math.sin(t*.0025+o.ph)*.06;o.sp.scale.setScalar((o.size||.82)*pulse*big);const cd=cam.position.distanceTo(o.sp.position);o.sp.material.opacity=cine?0:(cd<2?Math.max(0,cd-1):1);}
     for(const p of parts){if(p.life<=0)continue;p.life-=dt;p.s.position.x+=p.vx*dt;p.s.position.y+=p.vy*dt;p.s.position.z+=p.vz*dt;p.s.material.opacity=Math.max(0,Math.min(1,p.life*1.4));if(p.life<=0)p.s.visible=false;}
     if(++tick%4===0)drawMap();
     if(tick%5===0){let best=null,bd=1e9;for(const o of actives){if(o.off||o.passive||!o.label)continue;const d=Math.hypot(o.x-P.x,o.z-P.z);if(d<o.r&&d<bd){bd=d;best=o;}}
@@ -1648,11 +1672,12 @@ function buildWorld(T,wrap,opts){
       if(partner.bubble&&partnerSeen!==partner.bubble&&Math.hypot(PP.x-P.x,PP.z-P.z)<4.2){partnerSeen=partner.bubble;partner.emote={k:partner.lastK||'wave',t:0,dur:2};
         burst(partner.lastK==='kiss'||partner.lastK==='hug'?'heart':'spark',PP.x,1.8,PP.z,7);}}
   }
-  let last=performance.now(),raf=0,active=false,acc=0,accN=0,primed=false;
-  function frame(t){if(disposed||!active)return;raf=requestAnimationFrame(frame);const dt=Math.min(.05,(t-last)/1000);last=t;step(dt,t);
+  let last=performance.now(),raf=0,active=false,acc=0,accN=0,slow=0,primed=false;
+  function frame(t){if(disposed||!active)return;raf=requestAnimationFrame(frame);const raw=(t-last)/1000,dt=Math.min(.05,raw);last=t;step(dt,t);
     if(!primed){primed=true;renderer.shadowMap.needsUpdate=true;}
     draw();
-    acc+=dt;if(++accN>=90){const avg=acc/accN;acc=0;accN=0;if(avg>.026){if(fxOn){fxOn=false;fit();if(opts.onFxDrop)opts.onFxDrop();}else if(pr>1){pr=Math.max(1,pr-.25);fit();}}}}
+    // only real, consecutive frames count: a hidden or resuming tab must not look like a slow phone
+    if(raw<.1&&!document.hidden&&!cine){acc+=raw;if(++accN>=90){const avg=acc/accN;acc=0;accN=0;if(avg>.026){if(++slow>=2){slow=0;if(fxOn){fxOn=false;fit();if(opts.onFxDrop)opts.onFxDrop();}else if(pr>1){pr=Math.max(1,pr-.25);fit();}}}else slow=0;}}}
   const onRes=()=>{if(wrap.clientWidth&&wrap.clientHeight)fit();};
   window.addEventListener('resize',onRes);const ro=new ResizeObserver(onRes);ro.observe(wrap);
   applyCam(.016);loadModels();
@@ -1667,6 +1692,7 @@ function buildWorld(T,wrap,opts){
     setMovie(on){const o=tvM.map;tvM.map=tvTex(!!on);tvM.needsUpdate=true;if(o)o.dispose();},
     setSealed(n){mailDot.visible=n>0;},
     setFx(v){fxOn=!!v&&!!fx;fit();},
+    arrive(){startCine();},
     setGifts(list,who){giftActs.forEach(dropActive);giftActs=[];(list||[]).forEach(g=>{const mine=g.by===who;
       giftActs.push(addActive({key:'gift:'+g.id,e:mine?(HICONS[g.kind]?g.kind:'gift'):'gift',plain:mine,passive:mine,label:mine?null:'Pick up what '+g.by+' left for you',x:g.x,y:mine?.55:.85,z:g.z,r:1.9,size:mine?.36:.62}));});},
     setShell(s){if(shellAct){dropActive(shellAct);shellAct=null;}shellFound=!s||!!s.found;if(s&&!s.found){const p=HOUSE_SHELLS[s.i%HOUSE_SHELLS.length];shellAct=addActive({key:'shell',e:'shell',plain:true,passive:true,x:p[0],y:.32,z:p[1],r:0,size:.38});}},
@@ -1676,7 +1702,7 @@ function buildWorld(T,wrap,opts){
     emote(k){av.emote={k,t:0,dur:k==='dance'?2.6:1.8};const e=HOUSE_EMOTES.find(x=>x[0]===k);burst(e?e[2]:'spark',P.x,P.y+1.75,P.z,8);},
     sparkle(e){burst(e||'spark',P.x,P.y+1.6,P.z,8);},
     pos(){return {x:P.x,z:P.z,face:P.face,yaw:C.yaw,pitch:C.pitch,dist:C.dist};},
-    dbg(){return {x:+P.x.toFixed(2),y:+P.y.toFixed(2),z:+P.z.toFixed(2),face:+P.face.toFixed(2),yaw:+C.yaw.toFixed(2),pitch:+C.pitch.toFixed(2),dist:+C.cur.toFixed(2),door:+doorAmt.toFixed(2),room:zone(P.x,P.z),near:nearKey,path:P.path?P.path.length:0,mode:MODE,pr:prEff(),fx:fxOn,models:modelG.children.length,calls:renderer.info.render.calls,tris:renderer.info.render.triangles,sky:!!scene.background};},
+    dbg(){return {x:+P.x.toFixed(2),y:+P.y.toFixed(2),z:+P.z.toFixed(2),face:+P.face.toFixed(2),yaw:+C.yaw.toFixed(2),pitch:+C.pitch.toFixed(2),dist:+C.cur.toFixed(2),door:+doorAmt.toFixed(2),room:zone(P.x,P.z),near:nearKey,path:P.path?P.path.length:0,mode:MODE,pr:prEff(),fx:fxOn,cine:cine?+cine.t.toFixed(1):0,models:modelG.children.length,calls:renderer.info.render.calls,tris:renderer.info.render.triangles,sky:!!scene.background};},
     teleport(x,z,yaw,pitch,dist){P.x=x;P.z=z;P.vx=P.vz=0;P.path=null;if(yaw!==undefined)C.yaw=yaw;if(pitch!==undefined)C.pitch=pitch;if(dist)C.dist=dist;P.y=groundY(x,z);C.cur=C.dist;C.tx=x;C.tz=z;C.manual=performance.now()+1e7;applyCam(1);av.g.position.set(P.x,P.y,P.z);},
     free(){C.manual=-1e9;},
     walk(x,z){return walkTo(x,z);},
@@ -1696,6 +1722,7 @@ function House3D(props){
   const [fade,setFade]=useState(false);const [fan,setFan]=useState(null);const [coach,setCoach]=useState(true);
   const [mode,setMode]=useState(()=>{try{return localStorage.getItem('mel-sky')||'auto';}catch(e){return 'auto';}});
   const [fxPref,setFxPref]=useState(()=>{try{return localStorage.getItem('mel-fx')||'on';}catch(e){return 'on';}});
+  const [cineN,setCineN]=useState(0);
   const say=(m,ms)=>{setHint(m);clearTimeout(hintT.current);if(m)hintT.current=setTimeout(()=>setHint(''),ms||2800);};
   const sync=(w)=>{const p=cb.current;w.setWho(p.me||'Angelos');w.setDoorDone(!!p.doorDone);w.setMovie(!!p.movieNight);w.setSealed(p.sealedN||0);w.setGifts(p.gifts||[],p.me);w.setShell(p.shell);w.setPartner(p.other,p.partnerBubble,p.partnerK);};
   useEffect(()=>{
@@ -1710,7 +1737,9 @@ function House3D(props){
         if(window.__FX===undefined){try{const ms=await Promise.all(['EffectComposer','RenderPass','GTAOPass','UnrealBloomPass','OutputPass'].map(n=>import('https://esm.sh/three@0.160.0/examples/jsm/postprocessing/'+n+'.js')));
           window.__FX={EffectComposer:ms[0].EffectComposer,RenderPass:ms[1].RenderPass,GTAOPass:ms[2].GTAOPass,UnrealBloomPass:ms[3].UnrealBloomPass,OutputPass:ms[4].OutputPass};}catch(e){window.__FX=null;}}
         if(!alive||!wrapRef.current)return;
-        const w=buildWorld(T,wrapRef.current,{RB:window.__RB,GLTF:window.__GL,FX:window.__FX,fx:(()=>{try{return localStorage.getItem('mel-fx')!=='off';}catch(e){return true;}})(),onReady:()=>{if(alive)setLoading(false);},onFxDrop:()=>{try{localStorage.setItem('mel-fx','off');}catch(e){}setFxPref('off');},mode,start,me:cb.current.me||'Angelos',doorDone:cb.current.doorDone,setRoom,setNear,setFade,
+        const w=buildWorld(T,wrapRef.current,{RB:window.__RB,GLTF:window.__GL,FX:window.__FX,fx:(()=>{try{return localStorage.getItem('mel-fx')!=='off';}catch(e){return true;}})(),onCine:(n)=>{if(alive)setCineN(n);},onReady:()=>{if(!alive)return;
+            try{if(!start&&cb.current.active&&!sessionStorage.getItem('mel-arrived')){sessionStorage.setItem('mel-arrived','1');setCoach(false);const go=()=>{if(alive&&worldRef.current)worldRef.current.arrive();};if(worldRef.current)go();else setTimeout(go,60);}}catch(e){}
+            setLoading(false);},onFxDrop:()=>{try{localStorage.setItem('mel-fx','off');}catch(e){}setFxPref('off');},mode,start,me:cb.current.me||'Angelos',doorDone:cb.current.doorDone,setRoom,setNear,setFade,
           onFeature:(id)=>cb.current.onFeature(id),onDoor:()=>cb.current.onDoor(),onGiftFound:(id)=>{w.sparkle('heart');cb.current.onGiftFound(id);},
           onShell:()=>cb.current.onShell(),onPartner:()=>setFan('emo')});
         worldRef.current=w;window.__house=w;sync(w);w.setActive(!!cb.current.active);
@@ -1730,11 +1759,13 @@ function House3D(props){
   const doEmote=(k)=>{setFan(null);const w=W();if(w)w.emote(k);cb.current.onEmote(k);};
   const doGift=(g)=>{setFan(null);const w=W();if(!w)return;const p=w.pos();w.sparkle('spark');cb.current.onGift(g,p.x+Math.sin(p.face)*.7,p.z+Math.cos(p.face)*.7);};
   return html`
-    <div class=${'h3d'+(active?'':' off')} ref=${wrapRef}>
+    <div class=${'h3d'+(active?'':' off')+(cineN?' cine':'')} ref=${wrapRef}>
       <div class="h3dinput" onPointerDown=${e=>{setCoach(false);W()&&W().pDown(e);}} onPointerMove=${e=>W()&&W().pMove(e)}
         onPointerUp=${e=>W()&&W().pUp(e)} onPointerCancel=${e=>W()&&W().pUp(e)} onWheel=${e=>W()&&W().zoom(e.deltaY)}></div>
       <div class="joyring"></div><div class="joynub"></div>
       <div class=${'h3dfade'+(fade?' on':'')}></div>
+      <div class="cbar t"></div><div class="cbar b"></div>
+      <div class=${'ctitle'+(cineN===1||cineN===2?' on':'')}><div class="wm">Mel<em>temi</em></div><div class="cs">welcome home${props.me?', '+props.me:''}</div></div>
       <button class="hbtn hmenu" aria-label="Menu" onClick=${()=>{setOpen(true);setFan(null);}}><${HIco} n="menu" s=${22}/></button>
       ${room&&html`<div class="hroom">${room}</div>`}
       <div class="hmap"><canvas class="hmapc" width="264" height="264"></canvas></div>
@@ -1770,6 +1801,7 @@ function House3D(props){
         <div class="hdf">
           <div class="hseg">${[['auto','Auto'],['day','Day'],['dusk','Golden'],['night','Night']].map(m=>html`<button key=${m[0]} class=${mode===m[0]?'on':''} onClick=${()=>pickMode(m[0])}>${m[1]}</button>`)}</div>
           <div class="hseg">${[['on','Rich detail'],['off','Lighter, faster']].map(m=>html`<button key=${m[0]} class=${fxPref===m[0]?'on':''} onClick=${()=>pickFx(m[0])}>${m[1]}</button>`)}</div>
+          <button class="hdbtn" onClick=${()=>{setOpen(false);if(worldRef.current)worldRef.current.arrive();}}><${HIco} n="film" s=${15}/> Play the arrival</button>
           <button class="hdbtn" onClick=${()=>{setOpen(false);cb.current.onMoment();}}><${HIco} n="back" s=${15}/> Take me back to a moment</button>
         </div>
       </div>
