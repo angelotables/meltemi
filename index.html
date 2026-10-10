@@ -1276,7 +1276,7 @@ function buildWorld(T,wrap,opts){
     const seg=(s,e,y0,y1,c)=>{if(e-s<.02||y1-y0<.02)return;const len=e-s,mid=(s+e)/2;
       if(ax==='x')B(len,y1-y0,TH,M.plaster,mid,(y0+y1)/2,f);else B(TH,y1-y0,len,M.plaster,f,(y0+y1)/2,mid);
       if(c&&y0===0){if(ax==='x')B(len+.03,.09,TH+.03,M.white,mid,.045,f);else B(TH+.03,.09,len+.03,M.white,f,.045,mid);}
-      if(c){if(ax==='x')block(s,f-TH/2,e,f+TH/2,1);else block(f-TH/2,s,f+TH/2,e,1);}};
+      if(c){const bl=ax==='x'?block(s,f-TH/2,e,f+TH/2,1):block(f-TH/2,s,f+TH/2,e,1);if(y1<H)bl.top=y1;}};
     let cur=a;ops=(ops||[]).slice().sort((p,q)=>p.s-q.s);
     for(const o of ops){seg(cur,o.s,0,H,1);if(o.sill>0)seg(o.s,o.e,0,o.sill,1);seg(o.s,o.e,o.head,H,0);if(o.win)windowAt(ax,f,o,out||0);
       else if(!out){const fw=.07,fd=TH+.06;if(ax==='x'){B(fw,o.head,fd,M.white,o.s+fw/2,o.head/2,f);B(fw,o.head,fd,M.white,o.e-fw/2,o.head/2,f);B(o.e-o.s,fw,fd,M.white,(o.s+o.e)/2,o.head-fw/2,f);}
@@ -1562,13 +1562,21 @@ function buildWorld(T,wrap,opts){
   const hitGeo=new T.SphereGeometry(.55,8,6),hitMat=new T.MeshBasicMaterial();
   const actives=[];
   // where along a→b the segment first enters a wall (2 = never); g widens the wall a little
-  const hitT=(ax,ay,az,bx,by,bz,c,g)=>{let t0=0,t1=1,d,u,v,q;g=g||0;
+  const hitT=(ax,ay,az,bx,by,bz,c,g,h)=>{let t0=0,t1=1,d,u,v,q;g=g||0;h=h||c.top||3;
     d=bx-ax;if(Math.abs(d)<1e-9){if(ax<c.x1-g||ax>c.x2+g)return 2;}else{u=(c.x1-g-ax)/d;v=(c.x2+g-ax)/d;if(u>v){q=u;u=v;v=q;}if(u>t0)t0=u;if(v<t1)t1=v;if(t0>t1)return 2;}
     d=bz-az;if(Math.abs(d)<1e-9){if(az<c.z1-g||az>c.z2+g)return 2;}else{u=(c.z1-g-az)/d;v=(c.z2+g-az)/d;if(u>v){q=u;u=v;v=q;}if(u>t0)t0=u;if(v<t1)t1=v;if(t0>t1)return 2;}
-    d=by-ay;if(Math.abs(d)<1e-9){if(ay<0||ay>3)return 2;}else{u=(0-ay)/d;v=(3-ay)/d;if(u>v){q=u;u=v;v=q;}if(u>t0)t0=u;if(v<t1)t1=v;if(t0>t1)return 2;}
+    d=by-ay;if(Math.abs(d)<1e-9){if(ay<0||ay>h)return 2;}else{u=(0-ay)/d;v=(h-ay)/d;if(u>v){q=u;u=v;v=q;}if(u>t0)t0=u;if(v<t1)t1=v;if(t0>t1)return 2;}
     return t0;};
   const segBox=(ax,ay,az,bx,by,bz,c)=>hitT(ax,ay,az,bx,by,bz,c,0)<=1;
-  const seen=(x,y,z)=>{if(LIFT)return true;const cx=cam.position.x,cy=cam.position.y,cz=cam.position.z;for(const c of camBlocks){if(!c.on||c.cutNow)continue;if(segBox(cx,cy,cz,x,y,z,c))return false;}return true;};
+  // a marker shows only if your eye could really reach it: through a doorway or a window yes, through a wall no.
+  // From directly overhead everything shows. With the roof off, the near walls are only waist-high, so you see over them.
+  let anyCut=false;
+  const seen=(x,y,z)=>{if(LIFT&&C.pitch>1.05)return true;let ox=cam.position.x,oy=cam.position.y,oz=cam.position.z;if(!LIFT&&anyCut){ox=P.x;oy=P.y+1.5;oz=P.z;}
+    const fx=CUT.uFwd.value.x,fz=CUT.uFwd.value.y;
+    for(const c of camBlocks){if(!c.on)continue;const t=hitT(ox,oy,oz,x,y,z,c,0);if(t>1)continue;
+      if(LIFT){const hx=ox+(x-ox)*t,hz=oz+(z-oz)*t;if((hx-P.x)*fx+(hz-P.z)*fz<-.45&&hitT(ox,oy,oz,x,y,z,c,0,1.25)>1)continue;}
+      return false;}
+    return true;};
   const addActive=(o)=>{o.sp=spriteOf(o.plain?chipTex(o.e):badgeTex(o.e),o.size||.82);o.sp.material.depthTest=false;o.vis=1;o.sp.position.set(o.x,o.y,o.z);
     o.h=new T.Mesh(hitGeo,hitMat);o.h.visible=false;o.h.position.set(o.x,o.y,o.z);scene.add(o.h);o.by=o.y;o.ph=actives.length*1.3;actives.push(o);return o;};
   const dropActive=(o)=>{scene.remove(o.sp);scene.remove(o.h);o.sp.material.dispose();const i=actives.indexOf(o);if(i>=0)actives.splice(i,1);};
@@ -1615,7 +1623,7 @@ function buildWorld(T,wrap,opts){
   const walkTo=(x,z,after)=>{const p=findPath(P.x,P.z,x,z);if(!p)return false;P.path=p;P.after=after||null;P.stuck=0;const e=p[p.length-1];goalRing.position.set(e.x,.035,e.z);goalRing.visible=true;return true;};
   const _iv=new T.Matrix4();
   const applyCam=(dt)=>{dt=dt||.016;const ty=P.y+1.45,cp=Math.cos(C.pitch),dx=Math.sin(C.yaw)*cp,dy=Math.sin(C.pitch),dz=Math.cos(C.yaw)*cp,rx=Math.cos(C.yaw),rz=-Math.sin(C.yaw);
-    let want=C.dist;if(!cine&&ty+dy*C.dist+.1<H-.1){let tm=1;const ex=P.x+dx*C.dist,ey=ty+dy*C.dist+.1,ez=P.z+dz*C.dist;for(const c of camBlocks){if(!c.on)continue;const q=hitT(P.x,ty,P.z,ex,ey,ez,c,.14);if(q<tm)tm=q;}if(tm<1)want=Math.max(.85,tm*C.dist-.32);}
+    let want=C.dist;if(!cine&&ty+dy*C.dist+.1<H-.1){let tm=1;const ex=P.x+dx*C.dist,ey=ty+dy*C.dist+.1,ez=P.z+dz*C.dist;for(const c of camBlocks){if(!c.on)continue;const q=hitT(P.x,ty,P.z,ex,ey,ez,c,.14,3);if(q<tm)tm=q;}if(tm<1)want=Math.max(.85,tm*C.dist-.32);}
     C.cur+=(want-C.cur)*Math.min(1,dt*(want<C.cur?22:5));C.tx+=(P.x-C.tx)*Math.min(1,dt*16);C.tz+=(P.z-C.tz)*Math.min(1,dt*16);
     const sh=.42*Math.max(0,1-C.pitch/.8)*Math.min(1,C.cur/2.6);
     cam.position.set(C.tx+dx*C.cur+rx*sh,Math.max(.35,ty+dy*C.cur+.1),C.tz+dz*C.cur+rz*sh);cam.lookAt(C.tx+rx*sh,ty+.05,C.tz+rz*sh);
@@ -1734,7 +1742,7 @@ function buildWorld(T,wrap,opts){
     if(seaM.normalMap){seaM.normalMap.offset.x=t*.000012;seaM.normalMap.offset.y=t*.000008;}foam.material.opacity=.4+Math.sin(t*.0012)*.15;
     if(goalRing.visible)goalRing.scale.setScalar(1+Math.sin(t*.008)*.15);
     WIND.value=t*.001;if(duck){duck.position.set(-9.25+Math.sin(t*.0003)*.5,.012+Math.sin(t*.002)*.012,-2.9+Math.cos(t*.00037)*.8);duck.rotation.y=t*.0002;}
-    for(const c of camBlocks)c.cutNow=c.on&&segBox(cam.position.x,cam.position.y,cam.position.z,P.x,P.y+1.05,P.z,c);
+    anyCut=false;for(const c of camBlocks){if(c.on&&hitT(cam.position.x,cam.position.y,cam.position.z,P.x,P.y+1.05,P.z,c,0,3)<=1){anyCut=true;break;}}
     for(const o of actives){if(o.off)continue;const pulse=1+Math.sin(t*.004+o.ph)*.07,big=o.key===nearKey?1.3:1;o.sp.position.y=o.by+Math.sin(t*.0025+o.ph)*.06;o.sp.scale.setScalar((o.size||.82)*pulse*big);const cd=cam.position.distanceTo(o.sp.position);o.vis+=((seen(o.x,o.by,o.z)?1:0)-o.vis)*Math.min(1,dt*9);o.sp.material.opacity=cine?0:o.vis*(cd<2?Math.max(0,cd-1):1);}
     tag.material.opacity=partnerSpot.vis;
     for(const p of parts){if(p.life<=0)continue;p.life-=dt;p.s.position.x+=p.vx*dt;p.s.position.y+=p.vy*dt;p.s.position.z+=p.vz*dt;p.s.material.opacity=Math.max(0,Math.min(1,p.life*1.4));if(p.life<=0)p.s.visible=false;}
@@ -1777,7 +1785,7 @@ function buildWorld(T,wrap,opts){
     emote(k){av.emote={k,t:0,dur:k==='dance'?2.6:1.8};const e=HOUSE_EMOTES.find(x=>x[0]===k);burst(e?e[2]:'spark',P.x,P.y+1.75,P.z,8);},
     sparkle(e){burst(e||'spark',P.x,P.y+1.6,P.z,8);},
     pos(){return {x:P.x,z:P.z,face:P.face,yaw:C.yaw,pitch:C.pitch,dist:C.dist};},
-    dbg(){return {x:+P.x.toFixed(2),y:+P.y.toFixed(2),z:+P.z.toFixed(2),face:+P.face.toFixed(2),yaw:+C.yaw.toFixed(2),pitch:+C.pitch.toFixed(2),dist:+C.cur.toFixed(2),door:+doorAmt.toFixed(2),room:zone(P.x,P.z),near:nearKey,path:P.path?P.path.length:0,mode:MODE,pr:prEff(),fx:fxOn,cine:cine?+cine.t.toFixed(1):0,models:modelG.children.length,calls:renderer.info.render.calls,tris:renderer.info.render.triangles,sky:!!scene.background};},
+    dbg(){return {x:+P.x.toFixed(2),y:+P.y.toFixed(2),z:+P.z.toFixed(2),face:+P.face.toFixed(2),yaw:+C.yaw.toFixed(2),pitch:+C.pitch.toFixed(2),dist:+C.cur.toFixed(2),door:+doorAmt.toFixed(2),room:zone(P.x,P.z),near:nearKey,path:P.path?P.path.length:0,mode:MODE,pr:prEff(),fx:fxOn,vis:actives.filter(o=>!o.off&&o.vis>.5).map(o=>o.key).join(' '),cine:cine?+cine.t.toFixed(1):0,models:modelG.children.length,calls:renderer.info.render.calls,tris:renderer.info.render.triangles,sky:!!scene.background};},
     teleport(x,z,yaw,pitch,dist){P.x=x;P.z=z;P.vx=P.vz=0;P.path=null;if(yaw!==undefined)C.yaw=yaw;if(pitch!==undefined)C.pitch=pitch;if(dist)C.dist=dist;P.y=groundY(x,z);C.cur=C.dist;C.tx=x;C.tz=z;C.manual=performance.now()+1e7;applyCam(1);av.g.position.set(P.x,P.y,P.z);},
     free(){C.manual=-1e9;},
     walk(x,z){return walkTo(x,z);},
