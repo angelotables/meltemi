@@ -287,7 +287,7 @@
   .h3dfade.on{opacity:1}
   .hbtn{position:absolute;width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.74);
     backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);box-shadow:0 6px 22px rgba(20,40,60,.2);
-    font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#1E2A33;padding:0;font-family:inherit;transition:transform .12s}
+    font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--aegean);padding:0;font-family:inherit;transition:transform .12s}
   .hbtn:active{transform:scale(.9)}
   .hmenu{top:calc(12px + env(safe-area-inset-top));left:14px;font-size:22px}
   .hwho{top:calc(12px + env(safe-area-inset-top));right:14px}
@@ -442,9 +442,9 @@
     border:3px solid rgba(255,255,255,.92);box-shadow:0 8px 24px rgba(20,40,60,.32);pointer-events:none;background:#2FA9C2}
   .hmapc{width:100%;height:100%;display:block}
   .hroom{max-width:calc(100vw - 190px);overflow:hidden;text-overflow:ellipsis;font-size:15px;padding:9px 15px}
-  .hfan button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#1E2A33;width:50px;height:50px}
-  .hfan button span{font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#6B6257}
-  .hact .e{color:#3A2408}
+  .hfan button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--aegean);width:50px;height:50px}
+  .hfan button span{font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--aegean2)}
+  .hact .e{color:var(--aegean)}
   .hsech .ic,.hrow .main .ic{display:flex;align-items:center;justify-content:center;color:var(--aegean)}
   .hsech .ch{display:flex}
   .hdbtn{display:flex;align-items:center;justify-content:center;gap:8px}
@@ -1372,8 +1372,8 @@ function buildWorld(T,wrap,opts){
   const icon=(g,name,cx,cy,size,color,lw,fill)=>{g.save();g.translate(cx-size/2,cy-size/2);g.scale(size/24,size/24);g.strokeStyle=color;g.fillStyle=color;g.lineWidth=lw||1.8;g.lineCap='round';g.lineJoin='round';
     (HICONS[name]||HICONS.dot).forEach(d=>{const p=new Path2D(d);if(fill)g.fill(p);g.stroke(p);});g.restore();};
   const badgeTex=(e)=>texCache['b'+e]||(texCache['b'+e]=ctex(192,192,(g)=>{const gr=g.createRadialGradient(96,96,40,96,96,96);gr.addColorStop(0,'rgba(255,208,96,.95)');gr.addColorStop(1,'rgba(255,208,96,0)');g.fillStyle=gr;g.fillRect(0,0,192,192);
-    g.beginPath();g.arc(96,96,60,0,7);g.fillStyle='#FFFFFF';g.fill();g.lineWidth=9;g.strokeStyle='#F0A93A';g.stroke();icon(g,e,96,96,66,'#1E2A33',2);}));
-  const chipTex=(e)=>texCache['c'+e]||(texCache['c'+e]=ctex(128,128,(g)=>{g.beginPath();g.arc(64,64,50,0,7);g.fillStyle='rgba(255,255,255,.96)';g.fill();g.lineWidth=4;g.strokeStyle='rgba(30,42,51,.18)';g.stroke();icon(g,e,64,64,56,'#B4854F',2);}));
+    g.beginPath();g.arc(96,96,60,0,7);g.fillStyle='#FFFFFF';g.fill();g.lineWidth=9;g.strokeStyle='#F0A93A';g.stroke();icon(g,e,96,96,66,'#155E73',2.1);}));
+  const chipTex=(e)=>texCache['c'+e]||(texCache['c'+e]=ctex(128,128,(g)=>{g.beginPath();g.arc(64,64,50,0,7);g.fillStyle='rgba(255,255,255,.96)';g.fill();g.lineWidth=4;g.strokeStyle='rgba(30,42,51,.18)';g.stroke();icon(g,e,64,64,56,'#155E73',2);}));
   const shapeTex=(e)=>texCache['s'+e]||(texCache['s'+e]=ctex(96,96,(g)=>{icon(g,e,48,48,72,e==='heart'?'#F0506E':e==='drop'?'#5FC7E8':e==='music'?'#1F6FD0':'#F5B93A',2,e!=='music');}));
   const textTex=(s)=>ctex(512,112,(g)=>{g.font='600 44px -apple-system,"Segoe UI",sans-serif';const w=Math.min(492,g.measureText(s).width+60),x=(512-w)/2;
     g.fillStyle='rgba(255,255,255,.95)';g.beginPath();g.moveTo(x+50,8);g.arcTo(x+w,8,x+w,104,48);g.arcTo(x+w,104,x,104,48);g.arcTo(x,104,x,8,48);g.arcTo(x,8,x+w,8,48);g.fill();
