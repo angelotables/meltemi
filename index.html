@@ -284,7 +284,7 @@
   .h3d .cbar{position:absolute;left:0;right:0;height:9vh;background:#000;z-index:7;pointer-events:none;transition:transform .7s ease}
   .h3d .cbar.t{top:0;transform:translateY(-101%)}.h3d .cbar.b{bottom:0;transform:translateY(101%)}
   .h3d.cine .cbar{transform:none}
-  .h3d.cine>*:not(.h3dcanvas):not(.h3dinput):not(.cbar):not(.ctitle):not(.hload):not(.h3dfade){opacity:0!important;pointer-events:none!important;transition:opacity .35s}
+  .h3d.cine>*:not(.h3dcanvas):not(.h3dinput):not(.cbar):not(.ctitle):not(.hload):not(.h3dfade):not(.hvig){opacity:0!important;pointer-events:none!important;transition:opacity .35s}
   .ctitle{position:absolute;left:0;right:0;top:31%;text-align:center;z-index:7;opacity:0;transition:opacity 1.3s ease;pointer-events:none;text-shadow:0 2px 34px rgba(0,0,0,.5)}
   .ctitle.on{opacity:1}
   .ctitle .wm{font-family:var(--serif);font-size:60px;line-height:1;color:#fff}.ctitle .wm em{font-style:italic;color:#FFDCA6}
@@ -511,6 +511,7 @@
   .lovebtn{border:none;background:none;padding:2px;color:#D9D2C4;cursor:pointer;flex:0 0 auto;display:flex}
   .lovebtn.on{color:#E0607E}
   .h3dover{position:fixed;inset:0;z-index:151}
+  .hvig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 120% 100% at 50% 46%,rgba(0,0,0,0) 58%,rgba(14,24,40,.2) 100%)}
   .jwho{display:inline-flex;margin-right:6px;color:var(--aegean);vertical-align:-2px}
   .lwhen{font-size:11px;color:var(--soft);margin-top:3px;letter-spacing:.04em}
   .seal{display:flex;justify-content:center;color:#B4854F}
@@ -1205,10 +1206,10 @@ function buildWorld(T,wrap,opts){
   sunDisc.position.copy(sunDir).multiplyScalar(300);if(NIGHT)sunDisc.position.set(120,150,-220);scene.add(sunDisc);
 
   // ---------- materials (each can be cut away between the camera and the player) ----------
-  const CUT={uCutP:{value:new T.Vector3(0,0,-5)},uCutR:{value:1.2},uCamW:{value:cam.matrixWorld},uLift:{value:0},uPl:{value:new T.Vector3()},uFwd:{value:new T.Vector2(0,-1)}};let LIFT=false;
-  const cutShader=(sh)=>{sh.uniforms.uCutP=CUT.uCutP;sh.uniforms.uCutR=CUT.uCutR;sh.uniforms.uCamW=CUT.uCamW;sh.uniforms.uLift=CUT.uLift;sh.uniforms.uPl=CUT.uPl;sh.uniforms.uFwd=CUT.uFwd;
-    sh.fragmentShader='uniform vec3 uCutP;uniform float uCutR;uniform mat4 uCamW;uniform float uLift;uniform vec3 uPl;uniform vec2 uFwd;\n'+sh.fragmentShader.replace('#include <clipping_planes_fragment>',
-      '#include <clipping_planes_fragment>\n{vec3 cf=-vViewPosition;float cpp=dot(uCutP,uCutP);if(uCutR>0.0&&cpp>1.4){float ct=dot(cf,uCutP)/cpp;if(ct>0.02&&ct<0.95){float cd=length(cf-uCutP*ct);float cn=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453);float cr=uCutR*clamp((0.97-ct)*2.6,0.28,1.0);if(cd<cr*(0.96+0.04*cn))discard;}}\nif(uLift>0.5){vec3 wp=(uCamW*vec4(cf,1.0)).xyz;if(wp.y>1.25&&abs(wp.x)<6.8&&abs(wp.z)<4.8&&dot(wp.xz-uPl.xz,uFwd)<-0.45)discard;}}');};
+  const CUT={uCutP:{value:new T.Vector3(0,0,-5)},uCutR:{value:1.2},uCamW:{value:cam.matrixWorld},uLift:{value:0},uLiftH:{value:1.25},uPl:{value:new T.Vector3()},uFwd:{value:new T.Vector2(0,-1)}};let LIFT=false;
+  const cutShader=(sh)=>{sh.uniforms.uCutP=CUT.uCutP;sh.uniforms.uCutR=CUT.uCutR;sh.uniforms.uCamW=CUT.uCamW;sh.uniforms.uLift=CUT.uLift;sh.uniforms.uLiftH=CUT.uLiftH;sh.uniforms.uPl=CUT.uPl;sh.uniforms.uFwd=CUT.uFwd;
+    sh.fragmentShader='uniform vec3 uCutP;uniform float uCutR;uniform mat4 uCamW;uniform float uLift;uniform float uLiftH;uniform vec3 uPl;uniform vec2 uFwd;\n'+sh.fragmentShader.replace('#include <clipping_planes_fragment>',
+      '#include <clipping_planes_fragment>\n{vec3 cf=-vViewPosition;float cpp=dot(uCutP,uCutP);if(uCutR>0.0&&cpp>1.4){float ct=dot(cf,uCutP)/cpp;if(ct>0.02&&ct<0.95){float cd=length(cf-uCutP*ct);float cn=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453);float cr=uCutR*clamp((0.97-ct)*2.6,0.28,1.0);if(cd<cr*(0.96+0.04*cn))discard;}}\nif(uLift>0.5){vec3 wp=(uCamW*vec4(cf,1.0)).xyz;if(wp.y>uLiftH&&abs(wp.x)<6.8&&abs(wp.z)<4.8&&dot(wp.xz-uPl.xz,uFwd)<-0.45)discard;}}');};
   const mk=(o,ws,ud)=>{const m=new T.MeshStandardMaterial(Object.assign({roughness:.85,metalness:0,envMapIntensity:1.25},o));if(ws)m.userData.ws=ws;if(ud)Object.assign(m.userData,ud);m.onBeforeCompile=cutShader;return m;};
   const col=(c,r,ex,ud)=>mk(Object.assign({color:c,roughness:r===undefined?.85:r},ex||{}),0,ud);
   const fab=(c)=>mk({color:c,roughness:.95},1/.6,{soft:1});
@@ -1698,20 +1699,26 @@ function buildWorld(T,wrap,opts){
     const blob=new T.Mesh(new T.CircleGeometry(.38,20),new T.MeshBasicMaterial({map:blobTex,transparent:true,depthWrite:false,opacity:.6}));blob.rotation.x=-Math.PI/2;blob.position.y=.025;g.add(blob);
     scene.add(g);return {g,legL:L1.root,legR:L2.root,kneeL:L1.joint,kneeR:L2.joint,armL:A1.root,armR:A2.root,elbL:A1.joint,elbR:A2.joint,body,head,blob,emote:null,phase:0,who};};
   const killAvatar=(a)=>{if(!a)return;scene.remove(a.g);a.g.traverse(o=>{if(o.isMesh){o.geometry.dispose();if(o.material.dispose)o.material.dispose();}});};
-  const animate=(a,dt,sp,t)=>{
-    a.phase+=sp*dt*2.9;const k=Math.min(1,sp/2.6),amp=(a.who==='Antigoni'?.5:.72)*k,s=Math.sin(a.phase),c=Math.cos(a.phase);
-    a.legL.rotation.x=s*amp;a.legR.rotation.x=-s*amp;a.kneeL.rotation.x=Math.max(0,-c)*amp*1.2+.03;a.kneeR.rotation.x=Math.max(0,c)*amp*1.2+.03;
-    a.armL.rotation.x=-s*amp*.7;a.armR.rotation.x=s*amp*.7;a.armL.rotation.z=.09;a.armR.rotation.z=-.09;
-    a.elbL.rotation.x=-(.16+Math.max(0,s)*amp*.7);a.elbR.rotation.x=-(.16+Math.max(0,-s)*amp*.7);
-    a.body.scale.y=1+Math.sin(t*.002+(a.who==='Antigoni'?1:0))*.012;a.g.rotation.x=k*.07;
-    let lift=Math.abs(s)*.035*k,spin=0;const e=a.emote;
+  const animate=(a,dt,sp,t,turn)=>{
+    const A=a.who==='Antigoni',k=Math.min(1,sp/2.6),amp=(A?.5:.66)*(.4+.6*k)*Math.min(1,sp*2.5),stride=Math.max(.3,1.62*Math.sin(Math.max(.14,amp)));
+    a.phase+=dt*sp*Math.PI/stride;a.gait=(a.gait||0)+((sp>.15?1:0)-(a.gait||0))*Math.min(1,dt*9);a.lean=(a.lean||0)+((turn||0)-(a.lean||0))*Math.min(1,dt*6);
+    const w=a.gait,s=Math.sin(a.phase),c=Math.cos(a.phase),br=Math.sin(t*.0021+(A?1:0));
+    a.legL.rotation.x=s*amp*w;a.legR.rotation.x=-s*amp*w;a.kneeL.rotation.x=(Math.max(0,-c)*amp*1.25)*w+.04;a.kneeR.rotation.x=(Math.max(0,c)*amp*1.25)*w+.04;
+    a.armL.rotation.x=-s*amp*.75*w+br*.025;a.armR.rotation.x=s*amp*.75*w-br*.025;a.armL.rotation.z=.09+br*.01;a.armR.rotation.z=-.09-br*.01;
+    a.elbL.rotation.x=-(.14+(Math.max(0,s)*amp*.7+.28*k)*w);a.elbR.rotation.x=-(.14+(Math.max(0,-s)*amp*.7+.28*k)*w);
+    a.body.scale.y=1+br*.012;a.g.rotation.x=k*.075*w;a.g.rotation.z=Math.max(-.11,Math.min(.11,-a.lean*.09))*w;
+    let lift=Math.abs(s)*.03*k*w,spin=0;const e=a.emote;
     if(e){e.t+=dt;const u=e.t;
+      if(e.k==='reach'){const o=Math.sin(Math.min(1,u/e.dur)*Math.PI);a.armR.rotation.x=-1.25*o;a.armR.rotation.z=-.12;a.elbR.rotation.x=-.25-.2*o;}else
       if(e.k==='wave'){a.armR.rotation.z=-2.5+Math.sin(u*11)*.25;a.armR.rotation.x=0;a.elbR.rotation.x=-.5+Math.sin(u*11)*.3;}
       else if(e.k==='hug'){const o=Math.min(1,u*4);a.armL.rotation.x=-1.25*o;a.armR.rotation.x=-1.25*o;a.armL.rotation.z=-.4*o;a.armR.rotation.z=.4*o;a.elbL.rotation.x=-.9*o;a.elbR.rotation.x=-.9*o;}
       else if(e.k==='kiss'){const o=Math.min(1,u*5);a.armR.rotation.x=-1.5*o;a.armR.rotation.z=-.2;a.elbR.rotation.x=-1.9*o;}
       else if(e.k==='dance'){lift+=Math.abs(Math.sin(u*8))*.13;a.armL.rotation.z=1.9+Math.sin(u*8)*.5;a.armR.rotation.z=-1.9-Math.sin(u*8+1)*.5;a.elbL.rotation.x=-.6;a.elbR.rotation.x=-.6;spin=dt*5.5;}
       if(u>e.dur)a.emote=null;}
     return {lift,spin};};
+  const groundShadow=(a,x,z,face)=>{const out=!NIGHT&&!inHouse(x,z),b=a.blob;if(!out){b.position.set(0,.025,0);b.scale.set(1,1,1);b.rotation.z=0;b.material.opacity=.5;return;}
+    const el=Math.max(.35,sunDir.y),len=Math.min(1.5,.55/el),wx=-sunDir.x/Math.hypot(sunDir.x,sunDir.z||1e-6),wz=-sunDir.z/Math.hypot(sunDir.x,sunDir.z||1e-6),cf=Math.cos(face),sf=Math.sin(face),lx=wx*cf-wz*sf,lz=wx*sf+wz*cf;
+    b.position.set(lx*len*.42,.025,lz*len*.42);b.rotation.z=Math.atan2(-lz,lx);b.scale.set(1+len*.9,.9,1);b.material.opacity=.42;};
   let me=opts.me||'Angelos',av=makeAvatar(me),partner=makeAvatar(me==='Angelos'?'Antigoni':'Angelos');
   const PP={x:-10.05,z:.3,face:-Math.PI/2};
   const placePartner=()=>{partner.g.position.set(PP.x,0,PP.z);partner.g.rotation.y=PP.face;};placePartner();
@@ -1791,15 +1798,19 @@ function buildWorld(T,wrap,opts){
     if(out.length&&!grid[gj(tz)*GN+gi(tx)])out[out.length-1]={x:tx,z:tz};return out.length?out:null;};
   const walkTo=(x,z,after)=>{const p=findPath(P.x,P.z,x,z);if(!p)return false;P.path=p;P.after=after||null;P.stuck=0;const e=p[p.length-1];goalRing.position.set(e.x,.035,e.z);goalRing.visible=true;return true;};
   const _iv=new T.Matrix4();
+  let liftA=0;
   const applyCam=(dt)=>{dt=dt||.016;const ty=P.y+1.45,cp=Math.cos(C.pitch),dx=Math.sin(C.yaw)*cp,dy=Math.sin(C.pitch),dz=Math.cos(C.yaw)*cp,rx=Math.cos(C.yaw),rz=-Math.sin(C.yaw);
     let want=C.dist;if(!cine&&ty+dy*C.dist+.1<H-.1){let tm=1;const ex=P.x+dx*C.dist,ey=ty+dy*C.dist+.1,ez=P.z+dz*C.dist;for(const c of camBlocks){if(!c.on)continue;const q=hitT(P.x,ty,P.z,ex,ey,ez,c,.14,H);if(q<tm)tm=q;}if(tm<1)want=Math.max(.85,tm*C.dist-.32);}
     C.cur+=(want-C.cur)*Math.min(1,dt*(want<C.cur?22:5));C.tx+=(P.x-C.tx)*Math.min(1,dt*16);C.tz+=(P.z-C.tz)*Math.min(1,dt*16);
     const sh=.42*Math.max(0,1-C.pitch/.8)*Math.min(1,C.cur/2.6);
-    cam.position.set(C.tx+dx*C.cur+rx*sh,Math.max(.35,ty+dy*C.cur+.1),C.tz+dz*C.cur+rz*sh);cam.lookAt(C.tx+rx*sh,ty+.05,C.tz+rz*sh);
+    let cx=C.tx+dx*C.cur+rx*sh,cz=C.tz+dz*C.cur+rz*sh;const cy=Math.max(.35,ty+dy*C.cur+.1);
+    if(!cine&&cy<H-.1)for(const c of camBlocks){if(!c.on)continue;const g=.17;if(cx>c.x1-g&&cx<c.x2+g&&cz>c.z1-g&&cz<c.z2+g){const l=cx-(c.x1-g),r=(c.x2+g)-cx,n=cz-(c.z1-g),f=(c.z2+g)-cz,m=Math.min(l,r,n,f);if(m===l)cx=c.x1-g;else if(m===r)cx=c.x2+g;else if(m===n)cz=c.z1-g;else cz=c.z2+g;}}
+    cam.position.set(cx,cy,cz);cam.lookAt(C.tx+rx*sh,ty+.05,C.tz+rz*sh);
     cam.updateMatrixWorld();CUT.uCutP.value.set(P.x,P.y+1.05,P.z).applyMatrix4(_iv.copy(cam.matrixWorld).invert());
-    const lift=inHouse(P.x,P.z)&&cam.position.y>H-.1;for(const m of roofMeshes)m.visible=!lift;av.g.visible=C.cur>.7;
-    let hx=P.x-cam.position.x,hz=P.z-cam.position.z;const hl=Math.hypot(hx,hz)||1;hx/=hl;hz/=hl;LIFT=lift;CUT.uLift.value=lift?1:0;CUT.uCutR.value=lift?0:1.2;CUT.uPl.value.set(P.x,P.y,P.z);CUT.uFwd.value.set(hx,hz);
-    tv.visible=!(lift&&((tv.position.x-P.x)*hx+(tv.position.z-P.z)*hz)<-.45);};
+    const lift=inHouse(P.x,P.z)&&cam.position.y>H-.1;liftA+=((lift?1:0)-liftA)*Math.min(1,dt*7);if(Math.abs((lift?1:0)-liftA)<.012)liftA=lift?1:0;
+    for(const m of roofMeshes)m.visible=liftA<.02;av.g.visible=C.cur>.7;
+    let hx=P.x-cam.position.x,hz=P.z-cam.position.z;const hl=Math.hypot(hx,hz)||1;hx/=hl;hz/=hl;LIFT=lift;CUT.uLift.value=liftA>.02?1:0;CUT.uLiftH.value=1.25+(H+.7-1.25)*Math.pow(1-liftA,2);CUT.uCutR.value=liftA>.5?0:1.2;CUT.uPl.value.set(P.x,P.y,P.z);CUT.uFwd.value.set(hx,hz);
+    tv.visible=!(liftA>.6&&((tv.position.x-P.x)*hx+(tv.position.z-P.z)*hz)<-.45);};
   // ---------- depth and glow: a contact shadow in every corner, a soft bloom where the sun lands ----------
   let fx=null,fxOn=false;
   if(opts.FX&&(renderer.extensions.has('EXT_color_buffer_half_float')||renderer.extensions.has('EXT_color_buffer_float'))){try{const F=opts.FX,comp=new F.EffectComposer(renderer,new T.WebGLRenderTarget(4,4,{type:T.HalfFloatType,samples:4}));comp.addPass(new F.RenderPass(scene,cam));
@@ -1855,7 +1866,9 @@ function buildWorld(T,wrap,opts){
   const ray=new T.Raycaster(),gPlane=new T.Plane(new T.Vector3(0,1,0),0),gPt=new T.Vector3();
   const reach=(a)=>Math.hypot(a.x-P.x,a.z-P.z)<=a.r+.5;
   const trigger=(key)=>{const a=actives.find(o=>o.key===key);if(!a||a.off)return;
-    if(key==='door')opts.onDoor();else if(key==='partner')opts.onPartner();else if(key.indexOf('gift:')===0)opts.onGiftFound(key.slice(5));else opts.onFeature(key);};
+    if(key==='partner'){opts.onPartner();return;}if(key.indexOf('gift:')===0){opts.onGiftFound(key.slice(5));return;}
+    if(Math.hypot(a.x-P.x,a.z-P.z)<4){P.face=Math.atan2(a.x-P.x,a.z-P.z);av.emote={k:'reach',t:0,dur:.5};}
+    setTimeout(()=>{if(disposed)return;if(key==='door')opts.onDoor();else opts.onFeature(key);},170);};
   // tapping a marker walks you over; picking a place from the menu is a shortcut and puts you straight there
   const goTo=(key,jump)=>{const a=actives.find(o=>o.key===key);if(!a)return;const s=a.stand||[a.x+.9,a.z+.4];
     if(Math.hypot(s[0]-P.x,s[1]-P.z)<.4)return;if(!jump&&walkTo(s[0],s[1],{x:a.x,z:a.z}))return;
@@ -1895,16 +1908,17 @@ function buildWorld(T,wrap,opts){
       if(gd<.24||P.stuck>.6){if(P.stuck>.6)P.path=[];else P.path.shift();P.stuck=0;
         if(!P.path.length){P.path=null;goalRing.visible=false;if(P.after){P.face=Math.atan2(P.after.x-P.x,P.after.z-P.z);P.after=null;}}}
       else{const sp=Math.min(3.5,gd*5+.9);tx=gx/gd*sp;tz=gz/gd*sp;}}
-    const k=Math.min(1,dt*11);P.vx+=(tx-P.vx)*k;P.vz+=(tz-P.vz)*k;
+    const k=Math.min(1,dt*((tx||tz)?8.5:13));P.vx+=(tx-P.vx)*k;P.vz+=(tz-P.vz)*k;
     const ox=P.x,oz=P.z;P.x+=P.vx*dt;P.z+=P.vz*dt;collide();
     const moved=Math.hypot(P.x-ox,P.z-oz)/Math.max(dt,1e-4);if(P.path){if(moved<.3)P.stuck+=dt;else P.stuck=0;}
     const sp=Math.min(moved,Math.hypot(P.vx,P.vz));
-    if(sp>.25){let d=Math.atan2(P.vx,P.vz)-P.face;d=Math.atan2(Math.sin(d),Math.cos(d));P.face+=d*Math.min(1,dt*11);
+    P.turn=0;if(sp>.25){let d=Math.atan2(P.vx,P.vz)-P.face;d=Math.atan2(Math.sin(d),Math.cos(d));P.turn=d;P.face+=d*Math.min(1,dt*10);
       // the camera swings round behind you as you go, unless you've just moved it yourself
       if(ptrs.size===0&&t-C.manual>1100){let c=P.face+Math.PI-C.yaw;c=Math.atan2(Math.sin(c),Math.cos(c));if(Math.abs(c)<2.3)C.yaw+=c*Math.min(1,dt*(P.path?2.0:1.2));}}
     const gy=groundY(P.x,P.z);P.vy-=17*dt;P.y+=P.vy*dt;if(P.y<=gy){P.y=gy;P.vy=0;}
     const pool=inPool(P.x,P.z);if(pool&&!wasPool)burst('drop',P.x,.4,P.z,8);wasPool=pool;
-    const a=animate(av,dt,sp,t);P.face+=a.spin;av.g.position.set(P.x,P.y+a.lift,P.z);av.g.rotation.y=P.face;av.blob.visible=P.y>-.2&&P.y<.05;
+    const a=animate(av,dt,sp,t,P.turn||0);P.face+=a.spin;av.g.position.set(P.x,P.y+a.lift,P.z);av.g.rotation.y=P.face;av.blob.visible=P.y>-.2&&P.y<.05;groundShadow(av,P.x,P.z,P.face);
+    groundShadow(partner,PP.x,PP.z,partner.g.rotation.y);
     const pa=animate(partner,dt,0,t);partner.g.position.y=pa.lift;partner.g.rotation.y=PP.face+Math.sin(t*.0006)*.12;
     applyCam(dt);if(cine)cineCam(dt);
     doorAmt+=(doorTarget-doorAmt)*Math.min(1,dt*3.2);doorG.rotation.y=-doorAmt*1.9;doorCol.on=doorAmt<.5;
@@ -1912,7 +1926,7 @@ function buildWorld(T,wrap,opts){
     if(goalRing.visible)goalRing.scale.setScalar(1+Math.sin(t*.008)*.15);
     WIND.value=t*.001;if(duck){duck.position.set(-9.25+Math.sin(t*.0003)*.5,.012+Math.sin(t*.002)*.012,-2.9+Math.cos(t*.00037)*.8);duck.rotation.y=t*.0002;}
     anyCut=false;for(const c of camBlocks){if(c.on&&hitT(cam.position.x,cam.position.y,cam.position.z,P.x,P.y+1.05,P.z,c,0,H)<=1){anyCut=true;break;}}
-    for(const o of actives){if(o.off)continue;const pulse=1+Math.sin(t*.004+o.ph)*.07,big=o.key===nearKey?1.3:1;o.sp.position.y=o.by+Math.sin(t*.0025+o.ph)*.06;o.sp.scale.setScalar((o.size||.82)*pulse*big);const cd=cam.position.distanceTo(o.sp.position);o.vis+=((seen(o.x,o.by,o.z)?1:0)-o.vis)*Math.min(1,dt*9);o.sp.material.opacity=cine?0:o.vis*(cd<2?Math.max(0,cd-1):1);}
+    for(const o of actives){if(o.off)continue;const pulse=1+Math.sin(t*.004+o.ph)*.07,big=o.key===nearKey?1.3:1;o.sp.position.y=o.by+Math.sin(t*.0025+o.ph)*.06;o.sp.scale.setScalar((o.size||.82)*pulse*big);const cd=cam.position.distanceTo(o.sp.position);o.vis+=((seen(o.x,o.by,o.z)?1:0)-o.vis)*Math.min(1,dt*9);o.sp.material.opacity=cine?0:o.vis*(cd<2?Math.max(0,cd-1):1)*(Math.hypot(o.x-P.x,o.z-P.z)<1.25&&o.y<2.2?.4:1);}
     tag.material.opacity=partnerSpot.vis;
     for(const p of parts){if(p.life<=0)continue;p.life-=dt;p.s.position.x+=p.vx*dt;p.s.position.y+=p.vy*dt;p.s.position.z+=p.vz*dt;p.s.material.opacity=Math.max(0,Math.min(1,p.life*1.4));if(p.life<=0)p.s.visible=false;}
     if(++tick%4===0)drawMap();
@@ -2017,7 +2031,7 @@ function House3D(props){
         onPointerUp=${e=>W()&&W().pUp(e)} onPointerCancel=${e=>W()&&W().pUp(e)} onWheel=${e=>W()&&W().zoom(e.deltaY)}></div>
       <div class="joyring"></div><div class="joynub"></div>
       <div class=${'h3dfade'+(fade?' on':'')}></div>
-      <div class="cbar t"></div><div class="cbar b"></div>
+      <div class="hvig"></div><div class="cbar t"></div><div class="cbar b"></div>
       <div class=${'ctitle'+(cineN===1||cineN===2?' on':'')}><div class="wm">Mel<em>temi</em></div><div class="cs">welcome home${props.me?', '+props.me:''}</div></div>
       <button class="hbtn hmenu" aria-label="Menu" onClick=${()=>{setOpen(true);setFan(null);}}><${HIco} n="menu" s=${22}/></button>
       ${room&&html`<div class="hroom">${room}</div>`}
