@@ -1,0 +1,2 @@
+The furniture, plants and props in this folder are from Poly Haven (polyhaven.com), released under CC0.
+They were reduced in detail and re-exported as .glb for the web.
