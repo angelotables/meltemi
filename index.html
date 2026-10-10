@@ -256,6 +256,38 @@
     font-size:24px;width:42px;height:58px;border-radius:12px;cursor:pointer;z-index:2}
   .vnav:active{background:rgba(250,246,239,.22)}
   .vcount{color:rgba(250,246,239,.5);font-size:11px;letter-spacing:.16em;margin-top:9px}
+
+  /* ---- the house ---- */
+  .housewrap{animation:stepin .55s ease both}
+  @keyframes stepin{from{opacity:0;transform:scale(.965) translateY(10px)}to{opacity:1;transform:none}}
+  .house{display:block;width:100%;max-width:430px;margin:0 auto}
+  .rm{cursor:pointer}
+  .rm:active{opacity:.75}
+  .rlbl{font-family:var(--serif);font-style:italic;font-size:9.5px;fill:var(--soft)}
+  .hcap{text-align:center;font-family:var(--serif);font-style:italic;color:var(--soft);font-size:13.5px;margin:2px 0 12px}
+  .doorcard{text-align:center;animation:stepin .5s ease both}
+  .dgreet{font-family:var(--serif);font-size:27px;color:var(--ink);line-height:1.35;margin:14px 0 4px}
+  .dsub{color:var(--soft);font-size:13px;margin-bottom:14px;font-style:italic;font-family:var(--serif)}
+  .roomhub{display:flex;flex-direction:column;gap:12px}
+  .furn{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--hair);border-radius:18px;
+    padding:16px 17px;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);transition:transform .12s}
+  .furn:active{transform:scale(.98)}
+  .furn .fic{font-size:26px;width:44px;text-align:center}
+  .furn .ft{font-family:var(--serif);font-size:18px}
+  .furn .fs{color:var(--soft);font-size:12px;margin-top:3px}
+  .furn .marrow{margin-left:auto;color:var(--terra)}
+  .kpill{flex:0 0 auto;padding:9px 14px;border-radius:999px;border:1px solid var(--hair);background:none;color:var(--soft);
+    font-weight:600;font-size:12.5px;cursor:pointer;font-family:inherit}
+  .kpill.on{border-color:var(--ink);color:var(--ink)}
+  .krow{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:12px 13px;margin-bottom:8px}
+  .krow .kchk{width:24px;height:24px;min-width:24px;border-radius:8px;border:2px solid var(--hair);background:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+  .krow.done .kchk{background:var(--aegean2);border-color:var(--aegean2)}
+  .krow.done .kt{text-decoration:line-through;color:var(--soft)}
+  .krow .kt{flex:1;font-size:14.5px}
+  .krow .ksub{color:var(--soft);font-size:11px;margin-top:2px}
+  .vheart{background:none;border:none;cursor:pointer;font-size:17px;padding:2px 4px}
+  .bothbadge{font-size:10px;letter-spacing:.08em;color:var(--terra);font-weight:700}
   .viewer{position:fixed;inset:0;background:rgba(24,30,36,.94);z-index:200;display:flex;flex-direction:column;align-items:center;
     justify-content:center;padding:22px;animation:vfade .25s ease}
   @keyframes vfade{from{opacity:0}to{opacity:1}}
@@ -732,6 +764,18 @@ function App(){
   const [letters,setLetters]=useState(null);
   const [pings,setPings]=useState(null);
   const [qAns,setQAns]=useState('');
+  // ---- the house ----
+  const [kitchen,setKitchen]=useState(null);           // trip_kitchen: recipes / dinner plans / spots
+  const [tvdoc,setTvdoc]=useState(null);               // trip_tv: watchlist + movie nights
+  const [kKind,setKKind]=useState('try');
+  const [kTxt,setKTxt]=useState('');
+  const [kCity,setKCity]=useState('');
+  const [kWhen,setKWhen]=useState('');
+  const [tvIn,setTvIn]=useState('');
+  const [tvWhen,setTvWhen]=useState('');
+  const [tvPick,setTvPick]=useState('');
+  const [doorOpen,setDoorOpen]=useState(()=>{try{return localStorage.getItem('mel-door')===dkey(new Date());}catch(e){return false;}});
+  const openDoor=()=>{try{localStorage.setItem('mel-door',dkey(new Date()));}catch(e){}setDoorOpen(true);};
   const [liTxt,setLiTxt]=useState('');
   const [letOpen,setLetOpen]=useState(false);
   const [noteView,setNoteView]=useState('wall'); // 'wall' | 'letters' — letters live on their own page now
@@ -814,7 +858,9 @@ function App(){
     const u14=sub('trip_missions',(s)=>setMissions(s.exists()?(s.data().byDay||{}):{}));
     const u15=sub('trip_dailyphoto',(s)=>setDailyp(s.exists()?(s.data().byDate||{}):{}));
     const u16=sub('trip_missyou',(s)=>setMissyou(s.exists()?(s.data().list||[]):[]));
-    return ()=>{u1();u2();u3();u4();u5();u6();u7();u8();u9();u10();u17();u18();u19();u20();u11();u12();u13();u14();u15();u16();};
+    const u21=sub('trip_kitchen',(s)=>setKitchen(s.exists()?(s.data().list||[]):[]));
+    const u22=sub('trip_tv',(s)=>setTvdoc(s.exists()?s.data():{list:[],dates:[]}));
+    return ()=>{u1();u2();u3();u4();u5();u6();u7();u8();u9();u10();u17();u18();u19();u20();u11();u12();u13();u14();u15();u16();u21();u22();};
   },[authed]);
 
   const guard=(loaded)=>{if(loaded===null){setErr('Still connecting — try again in a second.');return false;}return true;};
@@ -962,6 +1008,51 @@ function App(){
     }else finish(null);
   }
   function delNote(id){if(!guard(notes))return;write('trip_notes',{list:notes.filter(x=>x.id!==id)});}
+
+  // ---- kitchen: recipes to try, dinner plans, spots to eat ----
+  function kAdd(){
+    if(!guard(kitchen))return;
+    const t=kTxt.trim();
+    if(!t){setErr(kKind==='spot'?'Name the place.':kKind==='plan'?'What are we making?':'Name the dish.');return;}
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setErr('');
+    const rec={id:Date.now().toString(36),kind:kKind,txt:t,by:me,at:nowStamp()};
+    if(kKind==='spot'&&kCity.trim())rec.city=kCity.trim();
+    if(kKind==='plan'&&kWhen)rec.when=kWhen;
+    write('trip_kitchen',{list:[rec,...kitchen]});
+    setKTxt('');setKWhen('');flash(kKind==='plan'?'On the stove 🍳':kKind==='spot'?'Added to our table map':'In the recipe box');
+  }
+  function kToggle(it){if(!guard(kitchen))return;write('trip_kitchen',{list:kitchen.map(x=>x.id===it.id?{...x,done:x.done?null:{by:me,at:nowStamp()}}:x)});}
+  function kDel(id){if(!guard(kitchen))return;write('trip_kitchen',{list:kitchen.filter(x=>x.id!==id)});}
+
+  // ---- living room tv: shared watchlist with votes + movie nights ----
+  const tvList=(tvdoc||{}).list||[];
+  const tvDates=((tvdoc||{}).dates||[]).filter(d3=>d3.when>=new Date(Date.now()-86400000*1).toISOString().slice(0,16));
+  const tvSave=(patch)=>write('trip_tv',{list:tvList,dates:(tvdoc||{}).dates||[],...patch});
+  function tvAdd(){
+    if(!guard(tvdoc))return;
+    const t=tvIn.trim();
+    if(!t){setErr('Name the movie or show.');return;}
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setErr('');
+    tvSave({list:[{id:Date.now().toString(36),title:t,by:me,at:nowStamp(),votes:{[me]:1}},...tvList]});
+    setTvIn('');flash('On the big screen list 🎬');
+  }
+  function tvVote(it){
+    if(!guard(tvdoc)||!me)return;
+    tvSave({list:tvList.map(x=>x.id===it.id?{...x,votes:{...(x.votes||{}),[me]:(x.votes||{})[me]?0:1}}:x)});
+  }
+  function tvWatched(it){if(!guard(tvdoc))return;tvSave({list:tvList.map(x=>x.id===it.id?{...x,watched:x.watched?null:nowStamp()}:x)});}
+  function tvDel(id){if(!guard(tvdoc))return;tvSave({list:tvList.filter(x=>x.id!==id)});}
+  function tvPlan(){
+    if(!guard(tvdoc))return;
+    if(!tvWhen){setErr('Pick the night.');return;}
+    if(!me){setErr('Tap who you are (top right).');return;}
+    setErr('');
+    tvSave({dates:[...((tvdoc||{}).dates||[]),{id:Date.now().toString(36),when:tvWhen,title:tvPick.trim(),by:me,at:nowStamp()}]});
+    setTvWhen('');setTvPick('');flash('Movie night planned 🍿');
+  }
+  function tvDelDate(id){if(!guard(tvdoc))return;tvSave({dates:((tvdoc||{}).dates||[]).filter(x=>x.id!==id)});}
 
   // ---- album ----
   async function uploadPhotos(files){
@@ -1136,6 +1227,8 @@ function App(){
     finds:{data:{list:finds||[]},n:(finds||[]).length},
     dailyphoto:{data:{byDate:dailyp||{}},n:Object.keys(dailyp||{}).length},
     missions:{data:{byDay:missions||{}},n:Object.keys(missions||{}).length},
+    kitchen:{data:{list:kitchen||[]},n:(kitchen||[]).length},
+    tv:{data:tvdoc||{list:[],dates:[]},n:((tvdoc||{}).list||[]).length+((tvdoc||{}).dates||[]).length},
   });
   async function runBackup(){
     try{
@@ -1280,6 +1373,8 @@ function App(){
     write('trip_photos',{list:mergeLists(photos,d.photos?.list)});
     write('trip_list',{list:mergeLists(bucket,d.list?.list)});
     write('trip_letters',{list:mergeLists(letters,d.letters?.list)});
+    if(d.kitchen)write('trip_kitchen',{list:mergeLists(kitchen,d.kitchen.list)});
+    if(d.tv)write('trip_tv',{list:mergeLists((tvdoc||{}).list,d.tv.list),dates:mergeLists((tvdoc||{}).dates,d.tv.dates)});
     const mergedDays={};
     const incD=d.days?.byDay||{};
     for(const k of new Set([...Object.keys(daysDoc||{}),...Object.keys(incD)])){
@@ -1961,6 +2056,252 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
           </div>`)}`}
     <//>`;
 
+  // ================= THE HOUSE =================
+  const hr5=new Date().getHours(), night5=hr5<6||hr5>=19;
+  const sealedN5=(letters||[]).filter(L=>tk<L.openAt).length;
+  const nextNight=[...tvDates].sort((a,b)=>a.when<b.when?-1:1)[0];
+  const fmtNight=(w)=>{const d3=new Date(w);return d3.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' · '+d3.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});};
+  const doorView=html`
+    <div class="doorcard">
+      <svg width="140" height="150" viewBox="0 0 140 150" style="display:block;margin:10px auto 0">
+        <polygon points="18,54 70,14 122,54" fill="var(--terra)" opacity=".9"/>
+        <rect x="26" y="54" width="88" height="90" fill="var(--card)" stroke="var(--hair)"/>
+        <path d="M52 144 L52 86 A18 18 0 0 1 88 86 L88 144 Z" fill="var(--terra)"/>
+        <circle cx="81" cy="112" r="2.6" fill="var(--sand)"/>
+        <rect x="46" y="144" width="48" height="4" rx="2" fill="var(--hair)"/>
+        <circle cx="34" cy="64" r="5" fill=${night5?'#E8DECC':'var(--sand)'} opacity=".9"/>
+      </svg>
+      <div class="dgreet">${night5?'Welcome home':'You’re home'}${me?', '+me:''}</div>
+      <div class="dsub">${myA?'your answer is sealed — come in':'answer at the door, then come in'}</div>
+      <div class="qcard" style="text-align:left">
+        <div class="eyebrow">Question of the day</div>
+        <div class="qq">${todaysQ}</div>
+        ${!me&&html`<div class="sealwait">Tap who you are (top right) to answer.</div>`}
+        ${me&&!myA&&html`
+          <textarea style="min-height:72px" placeholder="Only revealed once you’ve both answered…" value=${qAns} onInput=${e=>setQAns(e.target.value)}></textarea>
+          <button class="btn terra wide mt10" onClick=${()=>{if(!qAns.trim()){setErr('Write your answer first.');return;}answerQ();openDoor();}}>Seal it & step inside</button>
+        `}
+        ${me&&myA&&!theirA&&html`
+          <div class="qans"><div class="qwho">YOU · SEALED</div><div class="qtxt">${myA.txt}</div></div>
+          <div class="sealwait">Waiting for ${other}… then both reveal 🤍</div>
+        `}
+        ${myA&&theirA&&html`
+          <div class="qans" style="border-left-color:var(--sand)"><div class="qwho"><${Sig} who="Angelos"/> ANGELOS</div><div class="qtxt">${qToday.Angelos.txt}</div></div>
+          <div class="qans" style="border-left-color:var(--aegean2)"><div class="qwho"><${Sig} who="Antigoni"/> ANTIGONI</div><div class="qtxt">${qToday.Antigoni.txt}</div></div>
+        `}
+      </div>
+      <button class="btn quiet wide mt10" onClick=${openDoor}>${myA?'Step inside →':'Tiptoe in quietly →'}</button>
+    </div>`;
+  const houseView=html`
+    <div class="housewrap">
+      ${after&&html`<div class="hcap">${(photos||[]).length} memories · ${(journal||[]).length} pages — the house is always open</div>`}
+      <svg class="house" viewBox="0 0 360 312" aria-label="our house">
+        ${night5?html`
+          <path d="M62 40 A13 13 0 1 0 78 56 A10 10 0 0 1 62 40 Z" fill="#D9CFBA"/>
+          <circle cx="104" cy="34" r="1.4" fill="#D9CFBA"/><circle cx="124" cy="50" r="1" fill="#D9CFBA"/><circle cx="92" cy="58" r="1" fill="#D9CFBA"/>
+        `:html`
+          <circle cx="68" cy="46" r="12" fill="var(--sand)" opacity=".9"/>
+          <path d="M96 40 q10 -7 20 0 q10 7 20 0" fill="none" stroke="var(--aegean2)" stroke-width="1.6" opacity=".5" stroke-linecap="round"/>
+          <path d="M104 52 q8 -5 16 0 q8 5 16 0" fill="none" stroke="var(--aegean2)" stroke-width="1.3" opacity=".35" stroke-linecap="round"/>
+        `}
+        <rect x="266" y="40" width="17" height="38" fill="var(--ink2)" rx="2"/>
+        <polygon points="14,88 180,20 346,88" fill="var(--terra)" opacity=".92"/>
+        <rect x="28" y="88" width="304" height="184" fill="var(--card)" stroke="var(--hair)"/>
+        <line x1="28" y1="182" x2="332" y2="182" stroke="var(--hair)" stroke-width="2"/>
+        <line x1="186" y1="88" x2="186" y2="182" stroke="var(--hair)" stroke-width="2"/>
+        <line x1="150" y1="182" x2="150" y2="272" stroke="var(--hair)" stroke-width="2"/>
+        <line x1="216" y1="182" x2="216" y2="272" stroke="var(--hair)" stroke-width="2"/>
+
+        <rect x="44" y="142" width="70" height="26" rx="6" fill="var(--blush)"/>
+        <rect x="48" y="134" width="24" height="12" rx="4" fill="#fff" stroke="var(--hair)"/>
+        <rect x="58" y="104" width="22" height="17" fill="none" stroke="var(--terra)" stroke-width="1.6" rx="2"/>
+        <path d="M66 114 q3 -4 3 -1 q0 -3 3 1 l-3 3 Z" fill="var(--terra)"/>
+        <rect x="128" y="144" width="46" height="5" rx="2" fill="var(--terra)"/>
+        <line x1="133" y1="149" x2="133" y2="168" stroke="var(--terra)" stroke-width="3"/>
+        <line x1="169" y1="149" x2="169" y2="168" stroke="var(--terra)" stroke-width="3"/>
+        <line x1="154" y1="144" x2="154" y2="132" stroke="var(--ink2)" stroke-width="2"/>
+        <circle cx="154" cy="128" r="6" fill="var(--sand)" opacity=${night5?'1':'.55'}/>
+        <rect x="138" y="138" width="12" height="6" rx="1" fill="var(--aegean2)" opacity=".8"/>
+        <text x="106" y="176" text-anchor="middle" class="rlbl">the bedroom</text>
+
+        <line x1="196" y1="168" x2="324" y2="168" stroke="var(--ink2)" stroke-width="2"/>
+        ${[0,1,2,3,4,5,6,7,8,9].map(i2=>html`<line key=${i2} x1=${198+i2*14} y1="168" x2=${198+i2*14} y2="180" stroke="var(--ink2)" stroke-width="1.4"/>`)}
+        <rect x="226" y="150" width="17" height="16" rx="4" fill="var(--aegean)" opacity=".85"/>
+        <rect x="278" y="150" width="17" height="16" rx="4" fill="var(--aegean)" opacity=".85"/>
+        <circle cx="260" cy="160" r="7" fill="none" stroke="var(--ink2)" stroke-width="1.6"/>
+        <circle cx="257" cy="158" r="1.5" fill="var(--terra)"/><circle cx="263" cy="158" r="1.5" fill="var(--terra)"/>
+        <path d="M300 108 q9 -6 18 0 q9 6 18 0" fill="none" stroke="var(--aegean2)" stroke-width="1.5" opacity=".55" stroke-linecap="round"/>
+        <path d="M296 122 q7 -5 14 0" fill="none" stroke="var(--aegean2)" stroke-width="1.2" opacity=".4" stroke-linecap="round"/>
+        <text x="259" y="104" text-anchor="middle" class="rlbl">the balcony · us</text>
+
+        <rect x="40" y="196" width="26" height="56" rx="4" fill="#fff" stroke="var(--hair)"/>
+        <line x1="60" y1="210" x2="60" y2="222" stroke="var(--hair)" stroke-width="2"/>
+        <rect x="76" y="226" width="58" height="26" fill="var(--card)" stroke="var(--hair)"/>
+        <circle cx="90" cy="231" r="2.4" fill="var(--ink2)"/><circle cx="104" cy="231" r="2.4" fill="var(--ink2)"/>
+        <rect x="112" y="218" width="16" height="9" rx="2" fill="var(--aegean2)"/>
+        <path d="M116 214 q2 -4 0 -7 M122 214 q2 -4 0 -7" fill="none" stroke="var(--ink2)" stroke-width="1.2" opacity=".6"/>
+        <line x1="78" y1="206" x2="132" y2="206" stroke="var(--hair)" stroke-width="2"/>
+        <rect x="84" y="196" width="8" height="10" rx="1" fill="var(--sand)" opacity=".8"/>
+        <rect x="98" y="196" width="8" height="10" rx="1" fill="var(--blush)"/>
+        <text x="88" y="266" text-anchor="middle" class="rlbl">the kitchen</text>
+
+        <path d="M165 272 L165 212 A18 18 0 0 1 201 212 L201 272 Z" fill="var(--terra)" opacity=".9"/>
+        <circle cx="195" cy="244" r="2.4" fill="var(--sand)"/>
+        <rect x="170" y="188" width="26" height="14" rx="2" fill="none" stroke="var(--ink2)" stroke-width="1.5"/>
+        <line x1="174" y1="195" x2="192" y2="195" stroke="var(--ink2)" stroke-width="1.4"/>
+        ${sealedN5>0&&html`<circle cx="198" cy="188" r="4" fill="var(--terra)"/>`}
+        <text x="183" y="282" text-anchor="middle" class="rlbl">knock 💭</text>
+
+        <rect x="230" y="200" width="46" height="29" rx="3" fill="var(--ink)"/>
+        ${nextNight?html`<polygon points="249,209 258,214.5 249,220" fill="#9FE1CB"/>`:html`<rect x="234" y="204" width="38" height="21" rx="2" fill="var(--ink2)" opacity=".6"/>`}
+        <line x1="253" y1="229" x2="253" y2="236" stroke="var(--ink2)" stroke-width="3"/>
+        <rect x="286" y="236" width="40" height="20" rx="7" fill="var(--aegean)" opacity=".9"/>
+        <rect x="290" y="226" width="32" height="12" rx="5" fill="var(--aegean2)" opacity=".9"/>
+        <rect x="290" y="196" width="13" height="11" fill="none" stroke="var(--terra)" stroke-width="1.4" rx="1"/>
+        <rect x="309" y="194" width="11" height="13" fill="none" stroke="var(--terra)" stroke-width="1.4" rx="1"/>
+        <text x="274" y="266" text-anchor="middle" class="rlbl">the living room</text>
+
+        <line x1="14" y1="272" x2="346" y2="272" stroke="var(--hair)" stroke-width="3"/>
+        ${[0,1,2].map(i2=>html`
+          <g key=${i2} transform=${'translate('+(48+i2*34)+' 0)'}>
+            <path d="M0 292 L16 292 L13 304 L3 304 Z" fill="var(--terra)" opacity=".8"/>
+            <path d="M8 292 q0 -8 -5 -11 M8 292 q0 -8 5 -11 M8 292 l0 -13" fill="none" stroke="var(--aegean2)" stroke-width="1.6" stroke-linecap="round"/>
+          </g>`)}
+        <text x="82" y="310" text-anchor="middle" class="rlbl">the garden · our list</text>
+        <rect x="288" y="282" width="30" height="19" rx="3" fill="var(--sand)"/>
+        <path d="M296 282 q0 -6 7 -6 q7 0 7 6" fill="none" stroke="var(--sand)" stroke-width="3"/>
+        <line x1="288" y1="290" x2="318" y2="290" stroke="var(--paper)" stroke-width="1.4"/>
+        <text x="303" y="310" text-anchor="middle" class="rlbl">our trips</text>
+
+        <rect class="rm" x="28" y="88" width="158" height="94" fill="transparent" onClick=${()=>setTab('bedroom')}/>
+        <rect class="rm" x="186" y="88" width="146" height="94" fill="transparent" onClick=${()=>setTab('ld')}/>
+        <rect class="rm" x="28" y="182" width="122" height="90" fill="transparent" onClick=${()=>setTab('kitchen')}/>
+        <rect class="rm" x="150" y="182" width="66" height="90" fill="transparent" onClick=${sendPing}/>
+        <rect class="rm" x="216" y="182" width="116" height="90" fill="transparent" onClick=${()=>setTab('living')}/>
+        <rect class="rm" x="14" y="274" width="150" height="38" fill="transparent" onClick=${()=>setTab('list')}/>
+        <rect class="rm" x="270" y="274" width="80" height="38" fill="transparent" onClick=${()=>setTab('trip')}/>
+      </svg>
+      <div class="hcap" style="margin-top:6px">tap a room to walk in · knock on the door to say you’re thinking of them</div>
+      ${lastPingFromThem&&html`<div class="pingline">${lastPingFromThem.by==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} ${lastPingFromThem.by} knocked · ${relTime(lastPingFromThem.ts)}</div>`}
+      ${nextNight&&html`
+        <button class="card" style="width:100%;text-align:left;cursor:pointer;font-family:inherit;padding:14px 16px;margin-top:4px" onClick=${()=>setTab('tv')}>
+          <div class="eyebrow">Movie night is set 🍿</div>
+          <div style="font-family:var(--serif);font-size:15.5px;margin-top:7px">${fmtNight(nextNight.when)}${nextNight.title?html` — <em>${nextNight.title}</em>`:''}</div>
+        </button>`}
+      <button class="tmbbtn" onClick=${takeMeBack}>↺ take me back to a moment…</button>
+    </div>`;
+  const houseTab=doorOpen?houseView:doorView;
+  const bedroomTab=html`
+    <div class="roomhub">
+      <div class="hcap">the lamp’s on — what are we reaching for?</div>
+      <button class="furn" onClick=${()=>setTab('journal')}>
+        <span class="fic">📔</span>
+        <span><div class="ft">The desk · our journal</div><div class="fs">${(journal||[]).length?(journal||[]).length+' pages written':'the first page is waiting'}</div></span>
+        <span class="marrow">→</span>
+      </button>
+      <button class="furn" onClick=${()=>{setNoteView('wall');setTab('notes');}}>
+        <span class="fic">🗒</span>
+        <span><div class="ft">The wall of notes</div><div class="fs">${(notes||[]).length?(notes||[]).length+' pinned':'pin the first'}</div></span>
+        <span class="marrow">→</span>
+      </button>
+      <button class="furn" onClick=${()=>{setNoteView('letters');setTab('notes');}}>
+        <span class="fic">💌</span>
+        <span><div class="ft">The drawer of letters</div><div class="fs">${sealedN5?sealedN5+' still sealed':'write one for later'}</div></span>
+        <span class="marrow">→</span>
+      </button>
+    </div>`;
+  const livingTab=html`
+    <div class="roomhub">
+      <div class="hcap">lights low, couch deep</div>
+      <button class="furn" onClick=${()=>setTab('tv')}>
+        <span class="fic">📺</span>
+        <span><div class="ft">Movie night</div><div class="fs">${nextNight?fmtNight(nextNight.when):(tvList.filter(x=>!x.watched).length?tvList.filter(x=>!x.watched).length+' on the watchlist':'start the watchlist')}</div></span>
+        <span class="marrow">→</span>
+      </button>
+      <button class="furn" onClick=${()=>setTab('game')}>
+        <span class="fic">🎲</span>
+        <span><div class="ft">The game corner</div><div class="fs">tavli, duels, JALLA!</div></span>
+        <span class="marrow">→</span>
+      </button>
+      <button class="furn" onClick=${()=>setTab('photos')}>
+        <span class="fic">🖼</span>
+        <span><div class="ft">Frames on the wall · the album</div><div class="fs">${(photos||[]).length?(photos||[]).length+' memories':'hang the first'}</div></span>
+        <span class="marrow">→</span>
+      </button>
+    </div>`;
+  const kKinds=[['try','Recipes to try'],['plan','Dinner plans'],['spot','Places to eat']];
+  const kFiltered=(kitchen||[]).filter(x=>(x.kind||'try')===kKind);
+  const kitchenTab=html`
+    <${Fragment}>
+      <div class="hcap">what are we cooking, what are we trying</div>
+      <div class="row" style="gap:7px;flex-wrap:wrap">
+        ${kKinds.map(([v5,l5])=>html`<button key=${v5} class=${'kpill'+(kKind===v5?' on':'')} onClick=${()=>setKKind(v5)}>${l5}</button>`)}
+      </div>
+      <div class="card" style="margin-top:12px">
+        <input placeholder=${kKind==='spot'?'The place — ‘Ta Kanaria, tiny fish taverna’':kKind==='plan'?'The dish — ‘your mom’s pastitsio, Sunday’':'The dish to master — ‘seafood orzo like Naxos’'} value=${kTxt} onInput=${e=>setKTxt(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')kAdd();}} />
+        ${kKind==='spot'&&html`<input class="mt8" placeholder="Which city? — Athens, NYC, Larnaca…" value=${kCity} onInput=${e=>setKCity(e.target.value)} />`}
+        ${kKind==='plan'&&html`<input class="mt8" type="date" value=${kWhen} onInput=${e=>setKWhen(e.target.value)} />`}
+        <button class="btn terra wide mt10" onClick=${kAdd}>${kKind==='spot'?'Save the spot':kKind==='plan'?'Put it on the stove':'Into the recipe box'}</button>
+        ${kKind==='spot'&&html`<button class="btn quiet wide mt8" onClick=${()=>setTab('concierge')}>🔔 Ask the concierge for ideas →</button>`}
+      </div>
+      ${kitchen!==null&&kFiltered.length===0&&html`<div class="empty" style="padding:16px 0">${kKind==='spot'?'No spots saved yet — where are we eating?':kKind==='plan'?'Nothing on the stove yet.':'The recipe box is empty — scandalous.'}</div>`}
+      ${kFiltered.map(it=>html`
+        <div class=${'krow'+(it.done?' done':'')} key=${it.id}>
+          <button class="kchk" onClick=${()=>kToggle(it)}>${it.done?'✓':''}</button>
+          <div class="kt">${it.txt}
+            <div class="ksub">${it.city?it.city+' · ':''}${it.when?new Date(it.when+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' · ':''}${it.by}${it.done?' · done '+(it.done.by?'with '+it.done.by:''):''}</div>
+          </div>
+          <button class="jx" onClick=${()=>kDel(it.id)}>✕</button>
+        </div>`)}
+    <//>`;
+  const tvUnwatched=tvList.filter(x=>!x.watched).sort((a,b)=>(Object.values(b.votes||{}).filter(Boolean).length)-(Object.values(a.votes||{}).filter(Boolean).length));
+  const tvDone=tvList.filter(x=>x.watched);
+  const tvTab=html`
+    <${Fragment}>
+      <div class="hcap">the couch is calling</div>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:9px">Plan a movie night</div>
+        <input type="datetime-local" value=${tvWhen} onInput=${e=>setTvWhen(e.target.value)} />
+        <input class="mt8" placeholder="What are we watching? (optional)" value=${tvPick} onInput=${e=>setTvPick(e.target.value)} />
+        <button class="btn terra wide mt10" onClick=${tvPlan}>Set the date 🍿</button>
+      </div>
+      ${tvDates.sort((a,b)=>a.when<b.when?-1:1).map(d3=>html`
+        <div class="krow" key=${d3.id}>
+          <span style="font-size:18px">🍿</span>
+          <div class="kt">${fmtNight(d3.when)}${d3.title?html` — <em style="font-family:var(--serif)">${d3.title}</em>`:''}
+            <div class="ksub">planned by ${d3.by}</div>
+          </div>
+          <button class="jx" onClick=${()=>tvDelDate(d3.id)}>✕</button>
+        </div>`)}
+      <div class="card" style="margin-top:14px">
+        <div class="eyebrow" style="margin-bottom:9px">The watchlist — both hearts = we watch it</div>
+        <div class="row">
+          <input placeholder="A movie or show for us…" value=${tvIn} onInput=${e=>setTvIn(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')tvAdd();}} />
+          <button class="btn terra" style="flex:0 0 auto" onClick=${tvAdd}>Add</button>
+        </div>
+      </div>
+      ${tvdoc!==null&&tvUnwatched.length===0&&html`<div class="empty" style="padding:14px 0">Nothing queued — someone name a movie.</div>`}
+      ${tvUnwatched.map(it=>{
+        const vA=(it.votes||{}).Angelos,vB=(it.votes||{}).Antigoni,both=vA&&vB;
+        return html`
+        <div class="krow" key=${it.id}>
+          <div class="kt">${it.title}
+            <div class="ksub">${it.by} · ${both?html`<span class="bothbadge">BOTH IN 🤍 — watch it together</span>`:(vA||vB)?'one heart in':'no votes yet'}</div>
+          </div>
+          <span style="font-size:13px;letter-spacing:-2px">${vA?'🤍':''}${vB?'💙':''}</span>
+          <button class="vheart" title="my vote" onClick=${()=>tvVote(it)}>${me&&(it.votes||{})[me]?'❤️':'🩶'}</button>
+          <button class="jx" title="watched" onClick=${()=>tvWatched(it)}>✓</button>
+          <button class="jx" onClick=${()=>tvDel(it.id)}>✕</button>
+        </div>`;})}
+      ${tvDone.length>0&&html`
+        <div class="eyebrow" style="margin:16px 2px 8px">Watched together · ${tvDone.length}</div>
+        ${tvDone.map(it=>html`
+          <div class="krow done" key=${it.id}>
+            <span>📺</span><div class="kt">${it.title}<div class="ksub">${it.watched}</div></div>
+            <button class="jx" onClick=${()=>tvWatched(it)}>↺</button>
+          </div>`)}
+      `}
+    <//>`;
   const homeTab=html`
     <${Fragment}>
       <div class=${'hero'+(linkday?' fete':'')}>
@@ -2809,12 +3150,12 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         ${tab!=='home'&&html`
           <div class="backrow">
             <button class="backbtn" onClick=${()=>{setTab('home');setArmDel(null);setGameOn(false);}}>←</button>
-            <span class="btitle">${tab==='trip'?html`The <em>trip</em>`:tab==='list'?html`Our <em>list</em>`:tab==='journal'?html`Our <em>journal</em>`:tab==='notes'?html`Notes <em>& letters</em>`:tab==='game'?html`JALLA<em>!</em>`:tab==='concierge'?html`The <em>concierge</em>`:tab==='ld'?html`Long <em>distance</em>`:html`The <em>album</em>`}</span>
+            <span class="btitle">${tab==='trip'?html`The <em>trip</em>`:tab==='list'?html`The <em>garden</em>`:tab==='journal'?html`Our <em>journal</em>`:tab==='notes'?html`Notes <em>& letters</em>`:tab==='game'?html`JALLA<em>!</em>`:tab==='concierge'?html`The <em>concierge</em>`:tab==='ld'?html`The <em>balcony</em>`:tab==='bedroom'?html`The <em>bedroom</em>`:tab==='kitchen'?html`The <em>kitchen</em>`:tab==='living'?html`The <em>living room</em>`:tab==='tv'?html`Movie <em>night</em>`:html`The <em>album</em>`}</span>
           </div>`}
       </div></div>
       <div class="wrap">
         ${err&&html`<div class="banner err" onClick=${()=>setErr('')}>${err}</div>`}
-        ${tab==='home'?homeTab:tab==='trip'?tripTab:tab==='concierge'?conciergeTab:tab==='ld'?ldTab:tab==='list'?listTab:tab==='journal'?journalTab:tab==='notes'?notesTab:tab==='game'?gameTab:photosTab}
+        ${tab==='home'?houseTab:tab==='bedroom'?bedroomTab:tab==='living'?livingTab:tab==='kitchen'?kitchenTab:tab==='tv'?tvTab:tab==='trip'?tripTab:tab==='concierge'?conciergeTab:tab==='ld'?ldTab:tab==='list'?listTab:tab==='journal'?journalTab:tab==='notes'?notesTab:tab==='game'?gameTab:photosTab}
       </div>
       ${viewImg&&(()=>{
         const V=viewImg.list?viewImg.list[viewImg.idx]:viewImg;
@@ -2837,7 +3178,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
           </div>
         </div>`;})()}
       <div class="bnav">
-        ${[['home','Home'],['trip','Trip'],['notes','Notes'],['game','Jalla'],['ld','Us']].map(([id,l])=>html`
+        ${[['home','House'],['trip','Trip'],['notes','Notes'],['game','Jalla'],['ld','Us']].map(([id,l])=>html`
           <button key=${id} class=${tab===id?'on':''} onClick=${()=>setTab(id)}><${MNavIcon} id=${id}/><span class="cap">${l}</span></button>`)}
       </div>
       ${linkday&&html`
@@ -2857,7 +3198,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
 // Render straight away — the PIN screen is what signs us in now, so we no longer wait on auth.
 // PAUSED: while true, the app renders only the message below — no login, nothing loads,
 // nothing underneath is changed. Set to false to bring Meltemi back exactly as it was.
-const PAUSED=true;
+const PAUSED=false; // the house is open again
 const PausedScreen=()=>html`
   <div class="login" style="justify-content:center;text-align:center">
     <div style="font-family:var(--serif);font-size:40px;line-height:1.35;color:var(--ink)">
