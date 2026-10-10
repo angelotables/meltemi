@@ -652,6 +652,11 @@
   .key{border:1px solid var(--hair);border-radius:999px;background:#FFFDF9;color:var(--ink);font-size:20px;font-weight:500;
     width:74px;height:74px;cursor:pointer;font-family:var(--serif);box-shadow:var(--sh);transition:all .12s;margin:0 auto}
   .key:active{transform:scale(.88);background:#F2EBDF}
+  .claim{width:100%;max-width:340px;text-align:center}
+  .claim .ct{font-family:var(--serif);font-size:19px;color:var(--ink);margin-top:2px}
+  .claim .ct b{font-weight:500;letter-spacing:.08em;color:var(--aegean)}
+  .claim .cs{font-size:13px;line-height:1.55;color:var(--soft);margin:8px auto 16px;max-width:290px}
+  .claim .pcard{text-align:left}
   .gatelink{margin-top:34px;background:none;border:0;padding:10px 14px;font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft);opacity:.75;cursor:pointer}
   .key.ghostk{background:transparent;border-color:transparent;box-shadow:none;font-size:16px;color:var(--soft);font-family:var(--sans)}
   .pick{display:flex;flex-direction:column;gap:13px;width:100%;max-width:340px;margin-top:8px}
@@ -731,7 +736,7 @@ import htm from 'https://esm.sh/htm@3.1.1';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, onSnapshot, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { getStorage, ref as sref, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, updatePassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
 const html = htm.bind(h);
 
@@ -748,15 +753,12 @@ const db=initializeFirestore(fb,{localCache:persistentLocalCache({tabManager:per
 const storage=getStorage(fb);
 const _auth=getAuth(fb);
 const PIN_PAD='hmpin-';                 // invisible padding: 4-digit PIN → 6+ char Firebase password
-const MEL_PEOPLE=[['Angelos','angelos@helios.local'],['Antigoni','antigoni@helios.local']]; // each PIN belongs to one person
-const MEL_SHARED='meltemi@helios.local'; // the shared Meltemi account: one code for the house, then it asks once who you are
-// EARLY ACCESS: while GATE_ON is true there is exactly one wall. The page shows the "coming" message
-// and only the early access code opens it; that code is the shared account's real password (kept
-// here only as a hash, to turn other codes away before they reach Firebase). Personal PINs are
-// not accepted until GATE_ON is set to false, which brings the normal PIN screen back.
-const GATE_ON=true,GATE_KEY='mel-gate',GATE_HASH='1o9gy5d';
-const gateHash=c=>{let h=2166136261;for(const ch of 'meltemi:'+c){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return (h>>>0).toString(36);};
-const gateOpen=()=>{try{return localStorage.getItem(GATE_KEY)===GATE_HASH;}catch(e){return false;}};
+// Each of us has our own Meltemi code, and the code decides who you are: there is no choosing and no
+// switching. The first time, the code you type becomes yours (the account is created with it).
+const MEL_PEOPLE=[['Angelos','angelos@meltemi.local'],['Antigoni','antigoni@meltemi.local']];
+const MEL_LEGACY=[['Angelos','angelos@helios.local'],['Antigoni','antigoni@helios.local']]; // a Helios PIN still opens its owner's side
+const MEL_ALL=[...MEL_PEOPLE,...MEL_LEGACY];
+const SETUP_OPEN=true; // while true, a code nobody owns yet can be claimed. Set to false once both codes exist.
 const D=(k)=>doc(db,'gyrocity',k);
 
 const MEET='2026-07-29';
@@ -1680,13 +1682,13 @@ function buildWorld(T,wrap,opts){
       [.041,-.041].forEach(x=>{const b=mesh(new T.CapsuleGeometry(.0042,.03,3,8),hair3,x,1.647,.106);b.rotation.z=Math.PI/2+(x>0?-.16:.16);});
       mesh(new T.SphereGeometry(.128,16,12,0,Math.PI*2,0,Math.PI*.5),hair,0,1.61,-.015).rotation.x=-.3;
       const c1=[],c2=[],c3=[];let hs=7;const hr=()=>{hs=(Math.imul(hs,1664525)+1013904223)>>>0;return hs/4294967296;},sm3=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
-      mesh(new T.SphereGeometry(.15,16,12),hair3,0,1.5,-.045).scale.set(1.02,1.3,.78);
+      mesh(new T.SphereGeometry(.15,16,12),hair3,0,1.5,-.088).scale.set(1,1.3,.58);
       // ringlets: each strand leaves the crown smooth, then coils looser and wider as it falls to the shoulders
       const strand=(a,len,amp,turns,ph,y0,r0)=>{const pts=[];for(let k=0;k<=26;k++){const t=k/26,y=y0-len*Math.pow(t,1.08),R=r0+(.128-r0)*sm3(0,.22,t)+.034*Math.sin(Math.PI*Math.min(1,t*1.15)),h=amp*sm3(.08,.34,t)*(1+.35*t),f=ph+t*turns*6.2832,rr=R+h*Math.cos(f);
           pts.push(new T.Vector3(Math.sin(a)*rr+Math.cos(a)*h*Math.sin(f),y,-Math.cos(a)*rr*.94-.02+Math.sin(a)*h*Math.sin(f)));}
         return new T.TubeGeometry(new T.CatmullRomCurve3(pts),40,.0105+hr()*.004,5,false);};
-      for(let i=0;i<46;i++){const a=-2.35+4.7*(i+.5)/46+(hr()-.5)*.09,side=Math.abs(a)/2.35,len=.33+hr()*.13-side*.05;[c1,c2,c3][i%3].push(strand(a,len,.017+hr()*.012,3.2+hr()*2.2,hr()*6.28,1.722-hr()*.012,.03+hr()*.05));}
-      for(let i=0;i<16;i++){const a=-2.1+4.2*(i+.5)/16+(hr()-.5)*.2;[c2,c3,c1][i%3].push(strand(a,.2+hr()*.1,.014+hr()*.008,2.2+hr()*1.5,hr()*6.28,1.705,.085+hr()*.02));}
+      for(let i=0;i<46;i++){const a=-2.02+4.04*(i+.5)/46+(hr()-.5)*.07,side=Math.min(1,Math.abs(a)/2.02),len=(.33+hr()*.13-side*.05)*(1-.5*side*side*side);[c1,c2,c3][i%3].push(strand(a,len,.017+hr()*.012,3.2+hr()*2.2,hr()*6.28,1.722-hr()*.012,.03+hr()*.05));}
+      for(let i=0;i<16;i++){const a=-1.8+3.6*(i+.5)/16+(hr()-.5)*.16;[c2,c3,c1][i%3].push(strand(a,.2+hr()*.1,.014+hr()*.008,2.2+hr()*1.5,hr()*6.28,1.705,.085+hr()*.02));}
       g.add(new T.Mesh(mergeGeos(c1),hair));g.add(new T.Mesh(mergeGeos(c2),hair2));g.add(new T.Mesh(mergeGeos(c3),hair3));
       g.scale.setScalar(.985);
     }else{
@@ -2771,9 +2773,9 @@ function App(){
   const [me,setMe]=useState(null); // set by the PIN you sign in with
   const [picked,setPicked]=useState(false);
   const [authReady,setAuthReady]=useState(false);
-  const [gateAsk,setGateAsk]=useState(false);
-  const [gateStage,setGateStage]=useState('code');
-  const [gateCode,setGateCode]=useState('');
+  const [claim,setClaim]=useState(null);
+  const [claimMsg,setClaimMsg]=useState('');
+  const [denied,setDenied]=useState(false);
   const [tab,setTab]=useState('home');
   useEffect(()=>{window.scrollTo({top:0,left:0,behavior:'instant'});},[tab]);
   const [err,setErr]=useState('');
@@ -2873,7 +2875,7 @@ function App(){
       if(fromCache&&!s.exists())return;                     // cold cache claiming "empty"never believe it
       if(!fromCache)srvSeen.current[key]=true;
       apply(s);
-    },()=>setErr('No connection.'));
+    },(e)=>{if(e&&e.code==='permission-denied')setDenied(true);else setErr('No connection.');});
     const u1=sub('trip_meta',(s)=>setMeta(s.exists()?s.data():{}));
     const u2=sub('trip_journal',(s)=>setJournal(s.exists()?(s.data().list||[]):[]));
     const u3=sub('trip_notes',(s)=>setNotes(s.exists()?(s.data().list||[]):[]));
@@ -2916,10 +2918,11 @@ function App(){
     };
     window.addEventListener('keydown',h);
     return ()=>window.removeEventListener('keydown',h);
-  },[authed,pinBuf,pinMode,pinBad,firstPin,meta,gateStage,gateAsk,busy]);
+  },[authed,pinBuf,pinMode,pinBad,firstPin,meta,claim,claimMsg,busy]);
   function pressKey(k){
-    if(busy||(GATE_ON&&gateStage==='code'&&!gateAsk))return;
+    if(busy)return;
     if(pinBad)setPinBad(false);
+    if(claim)setClaim(null);if(claimMsg)setClaimMsg('');
     if(k==='back'){setPinBuf(pinBuf.slice(0,-1));return;}
     if(pinBuf.length>=4)return;
     const nb=pinBuf+k;setPinBuf(nb);
@@ -2930,43 +2933,36 @@ function App(){
   // Each person has their own PIN. Whichever account it opens is who you are, no choosing.
   async function submitPin(code){
     setBusy(true);
-    const pw=PIN_PAD+code;let net=false;
-    const tryAcc=async(email,p)=>{try{await signInWithEmailAndPassword(_auth,email,p);return true;}catch(e){if(e&&e.code==='auth/network-request-failed')net=true;return false;}};
-    const tryPeople=async()=>{for(const [name,email] of MEL_PEOPLE){if(await tryAcc(email,pw))return name;}return null;};
-    const enter=(w)=>{if(w)pickMe(w);else{const m=savedMe();if(m)setMe(m);}setAuthed(true);setPinBuf('');setGateStage('code');};
-    const fail=()=>{if(net)setErr('No connection, try again.');setPinBad(true);setPinBuf('');};
-    if(GATE_ON&&gateStage==='code'){
-      // the one wall: only the early access code gets any further
-      if(gateHash(code)!==GATE_HASH)fail();
-      else if(await tryAcc(MEL_SHARED,pw)){try{localStorage.setItem(GATE_KEY,GATE_HASH);}catch(e){}enter(null);}
-      else if(net)fail();
-      else{
-        try{localStorage.setItem(GATE_KEY,GATE_HASH);}catch(e){}
-        const u=_auth.currentUser,p=u&&MEL_PEOPLE.find(x=>x[1]===u.email);
-        if(u&&(p||u.email===MEL_SHARED))enter(p?p[0]:null);       // this phone is already signed in
-        else{setGateCode(code);setGateStage('old');setPinBuf('');} // the account still has its old code: ask for it once and switch it over
-      }
-    }else if(GATE_ON){
-      if(await tryAcc(MEL_SHARED,pw)){
-        if(gateCode){try{await updatePassword(_auth.currentUser,PIN_PAD+gateCode);}catch(e){setErr('You’re in, but the new code could not be saved. '+(e.message||e));}}
-        enter(null);
-      }else{const who=await tryPeople();if(who)enter(who);else fail();}
-    }else{
-      const who=await tryPeople();
-      if(who)enter(who);else if(await tryAcc(MEL_SHARED,pw))enter(null);else fail();
+    const pw=PIN_PAD+code;let net=false,who=null;
+    for(const [name,email] of MEL_ALL){
+      try{await signInWithEmailAndPassword(_auth,email,pw);who=name;break;}
+      catch(e){if(e&&e.code==='auth/network-request-failed')net=true;}
+    }
+    if(who)lockIn(who);
+    else if(net){setErr('No connection, try again.');setPinBad(true);setPinBuf('');}
+    else{setPinBad(true);setPinBuf('');setClaimMsg('');setClaim(SETUP_OPEN?code:null);}
+    setBusy(false);
+  }
+  // first time: the code just typed becomes this person's own code
+  async function claimCode(name){
+    if(busy||!claim)return;setBusy(true);
+    try{await createUserWithEmailAndPassword(_auth,MEL_PEOPLE.find(x=>x[0]===name)[1],PIN_PAD+claim);lockIn(name);}
+    catch(e){
+      if(e&&e.code==='auth/email-already-in-use'){setClaim(null);setPinBad(false);setClaimMsg(name+' already has a code, and that was not it.');}
+      else if(e&&e.code==='auth/network-request-failed')setClaimMsg('No connection, try again.');
+      else setClaimMsg('That did not work. '+((e&&e.message)||e));
     }
     setBusy(false);
   }
-  const pickMe=(n)=>{setMe(n);try{localStorage.setItem('mel-me',n);}catch(e){}};
-  const savedMe=()=>{try{const m=localStorage.getItem('mel-me');return m==='Angelos'||m==='Antigoni'?m:null;}catch(e){return null;}};
-  // Once a phone has signed in it stays signed in: the PIN screen is only ever shown the first time.
+  const lockIn=(name)=>{try{localStorage.setItem('mel-me',name);sessionStorage.removeItem('mel-arrived');}catch(e){}setMe(name);setAuthed(true);setPinBuf('');setPinBad(false);setClaim(null);setClaimMsg('');};
+  // Once a phone has signed in it stays that person's phone: the code screen is only shown the first time.
   useEffect(()=>{
     let first=true;const done=()=>setAuthReady(true),tm=setTimeout(done,3000);
     const un=onAuthStateChanged(_auth,(u)=>{
       if(!first)return;first=false;clearTimeout(tm);
-      if(u&&u.email&&(!GATE_ON||gateOpen())){const p=MEL_PEOPLE.find(x=>x[1]===u.email);
+      if(u&&u.email){const p=MEL_ALL.find(x=>x[1]===u.email);
         if(p){setMe(p[0]);setAuthed(true);}
-        else if(u.email===MEL_SHARED){const m=savedMe();if(m)setMe(m);setAuthed(true);}}
+        else signOut(_auth).catch(()=>{});}   // the old shared sign-in is retired
       done();});
     return ()=>{clearTimeout(tm);un();};
   },[]);
@@ -3943,49 +3939,45 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   if(!authed&&!authReady)return html`<div class="login"><div class="lmark">Mel<em>temi</em></div></div>`;
   if(!authed){
     const dots=[0,1,2,3].map(i=>html`<div class=${'dot'+(pinBuf.length>i?' f':'')} key=${i}></div>`);
-    const coming=GATE_ON&&gateStage==='code';
-    if(coming&&!gateAsk)return html`
-      <div class="login" style="justify-content:center;text-align:center">
-        <div style="font-family:var(--serif);font-size:40px;line-height:1.35;color:var(--ink)">A whole new<br/>Meltemi is coming</div>
-        <button class="gatelink" onClick=${()=>setGateAsk(true)}>I have a code</button>
-      </div>`;
     return html`
       <div class="login">
-        ${coming?html`<div style="font-family:var(--serif);font-size:26px;line-height:1.35;color:var(--ink);text-align:center">A whole new<br/>Meltemi is coming</div>`
-          :html`<div class="lmark">Mel<em>temi</em></div><div class="lsub">Angelos & Antigoni · our first summer</div>`}
-        <div class="ldiv" style=${coming?'margin-top:18px':''}></div>
-        <div class="soft" style="text-align:center;max-width:260px">
-          ${busy?'Opening…':coming?'Early access code':GATE_ON?'One time only: type your old Meltemi code, and it switches to the new one':'Your Meltemi PIN'}
-          ${pinBad&&html`<div style="color:#A4442C;font-weight:600;margin-top:5px">Not it, try again</div>`}
+        <div class="lmark">Mel<em>temi</em></div>
+        <div class="lsub">Angelos & Antigoni</div>
+        <div class="ldiv"></div>
+        <div class="soft" style="text-align:center;max-width:270px">
+          ${busy?'Opening…':'Your code'}
+          ${pinBad&&!claim&&html`<div style="color:#A4442C;font-weight:600;margin-top:5px">Not it, try again</div>`}
+          ${claimMsg&&html`<div style="color:#A4442C;font-weight:600;margin-top:5px">${claimMsg}</div>`}
         </div>
-        <div class=${'dots'+(pinBad?' bad':'')}>${dots}</div>
+        <div class=${'dots'+(pinBad&&!claim?' bad':'')}>${dots}</div>
+        ${claim?html`
+          <div class="claim">
+            <div class="ct">No one has the code <b>${claim.split('').join(' ')}</b> yet.</div>
+            <div class="cs">First time here? Tap your name and it becomes your code, on this phone and any other.</div>
+            <div class="pick">
+              ${MEL_PEOPLE.map(([n])=>html`<button key=${n} class="pcard" disabled=${busy} onClick=${()=>claimCode(n)}>
+                <span class="pe"><${Sig} who=${n} size="30px"/></span>
+                <span><div class="pn2">${n}</div><div class="ps2">MAKE IT MY CODE</div></span>
+              </button>`)}
+            </div>
+            <button class="gatelink" style="margin-top:14px" onClick=${()=>{setClaim(null);setPinBad(false);}}>Try a different code</button>
+          </div>`:html`
           <div class="pad">
             ${[1,2,3,4,5,6,7,8,9].map(k=>html`<button class="key" key=${k} onClick=${()=>pressKey(String(k))}>${k}</button>`)}
             <span></span>
             <button class="key" onClick=${()=>pressKey('0')}>0</button>
             <button class="key ghostk" onClick=${()=>pressKey('back')}>⌫</button>
-          </div>
+          </div>`}
       </div>`;
   }
-
-  if(!me){
-    return html`
-      <div class="login">
-        <div class="lmark">Mel<em>temi</em></div>
-        <div class="lsub">who\u2019s here?</div>
-        <div class="ldiv"></div>
-        <div class="pick">
-          <button class=${'pcard'+(me==='Angelos'?' hint':'')} onClick=${()=>{pickMe('Angelos');setPicked(true);}}>
-            <span class="pe"><${Sig} who="Angelos" size="30px"/></span>
-            <span><div class="pn2">Angelos</div><div class="ps2">SILLY SAUSAGE</div></span>
-          </button>
-          <button class=${'pcard'+(me==='Antigoni'?' hint':'')} onClick=${()=>{pickMe('Antigoni');setPicked(true);}}>
-            <span class="pe"><${Sig} who="Antigoni" size="30px"/></span>
-            <span><div class="pn2">Antigoni</div><div class="ps2">LITTLE STARFISH</div></span>
-          </button>
-        </div>
-      </div>`;
-  }
+  if(denied)return html`
+    <div class="login" style="justify-content:center;text-align:center">
+      <div class="lmark">Mel<em>temi</em></div>
+      <div class="ldiv"></div>
+      <div style="font-family:var(--serif);font-size:25px;line-height:1.35;color:var(--ink)">Your code is set${me?', '+me:''}.</div>
+      <div class="soft" style="max-width:280px;margin-top:10px">The house opens as soon as the new access is switched on. Angelos has one small step left to do.</div>
+      <button class="gatelink" onClick=${()=>location.reload()}>Try again</button>
+    </div>`;
 
   // ================= tabs =================
   const doneCount=(bucket||[]).filter(x=>x.done).length;
