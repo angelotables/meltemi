@@ -1293,8 +1293,10 @@ function buildWorld(T,wrap,opts){
     const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;return t;};
   const leafMat=(kind,o)=>{const m=mk(Object.assign({map:sprig(kind),alphaTest:.4,side:T.DoubleSide,roughness:.86,envMapIntensity:.9},o||{}));
     m.onBeforeCompile=(sh)=>{cutShader(sh);sh.uniforms.uWind=WIND;sh.vertexShader='uniform float uWind;\n'+sh.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n{float wv=sin(uWind*1.6+position.x*1.3+position.z*1.1)+sin(uWind*2.7+position.z*2.3+position.y)*.6;transformed.x+=wv*.014*uv.y;transformed.z+=wv*.010*uv.y;}');};m.userData.noAOpass=1;return m;};
-  const tGrass=ctex(256,256,(g,w,h)=>{g.fillStyle='#86AE55';g.fillRect(0,0,w,h);const P=['#7AA44C','#93BA60','#6E9A45','#A0C46C','#84AB52'];g.lineWidth=1.3;g.globalAlpha=.55;for(let i=0;i<2800;i++){g.strokeStyle=P[i%5];const x=Math.random()*w,y=Math.random()*h;g.beginPath();g.moveTo(x,y);g.lineTo(x+(Math.random()-.5)*5,y-3-Math.random()*6);g.stroke();}g.globalAlpha=1;});
-  M.grass=mk({map:tGrass,roughness:1},1/1.1,{noCast:1});M.fLawn=leafMat('lawn',{roughness:1});M.fLav=leafMat('lav');M.fFrond=leafMat('frond');
+  const tGrass=ctex(512,512,(g,w,h)=>{g.fillStyle='#7FA557';g.fillRect(0,0,w,h);for(let i=0;i<70;i++){const x=Math.random()*w,y=Math.random()*h,r=40+Math.random()*90,c=i%2?'104,146,70':'152,186,106';
+      for(const dx of [-w,0,w])for(const dy of [-h,0,h]){const gr=g.createRadialGradient(x+dx,y+dy,0,x+dx,y+dy,r);gr.addColorStop(0,'rgba('+c+',.34)');gr.addColorStop(1,'rgba('+c+',0)');g.fillStyle=gr;g.fillRect(x+dx-r,y+dy-r,r*2,r*2);}}
+    const P=['#76A04E','#8DB55F','#6A9646','#9ABF6A','#82A953'];g.lineWidth=1.2;g.globalAlpha=.5;for(let i=0;i<9000;i++){g.strokeStyle=P[i%5];const x=Math.random()*w,y=Math.random()*h;g.beginPath();g.moveTo(x,y);g.lineTo(x+(Math.random()-.5)*4,y-3-Math.random()*6);g.stroke();}g.globalAlpha=1;});
+  M.grass=mk({map:tGrass,roughness:1},1/5,{noCast:1});M.fLawn=leafMat('lawn',{roughness:1});M.fLav=leafMat('lav');M.fFrond=leafMat('frond');
   M.fGreen=leafMat('green');M.fOlive=leafMat('olive');M.fCyp=leafMat('cypress');M.fBoug=leafMat('boug');M.fFlower=leafMat('flower');M.fGrass=leafMat('grass',{roughness:1});
   const canopyGeo=(cx,cy,cz,rx,ry,rz,n,size,fill)=>{const pos=new Float32Array(n*12),nor=new Float32Array(n*12),uv=new Float32Array(n*8),idx=new Uint16Array(n*6);
     for(let i=0;i<n;i++){const a=rnd()*6.2832,cb=2*rnd()-1,sb=Math.sqrt(1-cb*cb),rr=Math.pow(rnd(),fill||.4),nx=sb*Math.cos(a),ny=cb,nz=sb*Math.sin(a),px=cx+nx*rx*rr,py=cy+ny*ry*rr,pz=cz+nz*rz*rr,s=size*(.7+rnd()*.6)*.5;
@@ -1307,19 +1309,32 @@ function buildWorld(T,wrap,opts){
       uv.set([0,0,1,0,1,1,0,1],i*8);const v=i*4;idx.set([v,v+1,v+2,v,v+2,v+3],i*6);}
     const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(pos,3));g.setAttribute('normal',new T.BufferAttribute(nor,3));g.setAttribute('uv',new T.BufferAttribute(uv,2));g.setIndex(new T.BufferAttribute(idx,1));return g;};
   const canopy=(mat,cx,cy,cz,rx,ry,rz,n,size,fill)=>put(canopyGeo(cx,cy,cz,rx,ry,rz,n,size,fill),mat,0,0,0);
+  M.cOlive=col('#5F7457',1);M.cGreen=col('#2E6A38',1);M.cCyp=col('#1C4A31',1);M.cBoug=col('#A3266F',1);M.barkO=mk({map:tOak,color:'#8B8377',roughness:1},1/1.2);photo([M.barkO],'oak');
+  const lump=(cx,cy,cz,rx,ry,rz,mat)=>{const g=new T.SphereGeometry(1,12,9),p=g.attributes.position,o=rnd()*6;for(let i=0;i<p.count;i++){const X=p.getX(i),Y=p.getY(i),Z=p.getZ(i),k=.86+.16*Math.sin(X*5.1+Y*3.7+o)*Math.cos(Z*4.3+X*2.1+o);p.setXYZ(i,X*k,Y*k,Z*k);}g.computeVertexNormals();put(g,mat,cx,cy,cz,0,0,0,rx,ry,rz);};
+  // a crown is a solid, lumpy heart with leaves all over its surface, so a tree reads as a mass and not a cloud of confetti
+  const crown=(leaf,core,cx,cy,cz,rx,ry,rz,n,size)=>{lump(cx,cy,cz,rx*.8,ry*.8,rz*.8,core);canopy(leaf,cx,cy,cz,rx,ry,rz,n,size,.16);};
+  const limb=(pts,r0,r1,mat)=>{const cv=new T.CatmullRomCurve3(pts.map(q=>new T.Vector3(q[0],q[1],q[2]))),SG=10,RS=8,g=new T.TubeGeometry(cv,SG,1,RS,false),p=g.attributes.position,c=new T.Vector3();
+    for(let i=0;i<=SG;i++){cv.getPointAt(i/SG,c);const r=r0+(r1-r0)*(i/SG);for(let j=0;j<=RS;j++){const k=i*(RS+1)+j;p.setXYZ(k,c.x+(p.getX(k)-c.x)*r,c.y+(p.getY(k)-c.y)*r,c.z+(p.getZ(k)-c.z)*r);}}g.computeVertexNormals();put(g,mat,0,0,0);};
+  // a branching tree: a short trunk, four boughs, a crown on each and one on top
+  const btree=(x,z,s,leaf,core,th)=>{const h=th*s;limb([[x,0,z],[x+.05*s,h*.5,z+.04*s],[x-.03*s,h,z]],.2*s,.13*s,M.barkO);
+    [[.75,.25,.9],[-.7,.15,.85],[.05,-.75,.8],[-.1,.6,1.05]].forEach((b,i)=>{const ex=x+b[0]*s,ez=z+b[1]*s,ey=h+b[2]*s;limb([[x-.03*s,h*.92,z],[x+b[0]*.45*s,h+b[2]*.45*s,z+b[1]*.45*s],[ex,ey,ez]],.11*s,.045*s,M.barkO);
+      crown(leaf,core,ex,ey+.25*s,ez,(.85-.06*i)*s,(.6-.04*i)*s,(.85-.06*i)*s,Math.round(120*s),.3);});
+    crown(leaf,core,x,h+1.3*s,z,.9*s,.6*s,.9*s,Math.round(120*s),.3);block(x-.22,z-.22,x+.22,z+.22);};
   const tuft=(mat,x,z,n,h,w,y)=>{y=y||0;const pos=[],nor=[],uv=[],idx=[];for(let i=0;i<n;i++){const a=rnd()*Math.PI,dx=Math.cos(a)*w/2,dz=Math.sin(a)*w/2,ox=(rnd()-.5)*w*.5,oz=(rnd()-.5)*w*.5,hh=h*(.7+rnd()*.5),lx=(rnd()-.5)*.3*hh,lz=(rnd()-.5)*.3*hh,k=i*4;
       pos.push(x+ox-dx,y,z+oz-dz,x+ox+dx,y,z+oz+dz,x+ox+dx+lx,y+hh,z+oz+dz+lz,x+ox-dx+lx,y+hh,z+oz-dz+lz);for(let q=0;q<4;q++)nor.push(0,1,0);uv.push(0,0,1,0,1,1,0,1);idx.push(k,k+1,k+2,k,k+2,k+3);}
     const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('normal',new T.Float32BufferAttribute(nor,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);put(g,mat,0,0,0);};
-  const boug=(x,y,z,rx,ry,rz,n)=>{canopy(M.fBoug,x,y,z,rx,ry,rz,n,.36);canopy(M.fGreen,x,y,z,rx*.9,ry*.9,rz*.9,Math.round(n*.4),.3);};
+  const boug=(x,y,z,rx,ry,rz,n)=>{lump(x,y,z,rx*.7,ry*.7,rz*.7,M.cBoug);canopy(M.fBoug,x,y,z,rx,ry,rz,Math.round(n*1.3),.34,.2);canopy(M.fGreen,x,y,z,rx*.9,ry*.9,rz*.9,Math.round(n*.4),.3);};
   const posy=(x,y,z,r)=>{canopy(M.fGreen,x,y-r*.3,z,r*.8,r*.5,r*.8,Math.round(6+r*30),r*1.1);canopy(M.fFlower,x,y,z,r,r*.7,r,Math.round(8+r*44),r*1.15);};
   const trunk=(x,z,h,r,segs)=>{let ox=0,oz=0;for(let i=0;i<segs;i++){const hh=h/segs,nx=ox+(rnd()-.5)*r*1.6,nz=oz+(rnd()-.5)*r*1.6,k0=1-i*.55/segs,k1=1-(i+1)*.55/segs;
       CY(r*k1,r*k0,hh*1.1,M.bark,x+(ox+nx)/2,hh*(i+.5),z+(oz+nz)/2,9,(nz-oz)/hh,-(nx-ox)/hh);ox=nx;oz=nz;}return [x+ox,z+oz];};
-  const cypress=(x,z,h)=>{h=h||4.2;CY(.07,.1,.6,M.bark,x,.3,z,8);const L=8;for(let i=0;i<L;i++){const t=(i+.5)/L,rad=.52*Math.sin(Math.min(1,t*1.9+.25)*Math.PI*.5)*(1-t*.82)+.06;canopy(M.fCyp,x,.45+h*t,z,rad,h/L*.72,rad,Math.round(26+rad*70),.42,.7);}block(x-.3,z-.3,x+.3,z+.3);};
-  const rock=(x,z,s,sy)=>{const g=new T.IcosahedronGeometry(s,2),p=g.attributes.position;for(let i=0;i<p.count;i++){const X=p.getX(i),Y=p.getY(i),Z=p.getZ(i),n=Math.sin(X*12.9898/s+Y*78.233/s+Z*37.719/s)*43758.5453,k=.82+.36*(n-Math.floor(n));p.setXYZ(i,X*k,Y*k*(sy||.6),Z*k);}g.computeVertexNormals();put(g,M.rock,x,s*.12,z,0,rnd()*6,0);};
+  const cypress=(x,z,h)=>{h=h||4.2;CY(.06,.09,.5,M.barkO,x,.25,z,8);const prof=(t)=>.46*Math.sin(Math.min(1,t*1.9+.25)*Math.PI*.5)*(1-t*.86),pts=[];for(let i=0;i<=10;i++){const t=i/10;pts.push(new T.Vector2(prof(t)*.84+.015,.4+h*t));}put(new T.LatheGeometry(pts,14),M.cCyp,x,0,z);
+    const L=9;for(let i=0;i<L;i++){const t=(i+.5)/L,rad=prof(t)+.05;canopy(M.fCyp,x,.42+h*t,z,rad,h/L*.7,rad,Math.round(22+rad*90),.36,.14);}block(x-.3,z-.3,x+.3,z+.3);};
+  const rock=(x,z,s,sy)=>{const g=new T.SphereGeometry(s,12,9),p=g.attributes.position,o=rnd()*6;for(let i=0;i<p.count;i++){const X=p.getX(i),Y=p.getY(i),Z=p.getZ(i),k=.84+.2*Math.sin(X*2.3/s+Y*1.7/s+o)*Math.cos(Z*2.9/s+X*1.1/s);p.setXYZ(i,X*k,Y*k*(sy||.6),Z*k);}g.computeVertexNormals();put(g,M.rock,x,s*.12,z,0,rnd()*6,0);};
 
   // ---------- island + shell of the house ----------
   put(new T.CylinderGeometry(17.5,21.5,.8,64),M.sand,0,-.4,1);
-  put(new T.CircleGeometry(12.6,72),M.grass,0,.004,1,-Math.PI/2);
+  {const N=96,pos=[0,0,0],idx=[];for(let i=0;i<N;i++){const a=i/N*6.2832,r=12.3+.5*Math.sin(a*3+.6)+.32*Math.sin(a*7+1.9)+.18*Math.sin(a*13);pos.push(Math.cos(a)*r,0,Math.sin(a)*r);}for(let i=0;i<N;i++)idx.push(0,1+(i+1)%N,1+i);
+    const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();put(g,M.grass,0,.004,1);}
   PL(13,9,M.floor,0,.006,0,-Math.PI/2);PL(13,9,M.ceil,0,H-.002,0,Math.PI/2);
   for(let i=0;i<10;i++)B(.14,.16,9,M.beamW,-5.85+i*1.3,H-.08,0);
   B(13.5,.24,9.5,M.roof,0,H+.12,0);
@@ -1400,11 +1415,14 @@ function buildWorld(T,wrap,opts){
   soft(2.04,.26,1.74,M.linen,-5.3,.33,2.75,0,{r:.07,puff:.12});soft(1.42,.13,1.84,M.linen,-4.93,.515,2.75,0,{r:.06,puff:.5});soft(.42,.14,1.86,M.oat,-5.66,.53,2.75,0,{r:.07,puff:.3});
   soft(.44,.17,.68,M.linen,-6.02,.56,2.3,.06,{r:.085,puff:.5});soft(.44,.17,.68,M.linen,-6.02,.56,3.2,-.06,{r:.085,puff:.5});
   MD('throw_pillows_01_0',-5.72,2.6,Math.PI/2,.8,.55);MD('throw_pillows_01_1',-5.7,3.02,Math.PI/2+.3,.7,.55);
-  // Pengu, sitting up against the pillows
-  {const px=-5.46,py=.615,pz=2.8,PB=fab('#3F74B0'),PO=col('#F2A23A',.7);
-    SP(.135,PB,px,py+.15,pz,1,1.15,1.05);SP(.108,PB,px+.01,py+.37,pz,1,.95,1.04);SP(.108,M.linen,px+.072,py+.13,pz,.8,1.05,.8);SP(.08,M.linen,px+.07,py+.35,pz,.72,.82,.86);
-    put(new T.ConeGeometry(.032,.075,12),PO,px+.125,py+.345,pz,0,0,-Math.PI/2);[.036,-.036].forEach(dz=>{SP(.0125,M.dark,px+.103,py+.392,pz+dz);SP(.05,PO,px+.085,py+.02,pz+dz*1.9,1.35,.42,.9);});
-    [.135,-.135].forEach(dz=>SP(.05,PB,px+.01,py+.2,pz+dz,.55,1.45,.36));[[-.01,0,.07],[.02,.03,.06],[-.035,-.025,.055]].forEach(t=>put(new T.ConeGeometry(.017,t[2],8),PB,px+t[0],py+.475+t[2]/2,pz+t[1],0,0,t[0]*-6));}
+  // Pengu: one soft sky-blue egg, a big white face and tummy, glossy eyes, a small yellow beak, a little crest
+  {const px=-5.47,py=.61,pz=2.8,PB=fab('#8CC6F0'),PW=fab('#FFFFFF'),PO=col('#F5A623',.6),PK=col('#15171A',.18);
+    put(new T.LatheGeometry([[0,0],[.1,.004],[.15,.05],[.172,.12],[.172,.19],[.156,.27],[.136,.33],[.118,.375],[.085,.415],[.045,.435],[0,.44]].map(q=>new T.Vector2(q[0],q[1])),28),PB,px,py,pz);
+    SP(.15,PW,px+.098,py+.15,pz,.62,.98,.98);SP(.103,PW,px+.078,py+.305,pz,.72,.98,1.04);
+    [.052,-.052].forEach(dz=>{SP(.021,PK,px+.146,py+.33,pz+dz,.7,1.1,1);SP(.0075,PW,px+.161,py+.34,pz+dz+.006);SP(.004,PW,px+.162,py+.323,pz+dz-.006);
+      SP(.052,PO,px+.085,py+.012,pz+dz*1.5,1.35,.36,.95);put(new T.SphereGeometry(.075,12,9),PB,px-.005,py+.2,pz+dz*3.75,dz>0?.5:-.5,0,0,.42,1.45,.4);});
+    SP(.022,PO,px+.158,py+.288,pz,1.15,.72,1.25);
+    [[-.012,0,1.25],[.014,0,1.05],[-.036,0,1]].forEach(t=>SP(.024,PB,px+t[0],py+.445,pz+t[1],.9,t[2],.9));}
   soft(.5,.07,1.5,M.dusty,-4.42,.595,2.75,0,{r:.035,puff:.3});
   for(let i=0;i<10;i++)soft(.1,1.3,.29,M.oat,-6.34,.75,1.4+i*.3,0,{r:.045,puff:0});
   block(-6.42,1.7,-4.07,3.8);
@@ -1511,9 +1529,8 @@ function buildWorld(T,wrap,opts){
   CY(.11,.09,.2,M.steel,-1.9,.1,5.75,14);CY(.02,.03,.24,M.steel,-1.74,.17,5.75,8,0,-1);
   [[-1.25,7.35],[-1.95,7.42],[-2.65,7.36]].forEach(q=>CY(.27,.27,.03,M.deck,q[0],.016,q[1],18));
   [[-4.9,7.05],[-1.95,6.95]].forEach(q=>{CY(.025,.035,.4,M.blk,q[0],.2,q[1],8);SP(.06,M.glow,q[0],.44,q[1]);});
-  {const tp=trunk(4.6,6.8,1.5,.1,3);[[0,2.15,0,.8],[.5,1.95,.3,.6],[-.5,2.05,.2,.6],[.1,2.55,-.3,.6],[-.2,1.85,-.5,.55]].forEach(p=>canopy(M.fGreen,tp[0]+p[0],p[1],tp[1]+p[2],p[3],p[3]*.8,p[3],72,.36));
-    for(let i=0;i<12;i++){const a=i*2.1,r=.5+((i*7)%5)/10;SP(.055,M.lemon,tp[0]+Math.cos(a)*r,1.5+((i*7)%10)/9,tp[1]+Math.sin(a)*r,1,1.25,1);}block(4.45,6.65,4.75,6.95);}
-  {const tp=trunk(-6.4,8.2,1.6,.17,4);[[0,2.3,0,.95],[.7,2.1,.2,.7],[-.7,2.2,-.1,.75],[0,2.75,.4,.65],[.2,2,-.7,.65]].forEach(p=>canopy(M.fOlive,tp[0]+p[0],p[1],tp[1]+p[2],p[3],p[3]*.75,p[3],84,.4));block(-6.6,8,-6.2,8.4);}
+  btree(4.6,6.8,.78,M.fGreen,M.cGreen,1.15);for(let i=0;i<14;i++){const a=i*2.1,r=.55+((i*7)%5)/9;SP(.05,M.lemon,4.6+Math.cos(a)*r,1.5+((i*7)%10)/10,6.8+Math.sin(a)*r,1,1.25,1);}
+  btree(-6.4,8.2,1,M.fOlive,M.cOlive,1.05);
   cypress(8.3,2.2);cypress(8.8,.6,4.8);cypress(8.2,-1.2,3.8);cypress(-4.5,-8.2,4.6);cypress(1.5,-8.6);cypress(9.5,6.2,3.6);
   [[10,10],[-13,-2],[5,-13],[-9,12],[14,2]].forEach(p=>{rock(p[0],p[1],.6);rock(p[0]+.7,p[1]+.3,.34);block(p[0]-.5,p[1]-.4,p[0]+.5,p[1]+.4);tuft(M.fGrass,p[0]-.5,p[1]+.6,6,.6,.6);});
   CY(.03,.03,2.2,M.white,8.2,1.1,11,10);put(new T.ConeGeometry(1.35,.5,18),M.coral,8.2,2.3,11);
@@ -1524,16 +1541,15 @@ function buildWorld(T,wrap,opts){
   [[-170,-120,34,11],[150,-170,46,14],[190,90,30,9],[-120,170,40,10]].forEach(p=>{[[0,0,1,1],[.8,.3,.6,.62],[-.75,-.2,.7,.5],[.25,-.5,.5,.8]].forEach(q=>put(new T.SphereGeometry(p[2],18,10,0,Math.PI*2,0,Math.PI/2),M.far,p[0]+q[0]*p[2],-1.5,p[1]+q[1]*p[2],0,0,0,q[2],q[3]*p[3]/p[2],q[2]));});
   [[60,46,-120],[-90,52,-80],[120,58,40],[-40,48,130],[-150,60,30],[20,64,-170]].forEach((p,i)=>{for(let k=0;k<4;k++)SP(7+((i+k)*5)%5,M.cloud,p[0]*1.5+k*9-13,p[1]+34+(k%2)*2,p[2]*1.5+(k%3)*3,1.6,.4,1);});
   // ---------- the grounds: lawn, lavender along the path, an olive grove, palms by the water, a gate, a jetty ----------
-  for(let i=0;i<170;i++){const a=rnd()*6.2832,d=Math.sqrt(rnd())*12.2,x=Math.cos(a)*d,z=1+Math.sin(a)*d;if((Math.abs(x)<7&&Math.abs(z)<5)||(x<-6&&x>-11&&z>-5&&z<1.4)||(Math.abs(x)<1.2&&z>4&&z<13))continue;tuft(M.fLawn,x,z,4,.14+rnd()*.12,.42,.004);}
-  for(let i=0;i<64;i++){const a=i/64*6.2832+rnd()*.05,x=Math.cos(a)*12.5,z=1+Math.sin(a)*12.5;if(Math.abs(x)<1.3&&z>10)continue;tuft(i%3?M.fLawn:M.fGrass,x,z,6,.3+rnd()*.25,.6);}
+  for(let i=0;i<90;i++){const a=i/90*6.2832+rnd()*.05,rr=12.3+.5*Math.sin(a*3+.6)+.32*Math.sin(a*7+1.9)+.18*Math.sin(a*13)+rnd()*.5,x=Math.cos(a)*rr,z=1+Math.sin(a)*rr;if(Math.abs(x)<1.3&&z>10)continue;tuft(i%3?M.fLawn:M.fGrass,x,z,6,.3+rnd()*.25,.6);}
   PL(1.7,3.2,M.deck,0,.01,11.3,-Math.PI/2);
   for(let k=0;k<8;k++){const z=6.7+k*.62;[-1.28,1.28].forEach(x=>tuft(M.fLav,x,z,7,.5+rnd()*.12,.5,.004));}
   [7.3,9.2,11.1].forEach(z=>[-1.02,1.02].forEach(x=>{CY(.025,.035,.46,M.blk,x,.23,z,8);SP(.065,M.glow,x,.5,z);}));
-  const olive=(x,z,s)=>{s=s||1;const tp=trunk(x,z,1.6*s,.17*s,4);[[0,2.3,0,.95],[.7,2.1,.2,.7],[-.7,2.2,-.1,.75],[0,2.75,.4,.65],[.2,2,-.7,.65]].forEach(p=>canopy(M.fOlive,tp[0]+p[0]*s,p[1]*s,tp[1]+p[2]*s,p[3]*s,p[3]*.75*s,p[3]*s,Math.round(80*s),.4));block(x-.2,z-.2,x+.2,z+.2);};
+  const olive=(x,z,s)=>btree(x,z,s||1,M.fOlive,M.cOlive,1.05);
   olive(-9,10.4,.9);olive(-10.4,6.4,1.05);olive(7.2,-7.4,.95);olive(-8.8,-8.2,.9);
-  const palm=(x,z,h,lean)=>{const n=7;let ox=0;for(let i=0;i<n;i++){const t=i/n,nx=lean*Math.pow((i+1)/n,1.6)*h*.22,hh=h/n;CY(.11-.035*t,.13-.035*t,hh*1.07,M.palmT,x+(ox+nx)/2,hh*(i+.5),z,10,0,-(nx-ox)/hh);ox=nx;}
+  const palm=(x,z,h,lean)=>{const ox=lean*h*.22;limb([[x,0,z],[x+ox*.22,h*.4,z],[x+ox*.68,h*.8,z],[x+ox,h,z]],.19,.1,M.palmT);
     const tx=x+ox,pos=[],nor=[],uv=[],idx=[];let v0=0;
-    for(let f=0;f<12;f++){const a=f/12*6.2832+rnd()*.4,L=1.9+rnd()*.7,rise=.2+rnd()*.5,SG=7;for(let q=0;q<=SG;q++){const t=q/SG,r=L*t,y=h+.05+rise*L*(t-1.35*t*t),wd=.32*Math.pow(Math.sin(Math.PI*Math.min(1,t*.94+.05)),.6)+.03,cx=tx+Math.cos(a)*r,cz=z+Math.sin(a)*r,px=-Math.sin(a)*wd,pz=Math.cos(a)*wd;
+    for(let f=0;f<20;f++){const a=f/10*6.2832+rnd()*.4+(f<10?0:.3),L=(f<10?2.3:1.7)+rnd()*.5,rise=(f<10?.12:.8)+rnd()*.3,SG=7;for(let q=0;q<=SG;q++){const t=q/SG,r=L*t,y=h+.05+rise*L*(t-1.35*t*t),wd=.4*Math.pow(Math.sin(Math.PI*Math.min(1,t*.94+.05)),.6)+.03,cx=tx+Math.cos(a)*r,cz=z+Math.sin(a)*r,px=-Math.sin(a)*wd,pz=Math.cos(a)*wd;
         pos.push(cx-px,y,cz-pz,cx+px,y,cz+pz);nor.push(0,1,0,0,1,0);uv.push(0,t,1,t);if(q<SG){const k=v0+q*2;idx.push(k,k+1,k+3,k,k+3,k+2);}}v0+=(SG+1)*2;}
     const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('normal',new T.Float32BufferAttribute(nor,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);put(g,M.fFrond,0,0,0);
     for(let i=0;i<4;i++)SP(.09,M.palmT,tx+Math.cos(i*1.6)*.12,h-.12,z+Math.sin(i*1.6)*.12);block(x-.2,z-.2,x+.2,z+.2);};
