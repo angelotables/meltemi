@@ -731,7 +731,7 @@ import htm from 'https://esm.sh/htm@3.1.1';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, onSnapshot, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { getStorage, ref as sref, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
 const html = htm.bind(h);
 
@@ -749,6 +749,7 @@ const storage=getStorage(fb);
 const _auth=getAuth(fb);
 const PIN_PAD='hmpin-';                 // invisible padding: 4-digit PIN → 6+ char Firebase password
 const MEL_PEOPLE=[['Angelos','angelos@helios.local'],['Antigoni','antigoni@helios.local']]; // each PIN belongs to one person
+const MEL_SHARED='meltemi@helios.local'; // the original shared Meltemi code still opens the house, then asks once who you are
 const D=(k)=>doc(db,'gyrocity',k);
 
 const MEET='2026-07-29';
@@ -1706,7 +1707,7 @@ function buildWorld(T,wrap,opts){
     a.phase+=dt*sp*Math.PI/stride;a.gait=(a.gait||0)+((sp>.15?1:0)-(a.gait||0))*Math.min(1,dt*9);a.lean=(a.lean||0)+((turn||0)-(a.lean||0))*Math.min(1,dt*6);
     const w=a.gait,s=Math.sin(a.phase),c=Math.cos(a.phase),br=Math.sin(t*.0021+(A?1:0));
     a.legL.rotation.x=s*amp*w;a.legR.rotation.x=-s*amp*w;a.kneeL.rotation.x=(Math.max(0,-c)*amp*1.25)*w+.04;a.kneeR.rotation.x=(Math.max(0,c)*amp*1.25)*w+.04;
-    a.armL.rotation.x=-s*amp*.75*w+br*.025;a.armR.rotation.x=s*amp*.75*w-br*.025;a.armL.rotation.z=.09+br*.01;a.armR.rotation.z=-.09-br*.01;
+    a.armL.rotation.x=-s*amp*.75*w+br*.025;a.armR.rotation.x=s*amp*.75*w-br*.025;a.armL.rotation.z=.09+br*.01;a.armR.rotation.z=-.09-br*.01;a.armL.rotation.y=0;a.armR.rotation.y=0;
     a.elbL.rotation.x=-(.14+(Math.max(0,s)*amp*.7+.28*k)*w);a.elbR.rotation.x=-(.14+(Math.max(0,-s)*amp*.7+.28*k)*w);
     a.body.scale.y=1+br*.012;a.g.rotation.x=k*.075*w;a.g.rotation.z=Math.max(-.11,Math.min(.11,-a.lean*.09))*w;
     let lift=Math.abs(s)*.03*k*w,spin=0;const e=a.emote;
@@ -1714,6 +1715,9 @@ function buildWorld(T,wrap,opts){
       if(e.k==='reach'){const o=Math.sin(Math.min(1,u/e.dur)*Math.PI);a.armR.rotation.x=-1.25*o;a.armR.rotation.z=-.12;a.elbR.rotation.x=-.25-.2*o;}else
       if(e.k==='wave'){a.armR.rotation.z=-2.5+Math.sin(u*11)*.25;a.armR.rotation.x=0;a.elbR.rotation.x=-.5+Math.sin(u*11)*.3;}
       else if(e.k==='hug'){const o=Math.min(1,u*4);a.armL.rotation.x=-1.25*o;a.armR.rotation.x=-1.25*o;a.armL.rotation.z=-.4*o;a.armR.rotation.z=.4*o;a.elbL.rotation.x=-.9*o;a.elbR.rotation.x=-.9*o;}
+      else if(e.k==='embrace'){let o=Math.min(1,u*2.4);o=o*o*(3-2*o);const hi=A?0:1,sw=Math.sin(u*2.1)*.03*o*(A?-1:1),P0=e.p||{};
+        const rx=P0.rx!==undefined?P0.rx:(hi?1.72:1.12),ry=P0.ry!==undefined?P0.ry:.5,el=P0.el!==undefined?P0.el:.62,rz=P0.rz||0;
+        a.armL.rotation.x=-rx*o;a.armR.rotation.x=-rx*o;a.armL.rotation.y=-ry*o;a.armR.rotation.y=ry*o;a.armL.rotation.z=.09*(1-o)+rz*o;a.armR.rotation.z=-.09*(1-o)-rz*o;a.elbL.rotation.x=-.14-el*o;a.elbR.rotation.x=-.14-el*o;a.g.rotation.x=(P0.lean!==undefined?P0.lean:.06)*o;a.g.rotation.z=sw;}
       else if(e.k==='kiss'){const o=Math.min(1,u*5);a.armR.rotation.x=-1.5*o;a.armR.rotation.z=-.2;a.elbR.rotation.x=-1.9*o;}
       else if(e.k==='dance'){lift+=Math.abs(Math.sin(u*8))*.13;a.armL.rotation.z=1.9+Math.sin(u*8)*.5;a.armR.rotation.z=-1.9-Math.sin(u*8+1)*.5;a.elbL.rotation.x=-.6;a.elbR.rotation.x=-.6;spin=dt*5.5;}
       if(u>e.dur)a.emote=null;}
@@ -1825,7 +1829,7 @@ function buildWorld(T,wrap,opts){
       const ov=ao.overrideVisibility.bind(ao);ao.overrideVisibility=function(){ov();scene.traverse(o=>{if(o.isSprite||(o.material&&o.material.userData&&o.material.userData.noAOpass))o.visible=false;});};
       comp.addPass(ao);comp.addPass(new F.UnrealBloomPass(new T.Vector2(256,256),.2,.7,1.7));comp.addPass(new F.OutputPass());fx={comp,ao};fxOn=opts.fx!==false;}catch(e){console.warn(e);fx=null;}}
   const draw=()=>{if(fxOn&&fx)fx.comp.render();else renderer.render(scene,cam);};
-  let filmP=null,filmT=1e6,capSize=null;   // filming: a free camera, a fixed frame size and a clock of its own
+  let filmP=null,filmT=1e6,capSize=null,filmDuo=null;   // filming: a free camera, a fixed frame size and a clock of its own
   const prEff=()=>capSize?1:(fxOn&&fx)?Math.min(pr,1.5):pr;
   const fit=()=>{const w=capSize?capSize[0]:W(),h=capSize?capSize[1]:HH();renderer.setPixelRatio(prEff());renderer.setSize(w,h,false);if(fx){fx.comp.setPixelRatio(prEff());fx.comp.setSize(w,h);}cam.aspect=w/h;cam.fov=w/h<.8?80:w/h<1.2?70:58;cam.updateProjectionMatrix();};
   fit();
@@ -1928,9 +1932,10 @@ function buildWorld(T,wrap,opts){
       if(ptrs.size===0&&t-C.manual>1100){let c=P.face+Math.PI-C.yaw;c=Math.atan2(Math.sin(c),Math.cos(c));if(Math.abs(c)<2.3)C.yaw+=c*Math.min(1,dt*(P.path?2.0:1.2));}}
     const gy=groundY(P.x,P.z);P.vy-=17*dt;P.y+=P.vy*dt;if(P.y<=gy){P.y=gy;P.vy=0;}
     const pool=inPool(P.x,P.z);if(pool&&!wasPool)burst('drop',P.x,.4,P.z,8);wasPool=pool;
-    const a=animate(av,dt,sp,t,P.turn||0);P.face+=a.spin;av.g.position.set(P.x,P.y+a.lift,P.z);av.g.rotation.y=P.face;av.blob.visible=P.y>-.2&&P.y<.05;groundShadow(av,P.x,P.z,P.face);
+    if(filmDuo){const d=filmDuo;P.x=d.a[0];P.z=d.a[1];P.face=d.a[2];P.turn=0;PP.x=d.b[0];PP.z=d.b[1];PP.face=d.b[2];partner.g.position.x=PP.x;partner.g.position.z=PP.z;}
+    const a=animate(av,dt,filmDuo?filmDuo.sp:sp,t,P.turn||0);P.face+=a.spin;av.g.position.set(P.x,P.y+a.lift,P.z);av.g.rotation.y=P.face;av.blob.visible=P.y>-.2&&P.y<.05;groundShadow(av,P.x,P.z,P.face);
     groundShadow(partner,PP.x,PP.z,partner.g.rotation.y);
-    const pa=animate(partner,dt,0,t);partner.g.position.y=pa.lift;partner.g.rotation.y=PP.face+Math.sin(t*.0006)*.12;
+    const pa=animate(partner,dt,filmDuo?filmDuo.sp:0,t);partner.g.position.y=pa.lift;partner.g.rotation.y=PP.face+(filmDuo?0:Math.sin(t*.0006)*.12);
     applyCam(dt);if(cine)cineCam(dt);if(filmP)filmCam();
     doorAmt+=(doorTarget-doorAmt)*Math.min(1,dt*3.2);doorG.rotation.y=-doorAmt*1.9;doorCol.on=doorAmt<.5;
     if(seaM.normalMap){seaM.normalMap.offset.x=t*.000012;seaM.normalMap.offset.y=t*.000008;}foam.material.opacity=.4+Math.sin(t*.0012)*.15;
@@ -1974,7 +1979,7 @@ function buildWorld(T,wrap,opts){
     cap(w,h){capSize=w?[w,h]:null;fit();},
     adv(n,k){Object.assign(keys,k||{});for(let i=0;i<(n||2);i++){filmT+=16.7;step(.0167,filmT);}for(const q in (k||{}))keys[q]=false;},
     shot(){draw();},face(a){P.face=a;av.g.rotation.y=a;},
-    partnerAt(x,z,f){PP.x=x;PP.z=z;PP.face=f;placePartner();},pEmote(k,d){partner.emote={k,t:0,dur:d||2};},myEmote(k,d){av.emote={k,t:0,dur:d||2};},
+    partnerAt(x,z,f){PP.x=x;PP.z=z;PP.face=f;placePartner();},pEmote(k,d,p){partner.emote={k,t:0,dur:d||2,p};},myEmote(k,d,p){av.emote={k,t:0,dur:d||2,p};},duo(d){filmDuo=d||null;},hearts(x,y,z,n){burst('heart',x,y,z,n||7);},
     setGifts(list,who){giftActs.forEach(dropActive);giftActs=[];(list||[]).forEach(g=>{const mine=g.by===who;
       giftActs.push(addActive({key:'gift:'+g.id,e:mine?(HICONS[g.kind]?g.kind:'gift'):'gift',plain:mine,passive:mine,label:mine?null:'Pick up what '+g.by+' left for you',x:g.x,y:mine?.55:.85,z:g.z,r:1.9,size:mine?.36:.62}));});},
     setShell(s){if(shellAct){dropActive(shellAct);shellAct=null;}shellFound=!s||!!s.found;if(s&&!s.found){const p=HOUSE_SHELLS[s.i%HOUSE_SHELLS.length];shellAct=addActive({key:'shell',e:'shell',plain:true,passive:true,x:p[0],y:.32,z:p[1],r:0,size:.38});}},
@@ -2758,6 +2763,7 @@ function App(){
   const [meta,setMeta]=useState(null);
   const [me,setMe]=useState(null); // set by the PIN you sign in with
   const [picked,setPicked]=useState(false);
+  const [authReady,setAuthReady]=useState(false);
   const [tab,setTab]=useState('home');
   useEffect(()=>{window.scrollTo({top:0,left:0,behavior:'instant'});},[tab]);
   const [err,setErr]=useState('');
@@ -2919,11 +2925,26 @@ function App(){
       try{await signInWithEmailAndPassword(_auth,email,pw);who=name;break;}
       catch(e){if(e&&e.code==='auth/network-request-failed')net=true;}
     }
-    if(who){setMe(who);setAuthed(true);setPinBuf('');}
+    let shared=false;
+    if(!who){try{await signInWithEmailAndPassword(_auth,MEL_SHARED,pw);shared=true;}catch(e){if(e&&e.code==='auth/network-request-failed')net=true;}}
+    if(who){pickMe(who);setAuthed(true);setPinBuf('');}
+    else if(shared){const m=savedMe();if(m)setMe(m);setAuthed(true);setPinBuf('');}
     else{if(net)setErr('No connection, try again.');setPinBad(true);setPinBuf('');}
     setBusy(false);
   }
-  const pickMe=(n)=>{setMe(n);localStorage.setItem('mel-me',n);};
+  const pickMe=(n)=>{setMe(n);try{localStorage.setItem('mel-me',n);}catch(e){}};
+  const savedMe=()=>{try{const m=localStorage.getItem('mel-me');return m==='Angelos'||m==='Antigoni'?m:null;}catch(e){return null;}};
+  // Once a phone has signed in it stays signed in: the PIN screen is only ever shown the first time.
+  useEffect(()=>{
+    let first=true;const done=()=>setAuthReady(true),tm=setTimeout(done,3000);
+    const un=onAuthStateChanged(_auth,(u)=>{
+      if(!first)return;first=false;clearTimeout(tm);
+      if(u&&u.email){const p=MEL_PEOPLE.find(x=>x[1]===u.email);
+        if(p){setMe(p[0]);setAuthed(true);}
+        else if(u.email===MEL_SHARED){const m=savedMe();if(m)setMe(m);setAuthed(true);}}
+      done();});
+    return ()=>{clearTimeout(tm);un();};
+  },[]);
 
   // ---- trip state ----
   const tk=todayKey();
@@ -3894,6 +3915,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   }
 
   // ================= lock =================
+  if(!authed&&!authReady)return html`<div class="login"><div class="lmark">Mel<em>temi</em></div></div>`;
   if(!authed){
     const dots=[0,1,2,3].map(i=>html`<div class=${'dot'+(pinBuf.length>i?' f':'')} key=${i}></div>`);
     return html`
@@ -3902,7 +3924,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         <div class="lsub">Angelos & Antigoni · our first summer</div>
         <div class="ldiv"></div>
         <div class="soft">
-          ${busy?'Opening…':'Your code'}
+          ${busy?'Opening…':'Your Meltemi PIN, just this once'}
           ${pinBad&&html`<div style="color:#A4442C;font-weight:600;margin-top:5px">Not it, try again</div>`}
         </div>
         <div class=${'dots'+(pinBad?' bad':'')}>${dots}</div>
@@ -3915,7 +3937,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       </div>`;
   }
 
-  if(false){
+  if(!me){
     return html`
       <div class="login">
         <div class="lmark">Mel<em>temi</em></div>
@@ -5245,6 +5267,7 @@ const PausedScreen=()=>html`
 // GATE: a soft lock in front of the whole app. Until the entry code has been typed once on a
 // device, the page shows only the "coming" message, no login, nothing loads. The code is kept
 // as a hash, not in plain text. To open Meltemi to everyone, set GATE_ON to false.
+let gateJust=false;
 const GATE_ON=true,GATE_KEY='mel-gate',GATE_HASH='1o9gy5d';
 const gateHash=c=>{let h=2166136261;for(const ch of 'meltemi:'+c){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return (h>>>0).toString(36);};
 const gateOpen=()=>{try{return localStorage.getItem(GATE_KEY)===GATE_HASH;}catch(e){return false;}};
@@ -5259,7 +5282,7 @@ function Gate(){
     if(k==='back'){setBuf(buf.slice(0,-1));return;}
     const n=(buf+k).slice(0,4);setBuf(n);
     if(n.length<4)return;
-    if(gateHash(n)===GATE_HASH){try{localStorage.setItem(GATE_KEY,GATE_HASH);}catch(e){}setOpen(true);}
+    if(gateHash(n)===GATE_HASH){try{localStorage.setItem(GATE_KEY,GATE_HASH);}catch(e){}gateJust=true;setOpen(true);}
     else{setBad(true);setTimeout(()=>{setBad(false);setBuf('');},650);}
   };
   return html`
