@@ -2010,6 +2010,8 @@ function buildWorld(T,wrap,opts){
   };
 }
 
+// Defaults for everyone: rich detail, and the sky follows the phone's own clock. Older saved choices are cleared once.
+try{if(localStorage.getItem('mel-prefs-v')!=='2'){localStorage.removeItem('mel-fx');localStorage.removeItem('mel-sky');localStorage.setItem('mel-prefs-v','2');}}catch(e){}
 function House3D(props){
   const {active,me,other,menu,notice,stats,children}=props;
   const wrapRef=useRef(null),worldRef=useRef(null),cb=useRef(props),hintT=useRef(null);cb.current=props;
@@ -2035,7 +2037,7 @@ function House3D(props){
         if(!alive||!wrapRef.current)return;
         const w=buildWorld(T,wrapRef.current,{RB:window.__RB,GLTF:window.__GL,FX:window.__FX,fx:(()=>{try{return localStorage.getItem('mel-fx')!=='off';}catch(e){return true;}})(),onCine:(n)=>{if(alive)setCineN(n);},onReady:()=>{if(!alive)return;
             try{if(!start&&cb.current.active&&!sessionStorage.getItem('mel-arrived')){sessionStorage.setItem('mel-arrived','1');setCoach(false);const go=()=>{if(alive&&worldRef.current)worldRef.current.arrive();};if(worldRef.current)go();else setTimeout(go,60);}}catch(e){}
-            setLoading(false);},onFxDrop:()=>{try{localStorage.setItem('mel-fx','off');}catch(e){}setFxPref('off');},mode,start,me:cb.current.me||'Angelos',doorDone:cb.current.doorDone,setRoom,setNear,setFade,
+            setLoading(false);},onFxDrop:()=>{setFxPref('off');},mode,start,me:cb.current.me||'Angelos',doorDone:cb.current.doorDone,setRoom,setNear,setFade,
           onFeature:(id)=>cb.current.onFeature(id),onDoor:()=>cb.current.onDoor(),onGiftFound:(id)=>{w.sparkle('heart');cb.current.onGiftFound(id);},
           onShell:()=>cb.current.onShell(),onPartner:()=>setFan('emo')});
         worldRef.current=w;window.__house=w;sync(w);w.setActive(!!cb.current.active);
