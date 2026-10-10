@@ -2500,9 +2500,7 @@ function ArcadeSheet({doc,me,other,onSave,onClassic,onClose}){
           <button class="gcard" onClick=${()=>setG('c4')}><span class="gart c4a">${[1,0,2,2,1,1,2,1,0].map((v,i)=>html`<i key=${i} class=${v===1?'a':v===2?'b':''}></i>`)}</span>
             <span class="gx"><b>Four in a row</b><i>Drop a disc, line up four. One move at a time, from anywhere.</i></span>${chip(F.win?'Rematch?':F.turn===me?'Your move':'Their move',!F.win&&F.turn===me)}</button>
           <button class="gcard" onClick=${()=>setG('sea')}><span class="gart seaa"><${HIco} n="waves" s=${26}/></span>
-            <span class="gx"><b>Sea battle</b><i>Hide your fleet in the Aegean. Take turns firing until one of you is sunk.</i></span>${chip(S.win?'Rematch?':S.phase==='place'?(myFleet?'Waiting':'Set sail'):S.turn===me?'Your shot':'Their shot',!S.win&&((S.phase==='place'&&!myFleet)||(S.phase==='play'&&S.turn===me)))}</button>
-          <div class="bkh"><span>The classics</span></div>
-          <div class="gseed">${[['tavli','Tavli'],['jalla','Jalla!'],['ttl','Two truths'],['duel','In sync'],['word','Word']].map(c=>html`<button class="kpill" key=${c[0]} onClick=${()=>onClassic(c[0])}>${c[1]}</button>`)}</div>`}
+            <span class="gx"><b>Sea battle</b><i>Hide your fleet in the Aegean. Take turns firing until one of you is sunk.</i></span>${chip(S.win?'Rematch?':S.phase==='place'?(myFleet?'Waiting':'Set sail'):S.turn===me?'Your shot':'Their shot',!S.win&&((S.phase==='place'&&!myFleet)||(S.phase==='play'&&S.turn===me)))}</button>`}
 
         ${g==='c4'&&html`
           ${head('Four','in a row')}
@@ -4084,7 +4082,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   const gardenSub=gPlantsL.length?(gThirsty?gThirsty+' waiting for your water':'all watered — nicely done'):'plant the first thing';
   const bucketSub=(bucket||[]).length?doneCount+' of '+bucket.length+' done':'start the list';
   const mS=milesStats(milesDoc),mileSub=mS.past.length?mS.past.length+(mS.past.length===1?' reunion · ':' reunions · ')+Math.round(mS.totalKm*.621371).toLocaleString()+' miles flown':'log the first trip';
-  const aMoves=arcadeMoves(arcadeDoc,me),arcadeSub=aMoves.length?'your move in '+aMoves.join(' and '):'four in a row, sea battle, tavli';
+  const aMoves=arcadeMoves(arcadeDoc,me),arcadeSub=aMoves.length?'your move in '+aMoves.join(' and '):'four in a row, sea battle';
   const kTonight=(kitchen||[]).find(x=>x.kind==='plan'&&x.when===tk&&!x.done);
   const houseMenu=[
     {id:'bed',name:'The bedroom',icon:'bed',items:[
