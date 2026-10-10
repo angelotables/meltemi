@@ -1602,7 +1602,8 @@ function buildWorld(T,wrap,opts){
     const limb=(x,y,mU,mL,lU,lL,rU,rL,end)=>{const root=new T.Group();root.position.set(x,y,0);g.add(root);mesh(new T.CapsuleGeometry(rU,lU,4,12),mU,0,-lU/2,0,root);
       const joint=new T.Group();joint.position.set(0,-lU,0);root.add(joint);mesh(new T.CapsuleGeometry(rL,lL,4,12),mL,0,-lL/2,0,joint);if(end)end(joint,lL);return {root,joint};};
     const head=mesh(new T.SphereGeometry(.118,20,16),skin,0,1.6,0);head.scale.set(.94,1.08,1);
-    mesh(new T.CylinderGeometry(.045,.052,.1,12),skin,0,1.46,0);[.04,-.04].forEach(x=>mesh(new T.SphereGeometry(.013,8,8),dark,x,1.615,.108));
+    mesh(new T.CylinderGeometry(.045,.052,.1,12),skin,0,1.46,0);if(A){const white=sm('#FBFAF6',.35),blue=sm('#2F8FE0',.25);[.04,-.04].forEach(x=>{mesh(new T.SphereGeometry(.015,12,10),white,x,1.616,.1025).scale.set(1.15,.85,1);mesh(new T.SphereGeometry(.0102,12,10),blue,x,1.616,.1105);mesh(new T.SphereGeometry(.0046,8,8),dark,x,1.616,.117);});}
+    else [.04,-.04].forEach(x=>mesh(new T.SphereGeometry(.013,8,8),dark,x,1.615,.108));
     let L1,L2,A1,A2,body;
     if(A){
       const dress=sm('#5B1E2C',.7),dress2=sm('#5B1E2C',.7,{side:T.DoubleSide}),heel=sm('#22150F',.6);
