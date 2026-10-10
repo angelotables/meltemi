@@ -1196,28 +1196,61 @@ function buildWorld(T,wrap,opts){
   const goalRing=new T.Mesh(new T.RingGeometry(.2,.28,28),new T.MeshBasicMaterial({color:'#FFFFFF',transparent:true,opacity:.85,depthWrite:false,toneMapped:false}));goalRing.rotation.x=-Math.PI/2;goalRing.visible=false;scene.add(goalRing);
 
   // ---------- characters ----------
+  const mergeGeos=(list)=>{let nV=0,nI=0;for(const g of list){nV+=g.attributes.position.count;nI+=g.index.count;}
+    const pos=new Float32Array(nV*3),nor=new Float32Array(nV*3),idx=new Uint16Array(nI);let vo=0,io=0;
+    for(const g of list){pos.set(g.attributes.position.array,vo*3);nor.set(g.attributes.normal.array,vo*3);const ia=g.index.array;for(let i=0;i<ia.length;i++)idx[io+i]=ia[i]+vo;vo+=g.attributes.position.count;io+=ia.length;g.dispose();}
+    const o=new T.BufferGeometry();o.setAttribute('position',new T.BufferAttribute(pos,3));o.setAttribute('normal',new T.BufferAttribute(nor,3));o.setIndex(new T.BufferAttribute(idx,1));return o;};
   const makeAvatar=(who)=>{
-    const A=who==='Antigoni',sm=(c,r)=>new T.MeshStandardMaterial({color:c,roughness:r||.8,envMapIntensity:EI});
-    const skin=sm(A?'#E3AE88':'#CF9870',.6),hair=sm(A?'#3A2418':'#1F1713',.5),top=sm(A?'#F26D5B':'#FBF6EC',.92),bot=sm(A?'#F26D5B':'#2A4F86',.9),shoe=sm(A?'#F4EBDD':'#B98A58',.8);
+    const A=who==='Antigoni',sm=(c,r,ex)=>new T.MeshStandardMaterial(Object.assign({color:c,roughness:r||.8,envMapIntensity:EI},ex||{}));
+    const skin=sm(A?'#C99468':'#C6916B',.6),hair=sm(A?'#C4923C':'#15100D',A?.7:.45),hair2=sm('#E6BC62',.7),hair3=sm('#A9792E',.7),gold=sm('#DDA945',.3,{metalness:.9});
     const g=new T.Group(),mesh=(geo,mat,x,y,z,par)=>{const m=new T.Mesh(geo,mat);m.position.set(x,y,z);(par||g).add(m);return m;};
-    const leg=(x)=>{const p=new T.Group();p.position.set(x,.86,0);g.add(p);mesh(new T.CapsuleGeometry(.062,.56,4,10),skin,0,-.4,0,p);
-      mesh(new T.SphereGeometry(.075,10,8),shoe,0,-.78,.035,p).scale.set(.95,.6,1.7);if(!A)mesh(new T.CapsuleGeometry(.082,.22,4,10),bot,0,-.17,0,p);return p;};
-    const legL=leg(.088),legR=leg(-.088);
-    const body=mesh(new T.CapsuleGeometry(.15,.36,6,14),top,0,1.15,0);body.scale.set(1.08,1,.74);
-    if(A)mesh(new T.CylinderGeometry(.15,.31,.52,18),bot,0,.82,0).scale.z=.82;else mesh(new T.CylinderGeometry(.155,.165,.2,14),bot,0,.9,0).scale.z=.78;
-    mesh(new T.CylinderGeometry(.045,.052,.1,10),skin,0,1.46,0);
+    let legL,legR,armL,armR,body;
     const head=mesh(new T.SphereGeometry(.118,18,14),skin,0,1.6,0);head.scale.set(.94,1.08,1);
-    const cap=mesh(new T.SphereGeometry(.126,18,12,0,Math.PI*2,0,Math.PI*.5),hair,0,1.615,-.014);cap.rotation.x=-.42;cap.scale.set(.98,1.1,1.04);
-    if(A)mesh(new T.CapsuleGeometry(.1,.3,4,10),hair,0,1.38,-.085).scale.set(1.12,1,.55);
-    [.04,-.04].forEach(x=>mesh(new T.SphereGeometry(.013,8,8),hair,x,1.615,.108));
-    const arm=(x)=>{const p=new T.Group();p.position.set(x,1.39,0);g.add(p);mesh(new T.SphereGeometry(.068,10,8),top,0,0,0,p);
-      mesh(new T.CapsuleGeometry(.056,.1,4,10),top,0,-.09,0,p);mesh(new T.CapsuleGeometry(.043,.44,4,10),skin,0,-.33,0,p);return p;};
-    const armL=arm(.2),armR=arm(-.2);
+    mesh(new T.CylinderGeometry(.045,.052,.1,10),skin,0,1.46,0);
+    const dark=sm('#1A1310',.5);[.04,-.04].forEach(x=>mesh(new T.SphereGeometry(.013,8,8),dark,x,1.615,.108));
+    if(A){
+      // long wine dress, thin straps, side slit; bare shoulders and arms; gold hoops; big blonde curls
+      const dress=sm('#5B1E2C',.7),dress2=sm('#5B1E2C',.7,{side:T.DoubleSide}),heel=sm('#22150F',.6);
+      const leg=(x)=>{const p=new T.Group();p.position.set(x,.86,0);g.add(p);mesh(new T.CapsuleGeometry(.056,.56,4,10),skin,0,-.4,0,p);mesh(new T.SphereGeometry(.07,10,8),heel,0,-.78,.03,p).scale.set(.8,.5,1.6);return p;};
+      legL=leg(.075);legR=leg(-.075);
+      body=mesh(new T.CapsuleGeometry(.138,.34,6,14),dress,0,1.13,0);body.scale.set(1.04,1,.72);
+      mesh(new T.SphereGeometry(.15,14,10),skin,0,1.4,0).scale.set(1.12,.26,.7);
+      mesh(new T.CylinderGeometry(.148,.235,.68,20,1,true,.8,Math.PI*2-.55),dress2,0,.56,0).scale.z=.84;
+      [.075,-.075].forEach(x=>{mesh(new T.BoxGeometry(.014,.1,.014),dress,x,1.395,.088).rotation.x=-.3;});
+      const arm=(x)=>{const p=new T.Group();p.position.set(x,1.38,0);g.add(p);mesh(new T.SphereGeometry(.056,10,8),skin,0,0,0,p);mesh(new T.CapsuleGeometry(.039,.5,4,10),skin,0,-.3,0,p);return p;};
+      armL=arm(.185);armR=arm(-.185);
+      [.116,-.116].forEach(x=>{mesh(new T.TorusGeometry(.024,.0045,6,16),gold,x,1.555,.005).rotation.y=Math.PI/2;});
+      mesh(new T.SphereGeometry(.128,16,12,0,Math.PI*2,0,Math.PI*.5),hair,0,1.61,-.015).rotation.x=-.3;
+      const c1=[],c2=[],c3=[];
+      for(let r=0;r<10;r++){const y=1.71-r*.062,rad=.122+Math.sin(Math.min(1,r/5)*Math.PI/2)*.075-(r>6?(r-6)*.012:0),n=r<1?8:13,wrap=y>1.5?.6:.8;
+        for(let i=0;i<n;i++){const a=-Math.PI*wrap+Math.PI*2*wrap*(i/(n-1))+(r%2)*.12,sz=.04+((i*7+r*3)%5)*.004;
+          const sp=new T.SphereGeometry(sz,7,5);sp.translate(Math.sin(a)*rad,y+(((i+r)%3)-1)*.01,-Math.cos(a)*rad*.9-.025);[c1,c2,c3][(i*2+r)%3].push(sp);}}
+      for(let i=0;i<9;i++){const a=i/9*Math.PI*2,sp=new T.SphereGeometry(.05,7,5);sp.translate(Math.cos(a)*.075,1.722+(i%2)*.012,Math.sin(a)*.075-.035);[c1,c2,c3][i%3].push(sp);}
+      g.add(new T.Mesh(mergeGeos(c1),hair));g.add(new T.Mesh(mergeGeos(c2),hair2));g.add(new T.Mesh(mergeGeos(c3),hair3));
+      g.scale.setScalar(.985);
+    }else{
+      // black overshirt open over a white tee, grey trousers, black shoes, gold cross; dark swept-back hair, stubble
+      const shirt=sm('#1B1D22',.85),tee=sm('#F4F1EA',.9),pants=sm('#9A9CA1',.85),shoe=sm('#141416',.6);
+      const leg=(x)=>{const p=new T.Group();p.position.set(x,.86,0);g.add(p);mesh(new T.CapsuleGeometry(.072,.56,4,10),pants,0,-.4,0,p);mesh(new T.SphereGeometry(.078,10,8),shoe,0,-.79,.035,p).scale.set(.95,.58,1.75);return p;};
+      legL=leg(.09);legR=leg(-.09);
+      body=mesh(new T.CapsuleGeometry(.152,.36,6,14),shirt,0,1.15,0);body.scale.set(1.1,1,.74);
+      mesh(new T.CapsuleGeometry(.1,.3,4,10),tee,0,1.15,.034).scale.set(.52,1,.9);
+      mesh(new T.CylinderGeometry(.158,.168,.2,14),pants,0,.9,0).scale.z=.78;
+      const arm=(x)=>{const p=new T.Group();p.position.set(x,1.39,0);g.add(p);mesh(new T.SphereGeometry(.056,10,8),shirt,0,-.01,0,p);mesh(new T.CapsuleGeometry(.05,.42,4,10),shirt,0,-.28,0,p);mesh(new T.SphereGeometry(.045,10,8),skin,0,-.59,0,p);return p;};
+      armL=arm(.196);armR=arm(-.196);
+      mesh(new T.TorusGeometry(.062,.0045,6,20,Math.PI),gold,0,1.415,.118).rotation.z=Math.PI;
+      mesh(new T.BoxGeometry(.008,.036,.006),gold,0,1.338,.126);mesh(new T.BoxGeometry(.024,.008,.006),gold,0,1.345,.126);
+      const cap=mesh(new T.SphereGeometry(.127,18,12,0,Math.PI*2,0,Math.PI*.47),hair,0,1.612,-.016);cap.rotation.x=-.5;cap.scale.set(.97,1.05,1.05);
+      const q=mesh(new T.SphereGeometry(.085,14,10),hair,0,1.712,.028);q.scale.set(1.05,.5,1.25);q.rotation.x=-.25;
+      mesh(new T.SphereGeometry(.1205,16,10,Math.PI*.16,Math.PI*.68,Math.PI*.6,Math.PI*.27),sm('#2A1D16',1,{transparent:true,opacity:.24}),0,1.6,0).scale.set(.94,1.08,1);
+      [.042,-.042].forEach(x=>mesh(new T.BoxGeometry(.038,.009,.012),hair,x,1.643,.107));
+      g.scale.setScalar(1.045);
+    }
     const blob=new T.Mesh(new T.CircleGeometry(.38,20),new T.MeshBasicMaterial({map:blobTex,transparent:true,depthWrite:false,opacity:.6}));blob.rotation.x=-Math.PI/2;blob.position.y=.025;g.add(blob);
     scene.add(g);return {g,legL,legR,armL,armR,body,head,blob,emote:null,phase:0,who};};
   const killAvatar=(a)=>{if(!a)return;scene.remove(a.g);a.g.traverse(o=>{if(o.isMesh){o.geometry.dispose();if(o.material.dispose)o.material.dispose();}});};
   const animate=(a,dt,sp,t)=>{
-    a.phase+=sp*dt*3;const k=Math.min(1,sp/2.2),sw=Math.sin(a.phase)*.8*k;
+    a.phase+=sp*dt*3;const k=Math.min(1,sp/2.2),sw=Math.sin(a.phase)*(a.who==='Antigoni'?.48:.8)*k;
     a.legL.rotation.x=sw;a.legR.rotation.x=-sw;a.armL.rotation.x=-sw*.75;a.armR.rotation.x=sw*.75;a.armL.rotation.z=.1;a.armR.rotation.z=-.1;
     a.body.scale.y=1+Math.sin(t*.002+(a.who==='Antigoni'?1:0))*.012;
     let lift=Math.abs(Math.sin(a.phase))*.04*k,spin=0;const e=a.emote;
@@ -1249,8 +1282,8 @@ function buildWorld(T,wrap,opts){
   const dropActive=(o)=>{scene.remove(o.sp);scene.remove(o.h);o.sp.material.dispose();const i=actives.indexOf(o);if(i>=0)actives.splice(i,1);};
   HOUSE_SPOTS.forEach(s=>addActive({key:s.id,e:s.e,label:s.label,x:s.p[0],y:s.p[1],z:s.p[2],r:2.1,stand:s.s}));
   const doorSpot=actives[0];doorSpot.off=!!opts.doorDone;doorSpot.sp.visible=!opts.doorDone;
-  const partnerSpot=addActive({key:'partner',e:'💛',label:'Send a little love',x:PP.x,y:2.2,z:PP.z,r:2.3,stand:[-9.1,.3],size:.5});
-  const tag=spriteOf(textTex(' '),1);tag.scale.set(1.5,.33,1);tag.position.set(PP.x,1.92,PP.z);
+  const partnerSpot=addActive({key:'partner',e:'💛',label:'Send a little love',x:PP.x,y:2.36,z:PP.z,r:2.3,stand:[-9.1,.3],size:.4});
+  const tag=spriteOf(textTex(' '),1);tag.scale.set(.95,.21,1);tag.position.set(PP.x,2.0,PP.z);
   const parts=[];for(let i=0;i<18;i++){const s=spriteOf(emojiTex('✨'),.24);s.visible=false;parts.push({s,life:0,vx:0,vy:0,vz:0});}
   const burst=(e,x,y,z,n)=>{const tex=emojiTex(e);let c=0;for(const p of parts){if(p.life>0)continue;p.s.material.map=tex;p.s.material.needsUpdate=true;p.s.position.set(x+(Math.random()-.5)*.3,y,z+(Math.random()-.5)*.3);
     p.vx=(Math.random()-.5)*.7;p.vz=(Math.random()-.5)*.7;p.vy=.7+Math.random()*.8;p.life=1.5;p.s.visible=true;if(++c>=(n||7))break;}};
