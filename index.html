@@ -445,6 +445,10 @@
   .eatb{padding:12px 14px 14px}
   .eatr{font-size:17px}
   .hico{display:block;flex:0 0 auto}
+  .swadd{display:flex;gap:7px;margin-top:16px;user-select:text;-webkit-user-select:text}
+  .swadd .btn{display:flex;align-items:center;gap:5px}
+  .swlink{display:block;width:100%;margin-top:8px;background:none;border:none;color:var(--aegean);font-weight:600;font-size:13px;font-family:inherit;cursor:pointer;padding:8px 4px}
+  .swbox .swhead em{font-style:italic;color:var(--terra)}
   .ndot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--terra);margin-left:5px;vertical-align:middle}
   .gdsub{font-family:var(--serif);font-style:italic;color:var(--soft);font-size:14px;margin:-10px 8px 14px}
   .gstats{display:flex;gap:8px;margin:0 0 14px}
@@ -480,6 +484,12 @@
   .mhero svg{width:100%;height:auto;display:block}
   .mhero .mk{font-family:var(--serif);font-size:34px;line-height:1.08;margin-top:2px}
   .mhero .ms{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.86;font-weight:600;margin-top:7px}
+  .mwhere{background:#fff;border:1px solid var(--hair);border-radius:18px;padding:12px 14px 10px;margin-bottom:12px}
+  .mrow{margin-bottom:10px}
+  .mwho{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);font-weight:600;display:flex;gap:5px;align-items:center;margin-bottom:6px}
+  .mchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .hsheet select.mini{width:auto;min-height:0;padding:7px 12px;border-radius:999px;font-size:12.5px;color:var(--soft)}
+  .hsheet select.mini.on{border-color:var(--ink);color:var(--ink);font-weight:600}
   .mnext{background:#FFF6E3;border:1px solid #F1DDB0;border-radius:18px;padding:12px 16px;display:flex;gap:12px;align-items:center;margin-bottom:12px;color:var(--ink);font-size:14px;line-height:1.3}
   .mnext b{font-family:var(--serif);font-size:32px;font-weight:500}.mnext i{display:block;font-style:normal;font-size:12px;color:var(--soft)}
   .mtrip{display:flex;background:#fff;border:1px solid var(--hair);border-radius:18px;margin-top:10px;overflow:hidden}
@@ -1669,10 +1679,11 @@ function buildWorld(T,wrap,opts){
   const reach=(a)=>Math.hypot(a.x-P.x,a.z-P.z)<=a.r+.5;
   const trigger=(key)=>{const a=actives.find(o=>o.key===key);if(!a||a.off)return;
     if(key==='door')opts.onDoor();else if(key==='partner')opts.onPartner();else if(key.indexOf('gift:')===0)opts.onGiftFound(key.slice(5));else opts.onFeature(key);};
-  const goTo=(key)=>{const a=actives.find(o=>o.key===key);if(!a)return;const s=a.stand||[a.x+.9,a.z+.4];
-    if(Math.hypot(s[0]-P.x,s[1]-P.z)<.4)return;if(walkTo(s[0],s[1],{x:a.x,z:a.z}))return;
+  // tapping a marker walks you over; picking a place from the menu is a shortcut and puts you straight there
+  const goTo=(key,jump)=>{const a=actives.find(o=>o.key===key);if(!a)return;const s=a.stand||[a.x+.9,a.z+.4];
+    if(Math.hypot(s[0]-P.x,s[1]-P.z)<.4)return;if(!jump&&walkTo(s[0],s[1],{x:a.x,z:a.z}))return;
     opts.setFade(true);setTimeout(()=>{P.x=s[0];P.z=s[1];P.vx=P.vz=0;P.path=null;goalRing.visible=false;collide();P.y=groundY(P.x,P.z);C.tx=P.x;C.tz=P.z;
-      C.yaw=Math.atan2(P.x-a.x,P.z-a.z);P.face=Math.atan2(a.x-P.x,a.z-P.z);applyCam(.016);opts.setFade(false);},170);};
+      C.yaw=Math.atan2(P.x-a.x,P.z-a.z);P.face=Math.atan2(a.x-P.x,a.z-P.z);C.pitch=Math.min(C.pitch,.3);C.manual=-1e9;applyCam(1);opts.setFade(false);},170);};
   function tap(e){const r=wrap.getBoundingClientRect(),v=new T.Vector2(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);
     scene.updateMatrixWorld(true);cam.updateMatrixWorld(true);ray.setFromCamera(v,cam);
     const live=actives.filter(a=>!a.off&&!a.passive&&a.vis>.3),hits=ray.intersectObjects(live.map(a=>a.h),false);
@@ -1858,7 +1869,7 @@ function House3D(props){
                   <button class="main" onClick=${()=>{setOpen(false);cb.current.onFeature(it.key);}}>
                     <span class="ic"><${HIco} n=${it.icon} s=${19}/></span><span style="min-width:0"><div class="lb">${it.label}</div><div class="sb">${it.sub}</div></span>
                   </button>
-                  ${it.spot&&html`<button class="go" onClick=${()=>{setOpen(false);W()&&W().goTo(it.spot);}}>WALK THERE</button>`}
+                  ${it.spot&&html`<button class="go" onClick=${()=>{setOpen(false);W()&&W().goTo(it.spot,true);}}>GO THERE</button>`}
                 </div>`)}
             </div>`)}
         </div>
@@ -1875,14 +1886,15 @@ function House3D(props){
 }
 
 // Swipe the watchlist — yes/no on each title, a match when you both said yes.
-function SwipeDeck({deck,other,match,onSwipe,onClose,onList}){
+function SwipeDeck({deck,other,match,onSwipe,onClose,onList,onAdd}){
+  const [nt,setNt]=useState('');const addIt=()=>{const t=nt.trim();if(!t)return;onAdd(t);setNt('');};
   const [dx,setDx]=useState(0);const [go,setGo]=useState(false);const st=useRef(null);
   const top=deck[0],hue=(s)=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%360;return h;};
   const done=(yes)=>{if(!top||go)return;setGo(true);setDx(yes?520:-520);setTimeout(()=>{onSwipe(top,yes);setDx(0);setGo(false);},210);};
   return html`
     <div class="dsheet mid" onClick=${e=>{if(e.target.classList.contains('dsheet'))onClose();}}>
       <div class="swbox">
-        <div class="swhead"><span>Swipe night</span><button class="hbtn hx" onClick=${onClose}><${HIco} n="x" s=${16}/></button></div>
+        <div class="swhead"><span>Movie <em>night</em></span><button class="hbtn hx" onClick=${onClose}><${HIco} n="x" s=${16}/></button></div>
         ${match&&html`<div class="swmatch"><div class="big">It’s a match</div><div>${match}</div><div class="sm">you both want this one</div></div>`}
         ${!match&&top&&html`
           <div class="swcard" key=${top.id} style=${{transform:'translateX('+dx+'px) rotate('+(dx/22)+'deg)',transition:(st.current!==null?'none':'transform .22s ease'),
@@ -1897,8 +1909,9 @@ function SwipeDeck({deck,other,match,onSwipe,onClose,onList}){
           </div>
           <div class="swbtns"><button class="no" aria-label="No" onClick=${()=>done(false)}><${HIco} n="x" s=${26}/></button><span>${deck.length} left</span><button class="yes" aria-label="Yes" onClick=${()=>done(true)}><${HIco} n="heart" s=${26} f=${1}/></button></div>
         `}
-        ${!match&&!top&&html`<div class="swempty"><div class="big">All caught up</div><div class="sm">Nothing left to vote on.</div>
-          <button class="btn terra wide mt10" onClick=${onList}>Open the watchlist</button></div>`}
+        ${!match&&!top&&html`<div class="swempty"><div class="big">All caught up</div><div class="sm">Nothing left to vote on. Add something you want to watch and ${other} gets to swipe on it.</div></div>`}
+        <div class="swadd"><input placeholder="Add a movie or show…" value=${nt} onInput=${e=>setNt(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')addIt();}} /><button class="btn terra" style="flex:0 0 auto" onClick=${addIt}><${HIco} n="plus" s=${14}/> Add</button></div>
+        <button class="swlink" onClick=${onList}>See the whole watchlist and plan a movie night</button>
       </div>
     </div>`;
 }
@@ -1937,7 +1950,7 @@ function DinnerWheel({pool,onLock,onClose,onAdd}){
 const BOOK_TAKES=['The ending was earned.','The main character is secretly the villain.','It started better than it finished.','I’d give this to my mother.','The love story was the weakest part.','It should be a movie — and I know who’d star.','I saw the twist coming.','The best character wasn’t the main one.','It was fifty pages too long.','I’ll still think about this in a year.','The title is better than the book.','I’d read the sequel tomorrow.','Someone in this book reminds me of you.','The author was showing off.','The first chapter almost lost me.','I underlined something.','It made me want to book a trip.','We’d have survived this plot better than they did.','It deserved its hype.','I trust the narrator.'];
 function BookClub({doc,me,other,onSave,onClose}){
   const [view,setView]=useState(null);const [t1,setT1]=useState('');const [t2,setT2]=useState('');
-  const [drag,setDrag]=useState(null);const [take,setTake]=useState('');const [arg,setArg]=useState({});
+  const [drag,setDrag]=useState(null);const [take,setTake]=useState('');const [arg,setArg]=useState({});const [addOpen,setAddOpen]=useState(null);
   if(doc===null)return html`<div class="dsheet mid"><div class="swbox"><div class="swempty"><div class="sm">opening the library…</div></div></div></div>`;
   const D={recs:doc.recs||[],cur:doc.cur||null,debates:doc.debates||[],done:doc.done||[]};
   const save=(patch)=>onSave(Object.assign({},D,patch));
@@ -1947,7 +1960,7 @@ function BookClub({doc,me,other,onSave,onClose}){
   const deck=D.recs.filter(r=>me&&!(r.votes||{})[me]&&!(r.pass||{})[me]);
   const matches=D.recs.filter(r=>(r.votes||{}).Angelos&&(r.votes||{}).Antigoni);
   const v=view||(cur?'now':'picks');
-  const addRec=()=>{const t=t1.trim();if(!t||!me)return;save({recs:[{id:nid(),title:t,author:t2.trim(),by:me,ts:Date.now(),votes:{[me]:1}},...D.recs]});setT1('');setT2('');};
+  const addRec=()=>{const t=t1.trim();if(!t||!me)return;setAddOpen(false);setView('picks');save({recs:[{id:nid(),title:t,author:t2.trim(),by:me,ts:Date.now(),votes:{[me]:1}},...D.recs]});setT1('');setT2('');};
   const vote=(r,yes)=>save({recs:D.recs.map(x=>x.id!==r.id?x:Object.assign({},x,yes?{votes:Object.assign({},x.votes||{},{[me]:1})}:{pass:Object.assign({},x.pass||{},{[me]:1})}))});
   const start=(r)=>{save({recs:D.recs.filter(x=>x.id!==r.id),cur:{id:r.id,title:r.title,author:r.author||'',ts:Date.now(),prog:{Angelos:0,Antigoni:0},stars:{}}});setView('now');};
   const setProg=(p)=>{p=Math.max(0,Math.min(100,Math.round(p)));save({cur:Object.assign({},cur,{prog:Object.assign({},cur.prog||{},{[me]:p})})});};
@@ -1965,6 +1978,14 @@ function BookClub({doc,me,other,onSave,onClose}){
     <div class="dsheet" onClick=${e=>{if(e.target.classList.contains('dsheet'))onClose();}}>
       <div class="inner hsheet">
         <div class="swhead"><span>The <em>library</em></span><button class="hbtn hx" onClick=${onClose}><${HIco} n="x" s=${16}/></button></div>
+        ${(addOpen===null?(!cur&&!D.recs.length):addOpen)?html`<div class="take" style="margin:0 0 14px;border-color:var(--terra)">
+            <div class="ts" style="margin-bottom:10px">Recommend a book</div>
+            <input placeholder="Title" value=${t1} onInput=${e=>setT1(e.target.value)} />
+            <div class="row mt8" style="gap:7px"><input placeholder="Author (optional)" value=${t2} onInput=${e=>setT2(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')addRec();}} />
+              <button class="btn terra" style="flex:0 0 auto" onClick=${addRec}>Add</button></div>
+            <div class="sm">${other} gets to say yes or no. When you both say yes, you read it together.</div>
+          </div>`
+          :html`<button class="linkrow" style="margin:0 0 14px" onClick=${()=>setAddOpen(true)}><${HIco} n="plus" s=${18}/><span><b>Recommend a book</b><i>add a title for ${other} to say yes or no to</i></span><${HIco} n="chev" s=${16}/></button>`}
         <div class="hseg" style="margin-bottom:14px">
           ${[['now','Reading'],['picks','Picks'+(deck.length?' · '+deck.length:'')],['shelf','Shelf'+(D.done.length?' · '+D.done.length:'')]].map(m=>html`<button key=${m[0]} class=${v===m[0]?'on':''} onClick=${()=>setView(m[0])}>${m[1]}</button>`)}
         </div>
@@ -2015,11 +2036,7 @@ function BookClub({doc,me,other,onSave,onClose}){
               <div class="sm2">${deck[0].by} wants to read</div><div class="bkt">${deck[0].title}</div>${deck[0].author&&html`<div class="sm2">${deck[0].author}</div>`}
             </div>
             <div class="swbtns"><button class="no" aria-label="No" onClick=${()=>vote(deck[0],false)}><${HIco} n="x" s=${26}/></button><span>${deck.length} to decide</span><button class="yes" aria-label="Yes" onClick=${()=>vote(deck[0],true)}><${HIco} n="heart" s=${26} f=${1}/></button></div>
-          `:html`<div class="sm" style="text-align:center;margin:10px 0 4px">${matches.length?'':'No picks waiting on you. Recommend one:'}</div>`}
-          <div class="bkh"><span>Recommend a book</span></div>
-          <input placeholder="Title" value=${t1} onInput=${e=>setT1(e.target.value)} />
-          <div class="row mt8" style="gap:7px"><input placeholder="Author (optional)" value=${t2} onInput=${e=>setT2(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')addRec();}} />
-            <button class="btn terra" style="flex:0 0 auto" onClick=${addRec}>Add</button></div>
+          `:html`<div class="sm" style="text-align:center;margin:10px 0 4px">${matches.length?'':'No picks waiting on you. Recommend one at the top.'}</div>`}
           ${D.recs.filter(r=>r.by===me&&!(r.votes||{})[other]&&!(r.pass||{})[other]).length>0&&html`<div class="sm mt8">Waiting on ${other}: ${D.recs.filter(r=>r.by===me&&!(r.votes||{})[other]&&!(r.pass||{})[other]).map(r=>r.title).join(' · ')}</div>`}`}
         ${v==='shelf'&&html`
           ${D.done.length===0&&html`<div class="swempty"><div class="big">An empty shelf</div><div class="sm">Books you finish together live here.</div></div>`}
@@ -2230,9 +2247,11 @@ const AIRPORTS={JFK:['New York',40.64,-73.78],EWR:['Newark',40.69,-74.17],LGA:['
   LCA:['Larnaca',34.88,33.62],PFO:['Paphos',34.72,32.49],ATH:['Athens',37.94,23.94],SKG:['Thessaloniki',40.52,22.97],HER:['Heraklion',35.34,25.18],JTR:['Santorini',36.4,25.48],JMK:['Mykonos',37.44,25.35],PAS:['Paros',37.02,25.11],RHO:['Rhodes',36.41,28.09],CFU:['Corfu',39.6,19.91],
   LHR:['London',51.47,-.45],CDG:['Paris',49.01,2.55],AMS:['Amsterdam',52.31,4.76],FRA:['Frankfurt',50.04,8.56],MUC:['Munich',48.35,11.79],ZRH:['Zurich',47.46,8.55],VIE:['Vienna',48.11,16.57],FCO:['Rome',41.8,12.25],MXP:['Milan',45.63,8.72],
   MAD:['Madrid',40.47,-3.56],BCN:['Barcelona',41.3,2.08],LIS:['Lisbon',38.77,-9.13],IST:['Istanbul',41.28,28.75],TLV:['Tel Aviv',32.01,34.89],BEY:['Beirut',33.82,35.49],DXB:['Dubai',25.25,55.36],DOH:['Doha',25.27,51.61]};
+// she is always on the move: these are the places each of us is usually found, one tap apart
+const MILE_BASES={Angelos:['JFK'],Antigoni:['LHR','LCA','ATH']},placeNick=(c)=>c==='LCA'?'Cyprus':(AIRPORTS[c]||[c||'somewhere'])[0];
 const kmBetween=(a,b)=>{const A=AIRPORTS[a],B=AIRPORTS[b];if(!A||!B)return 0;const r=Math.PI/180,dl=(B[1]-A[1])*r,dn=(B[2]-A[2])*r,h=Math.sin(dl/2)**2+Math.cos(A[1]*r)*Math.cos(B[1]*r)*Math.sin(dn/2)**2;return Math.round(12742*Math.asin(Math.sqrt(h)));};
 const milesStats=(doc)=>{const homes=Object.assign({Angelos:'JFK',Antigoni:'LCA'},(doc||{}).homes||{}),today=todayKey(),dnum=(k)=>Math.round(new Date(k+'T12:00:00').getTime()/864e5);
-  const km=(t)=>{if(t.who==='both'){return (kmBetween(homes.Angelos,t.to)+kmBetween(homes.Antigoni,t.to))*(t.d2?2:1);}return kmBetween(t.from,t.to)+(t.d2?kmBetween(t.back||t.to,t.from):0);};
+  const km=(t)=>{if(t.who==='both'){return (kmBetween(t.fa||homes.Angelos,t.to)+kmBetween(t.fb||homes.Antigoni,t.to))*(t.d2?2:1);}return kmBetween(t.from,t.to)+(t.d2?kmBetween(t.back||t.to,t.from):0);};
   const tog=(t)=>{let e=t.d2||t.d1;if(e>today)e=today;return Math.max(1,dnum(e)-dnum(t.d1)+1);};
   const trips=((doc||{}).trips||[]).slice().sort((a,b)=>a.d1<b.d1?1:-1),past=trips.filter(t=>t.d1<=today),next=trips.filter(t=>t.d1>today).sort((a,b)=>a.d1<b.d1?-1:1)[0]||null;
   const togDays=past.reduce((s,t)=>s+tog(t),0),totalKm=past.reduce((s,t)=>s+km(t),0),first=past.length?past[past.length-1]:null;
@@ -2245,8 +2264,9 @@ function MilesSheet({doc,me,other,onSave,onApart,onClose}){
   const city=(c)=>(AIRPORTS[c]||[c||'somewhere'])[0],fmt=(n)=>Math.round(n).toLocaleString(),mi=(n)=>fmt(n*.621371);
   const fd=(k)=>{try{return new Date(k+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}catch(e){return k;}};
   const oth=(w)=>w==='Angelos'?'Antigoni':'Angelos';
-  const blank=()=>{const w=me||'Angelos';return {id:null,who:w,from:homes[w],to:homes[oth(w)],back:'',d1:today,d2:'',note:''};};
-  const submit=()=>{const f=form;if(!f.d1||!f.to||(f.who!=='both'&&!f.from))return;const rec={id:f.id||Date.now().toString(36),who:f.who,from:f.who==='both'?'':f.from,to:f.to,back:f.who==='both'?'':(f.back||''),d1:f.d1,d2:f.d2&&f.d2>=f.d1?f.d2:'',note:(f.note||'').trim(),by:me||'',ts:Date.now()};
+  const blank=()=>{const w=me||'Angelos';return {id:null,who:w,from:homes[w],to:homes[oth(w)],fa:homes.Angelos,fb:homes.Antigoni,back:'',d1:today,d2:'',note:''};};
+  const setAt=(w,c)=>save({homes:Object.assign({},homes,{[w]:c})});
+  const submit=()=>{const f=form;if(!f.d1||!f.to||(f.who!=='both'&&!f.from))return;const rec={id:f.id||Date.now().toString(36),who:f.who,from:f.who==='both'?'':f.from,to:f.to,back:f.who==='both'?'':(f.back||''),fa:f.who==='both'?(f.fa||homes.Angelos):'',fb:f.who==='both'?(f.fb||homes.Antigoni):'',d1:f.d1,d2:f.d2&&f.d2>=f.d1?f.d2:'',note:(f.note||'').trim(),by:me||'',ts:Date.now()};
     const list=doc.trips||[];save({trips:f.id?list.map(x=>x.id===f.id?rec:x):[rec,...list]});setForm(null);};
   const drop=(t)=>{save({trips:(doc.trips||[]).filter(x=>x.id!==t.id)});setArm(null);};
   const sel=(val,on,blankLabel)=>html`<select value=${val||''} onChange=${e=>on(e.target.value)}>${blankLabel&&html`<option value="">${blankLabel}</option>`}${Object.keys(AIRPORTS).map(c=>html`<option key=${c} value=${c}>${AIRPORTS[c][0]} · ${c}</option>`)}</select>`;
@@ -2261,9 +2281,15 @@ function MilesSheet({doc,me,other,onSave,onApart,onClose}){
           <svg viewBox="0 0 320 96"><path d="M34 70 Q160 -16 286 70" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.6" stroke-dasharray="3 5" stroke-linecap="round"/>
             <circle cx="34" cy="70" r="5" fill="#FFD9A0"/><circle cx="286" cy="70" r="5" fill="#9FE0EE"/>
             <g transform=${S.nowTog?'translate(274 55) rotate(40)':'translate(160 27)'}><path d="M-9 0H9M3 -6L9 0L3 6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
-            <text x="34" y="90" fill="rgba(255,255,255,.92)" font-size="10.5" text-anchor="middle" font-weight="600">${city(homes.Angelos)}</text><text x="286" y="90" fill="rgba(255,255,255,.92)" font-size="10.5" text-anchor="middle" font-weight="600">${city(homes.Antigoni)}</text></svg>
+            <text x="34" y="90" fill="rgba(255,255,255,.92)" font-size="10.5" text-anchor="middle" font-weight="600">${placeNick(homes.Angelos)}</text><text x="286" y="90" fill="rgba(255,255,255,.92)" font-size="10.5" text-anchor="middle" font-weight="600">${placeNick(homes.Antigoni)}</text></svg>
           <div class="mk">${S.nowTog?'Zero. You’re together.':mi(S.gap)+' miles'}</div>
           <div class="ms">${S.nowTog?'normally '+mi(S.gap)+' miles · '+fmt(S.gap)+' km apart':fmt(S.gap)+' km between you right now'}</div>
+        </div>
+        <div class="mwhere">
+          ${['Antigoni','Angelos'].map(w=>html`<div class="mrow" key=${w}><span class="mwho"><${HIco} n=${w==='Antigoni'?'waves':'sun'} s=${13}/> ${w} is in</span>
+            <div class="mchips">${MILE_BASES[w].map(c=>html`<button key=${c} class=${'kpill'+(homes[w]===c?' on':'')} onClick=${()=>setAt(w,c)}>${placeNick(c)}</button>`)}
+              <select class=${'mini'+(MILE_BASES[w].includes(homes[w])?'':' on')} value=${MILE_BASES[w].includes(homes[w])?'':homes[w]} onChange=${e=>{if(e.target.value)setAt(w,e.target.value);}}><option value="">elsewhere…</option>${Object.keys(AIRPORTS).filter(c=>!MILE_BASES[w].includes(c)).map(c=>html`<option key=${c} value=${c}>${AIRPORTS[c][0]}</option>`)}</select></div></div>`)}
+          <div class="sm" style="margin:2px 2px 0">From ${placeNick(homes.Angelos)}: ${MILE_BASES.Antigoni.map(c=>placeNick(c)+' '+mi(kmBetween(homes.Angelos,c))+' mi').join(' · ')}</div>
         </div>
         ${S.next&&html`<div class="mnext"><b>${S.dnum(S.next.d1)-S.dnum(today)}</b><span>${S.dnum(S.next.d1)-S.dnum(today)===1?'day':'days'} until ${S.next.who==='both'?'you meet in '+city(S.next.to):S.next.who+' lands in '+city(S.next.to)}<i>${fd(S.next.d1)}</i></span></div>`}
         <div class="gstats"><div class="gstat"><b>${S.past.length}</b><span>${S.past.length===1?'reunion':'reunions'}</span></div><div class="gstat"><b>${S.togDays}</b><span>days together</span></div><div class="gstat"><b>${mi(S.totalKm)}</b><span>miles flown</span></div></div>
@@ -2273,6 +2299,7 @@ function MilesSheet({doc,me,other,onSave,onApart,onClose}){
           <div class="ts" style="margin-bottom:10px">${form.id?'Change this trip':'A time we closed the distance'}</div>
           <div class="hseg">${[['Angelos','Angelos flew'],['Antigoni','Antigoni flew'],['both','We met there']].map(m=>html`<button key=${m[0]} class=${form.who===m[0]?'on':''} onClick=${()=>F(m[0]==='both'?{who:'both'}:{who:m[0],from:homes[m[0]],to:form.who==='both'?homes[oth(m[0])]:form.to===homes[m[0]]?homes[oth(m[0])]:form.to})}>${m[1]}</button>`)}</div>
           ${form.who!=='both'&&html`<div class="mlab">From</div>${sel(form.from,v=>F({from:v}))}`}
+          ${form.who==='both'&&html`<div class="row" style="gap:8px"><div style="flex:1;min-width:0"><div class="mlab">Angelos came from</div>${sel(form.fa||homes.Angelos,v=>F({fa:v}))}</div><div style="flex:1;min-width:0"><div class="mlab">Antigoni came from</div>${sel(form.fb||homes.Antigoni,v=>F({fb:v}))}</div></div>`}
           <div class="mlab">${form.who==='both'?'Where we met':'To'}</div>${sel(form.to,v=>F({to:v}))}
           <div class="row" style="gap:8px"><div style="flex:1;min-width:0"><div class="mlab">Landed</div><input type="date" value=${form.d1} onInput=${e=>F({d1:e.target.value})} /></div><div style="flex:1;min-width:0"><div class="mlab">Flew home</div><input type="date" value=${form.d2} onInput=${e=>F({d2:e.target.value})} /></div></div>
           ${form.who!=='both'&&html`<div class="mlab">Flew home from</div>${sel(form.back,v=>F({back:v}),'The same place')}`}
@@ -2290,8 +2317,6 @@ function MilesSheet({doc,me,other,onSave,onApart,onClose}){
               <div class="t2">${mi(S.km(t))} miles · ${fmt(S.km(t))} km${t.who!=='both'?' · '+t.who+' flew':''}</div>
               <div class="row mt8" style="gap:6px"><button class="kpill" onClick=${()=>{setArm(null);setForm(Object.assign({back:'',d2:'',note:''},t));}}>Change</button><button class="kpill" onClick=${()=>arm===t.id?drop(t):setArm(t.id)}>${arm===t.id?'Tap again to remove':'Remove'}</button></div>
             </div></div>`)}
-          <div class="bkh"><span>Where we each live</span></div>
-          <div class="row" style="gap:8px"><div style="flex:1;min-width:0"><div class="mlab" style="margin-top:0">Angelos</div>${sel(homes.Angelos,v=>save({homes:Object.assign({},homes,{Angelos:v})}))}</div><div style="flex:1;min-width:0"><div class="mlab" style="margin-top:0">Antigoni</div>${sel(homes.Antigoni,v=>save({homes:Object.assign({},homes,{Antigoni:v})}))}</div></div>
           <button class="linkrow" onClick=${onApart}><${HIco} n="waves" s=${18}/><span><b>The days apart</b><i>good mornings, missions and the jar</i></span><${HIco} n="chev" s=${16}/></button>`}
       </div>
     </div>`;
@@ -3691,7 +3716,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     if(id==='plans'){setKKind('plan');setTab('kitchen');return;}
     if(id==='wheel'){setHSheet('wheel');return;}
     if(id==='books'){setHSheet('books');return;}
-    if(id==='tv'){if(swipeDeck.length>0)setHSheet('swipe');else setTab('tv');return;}
+    if(id==='tv'){setHSheet('swipe');return;}
     if(id==='tvlist'){setTab('tv');return;}
     setTab(id);
   };
@@ -3760,7 +3785,8 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       onEmote=${(k)=>sendPing(k)} onGift=${leaveGift} onMoment=${takeMeBack} onNotice=${()=>setErr('')}>
       ${ritualSheet}
       ${hSheet==='swipe'&&html`<${SwipeDeck} deck=${swipeDeck} other=${other} match=${hMatch} onSwipe=${tvSwipe}
-        onClose=${()=>setHSheet(null)} onList=${()=>{setHSheet(null);setTab('tv');}}/>`}
+        onClose=${()=>setHSheet(null)} onList=${()=>{setHSheet(null);setTab('tv');}}
+        onAdd=${(t)=>{if(!guard(tvdoc))return;if(!me){setErr('Sign in first.');return;}tvSave({list:[{id:Date.now().toString(36),title:t,by:me,at:nowStamp(),votes:{[me]:1}},...tvList]});flash('Added. '+other+' gets to vote on it');}}/>`}
       ${hSheet==='eats'&&html`<${EatsBook} want=${eatWant} doc=${eatsDoc} me=${me} other=${other} onSave=${(d)=>{write('trip_eats',d);}} onWent=${eatWent} onAddSpot=${eatAdd}
         onUpload=${(fs)=>uploadMany(fs,()=>{})} onView=${(list,idx)=>setViewImg({list,idx})} onClose=${()=>setHSheet(null)}/>`}
       ${hSheet==='books'&&html`<${BookClub} doc=${booksDoc} me=${me} other=${other} onSave=${(d)=>write('trip_books',d)} onClose=${()=>setHSheet(null)}/>`}
