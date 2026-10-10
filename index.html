@@ -449,6 +449,36 @@
   .swadd .btn{display:flex;align-items:center;gap:5px}
   .swlink{display:block;width:100%;margin-top:8px;background:none;border:none;color:var(--aegean);font-weight:600;font-size:13px;font-family:inherit;cursor:pointer;padding:8px 4px}
   .swbox .swhead em{font-style:italic;color:var(--terra)}
+  .gboard{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--hair);border-radius:20px;padding:14px 16px;margin-bottom:6px;font-size:12.5px;font-weight:600;color:var(--ink2)}
+  .gboard b{font-family:var(--serif);font-size:34px;font-weight:500;color:var(--ink);line-height:1}.gboard b i{font-style:normal;color:var(--soft);font-size:22px}
+  .gboard .gsa,.gboard .gsb{display:flex;align-items:center;gap:6px}.gboard .gsa{color:#B9791A}.gboard .gsb{color:var(--aegean)}
+  .gcard{display:flex;gap:12px;align-items:center;width:100%;background:#fff;border:1px solid var(--hair);border-radius:20px;padding:13px 14px;margin-top:10px;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink)}
+  .gcard:active{transform:scale(.985)}
+  .gx{flex:1;min-width:0}.gx b{display:block;font-family:var(--serif);font-size:19px;font-weight:500}.gx i{display:block;font-style:normal;font-size:12px;color:var(--soft);line-height:1.35;margin-top:2px}
+  .gart{flex:0 0 54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+  .gart.c4a{background:linear-gradient(160deg,#2B7390,#1B4F6B);display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:9px}
+  .gart.c4a i{border-radius:50%;background:#F4EEE2;aspect-ratio:1;display:block}.gart.c4a i.a,.glegend i.a{background:#F5A93A}.gart.c4a i.b,.glegend i.b{background:#49B5CF}
+  .gart.seaa{background:linear-gradient(160deg,#BFE6F0,#7CC7DC);color:#1B4F6B}
+  .gchip{flex:0 0 auto;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-radius:999px;padding:6px 10px;background:var(--paper);color:var(--soft);white-space:nowrap}
+  .gchip.go{background:#FFE4AE;color:#7A4E0C}
+  .gback{border:none;background:none;padding:0 8px 0 0;color:var(--aegean);cursor:pointer;vertical-align:middle}
+  .gturn{text-align:center;font-family:var(--serif);font-size:19px;color:var(--ink2);background:#fff;border:1px solid var(--hair);border-radius:999px;padding:9px 14px;margin:0 0 12px}
+  .gturn.go{background:#FFE9BF;border-color:#F1D59A;color:#5E3B06}
+  .c4{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;background:linear-gradient(160deg,#2B7390,#1B4F6B);padding:11px;border-radius:22px;box-shadow:0 12px 28px rgba(27,79,107,.28);overflow:hidden}
+  .c4c{aspect-ratio:1;border-radius:50%;border:none;background:#F4EEE2;box-shadow:inset 0 2px 5px rgba(0,0,0,.28);padding:0;cursor:pointer;min-width:0}
+  .c4c.a{background:radial-gradient(circle at 35% 30%,#FFE7A6,#F5A93A)}.c4c.b{background:radial-gradient(circle at 35% 30%,#C9EEF6,#2A9CB8)}
+  .c4c.win{box-shadow:0 0 0 3px #fff,0 0 16px rgba(255,255,255,.9)}
+  .c4c.last{animation:c4drop .38s cubic-bezier(.3,1.35,.6,1)}
+  @keyframes c4drop{from{transform:translateY(-240px)}to{transform:none}}
+  .glegend{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--ink2);font-weight:600;margin:10px 4px 0}
+  .glegend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+  .sea{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;background:linear-gradient(160deg,#BFE6F0,#86CCDF);padding:11px;border-radius:22px;box-shadow:0 12px 28px rgba(27,79,107,.18)}
+  .seac{aspect-ratio:1;border-radius:10px;border:none;background:rgba(255,255,255,.5);padding:0;display:flex;align-items:center;justify-content:center;min-width:0}
+  button.seac{cursor:pointer}
+  .seac.ship{background:#56768F}
+  .seac.miss::after{content:'';width:8px;height:8px;border-radius:50%;background:rgba(27,79,107,.42)}
+  .seac.hit{background:#F26D5B}.seac.hit::after{content:'';width:10px;height:10px;border-radius:50%;background:#fff}
+  .seac.sunk{background:#8E3B2F}.seac.sunk::after{content:'';width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.75)}
   .ndot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--terra);margin-left:5px;vertical-align:middle}
   .gdsub{font-family:var(--serif);font-style:italic;color:var(--soft);font-size:14px;margin:-10px 8px 14px}
   .gstats{display:flex;gap:8px;margin:0 0 14px}
@@ -2330,6 +2360,93 @@ function MilesSheet({doc,me,other,onSave,onApart,onClose}){
     </div>`;
 }
 
+// ================= THE GAMES ROOM · play across the distance, a move at a time =================
+const C4W=7,C4H=6,SEA_N=7,SEA_FLEET=[4,3,2,2];
+const c4Win=(b)=>{const dirs=[[1,0],[0,1],[1,1],[1,-1]];for(let r=0;r<C4H;r++)for(let c=0;c<C4W;c++){const v=b[r*C4W+c];if(!v)continue;
+  for(const d of dirs){const line=[r*C4W+c];for(let k=1;k<4;k++){const rr=r+d[1]*k,cc=c+d[0]*k;if(rr<0||rr>=C4H||cc<0||cc>=C4W||b[rr*C4W+cc]!==v)break;line.push(rr*C4W+cc);}if(line.length===4)return {v,line};}}return null;};
+const seaFleet=()=>{for(let tries=0;tries<200;tries++){const used=new Set(),ships=[];let ok=true;
+  for(const len of SEA_FLEET){let placed=false;for(let t=0;t<60&&!placed;t++){const hz=Math.random()<.5,r=Math.floor(Math.random()*(hz?SEA_N:SEA_N-len+1)),c=Math.floor(Math.random()*(hz?SEA_N-len+1:SEA_N)),cells=[];
+      for(let k=0;k<len;k++)cells.push((r+(hz?0:k))*SEA_N+c+(hz?k:0));if(cells.some(x=>used.has(x)))continue;cells.forEach(x=>used.add(x));ships.push(cells);placed=true;}
+    if(!placed){ok=false;break;}}
+  if(ok)return ships;}return [[0,1,2,3],[14,15,16],[28,29],[42,43]];};
+const arcadeC4=(doc)=>(doc&&doc.c4)||{board:Array(42).fill(0),turn:'Angelos',win:null,line:[],last:-1,n:0};
+const arcadeSea=(doc)=>(doc&&doc.sea)||{phase:'place',fleets:{},shots:{},turn:'Angelos',win:null,n:0};
+// which games are waiting on you right now
+const arcadeMoves=(doc,me)=>{if(!doc||!me)return [];const out=[],F=arcadeC4(doc),S=arcadeSea(doc);if(!F.win&&F.turn===me&&F.board.some(x=>x))out.push('Four in a row');
+  if(S.phase==='play'&&!S.win&&S.turn===me)out.push('Sea battle');if(S.phase==='place'&&(S.fleets||{})[me==='Angelos'?'Antigoni':'Angelos']&&!(S.fleets||{})[me])out.push('Sea battle');return out;};
+function ArcadeSheet({doc,me,other,onSave,onClassic,onClose}){
+  const [g,setG]=useState(null);const [seaView,setSeaView]=useState('them');const [draft,setDraft]=useState(()=>seaFleet());
+  if(doc===null)return html`<div class="dsheet mid"><div class="swbox"><div class="swempty"><div class="sm">setting up the table…</div></div></div></div>`;
+  const W0={Angelos:0,Antigoni:0},wins=Object.assign({c4:W0,sea:W0},doc.wins||{}),tot=(w)=>((wins.c4||{})[w]||0)+((wins.sea||{})[w]||0);
+  const save=(patch)=>onSave(Object.assign({},doc,patch));
+  const ico=(w,s)=>html`<${HIco} n=${w==='Antigoni'?'waves':'sun'} s=${s||14}/>`,opp=(w)=>w==='Angelos'?'Antigoni':'Angelos';
+  // ---- four in a row ----
+  const F=arcadeC4(doc),fv=(w)=>w==='Angelos'?1:2;
+  const drop=(col)=>{if(!me||F.win||F.turn!==me)return;const b=F.board.slice();let r=C4H-1;while(r>=0&&b[r*C4W+col])r--;if(r<0)return;b[r*C4W+col]=fv(me);const w=c4Win(b),full=b.every(x=>x);
+    const patch={c4:Object.assign({},F,{board:b,last:r*C4W+col,turn:w||full?F.turn:other,win:w?me:full?'draw':null,line:w?w.line:[]})};
+    if(w){const cw=Object.assign({},W0,wins.c4);cw[me]=(cw[me]||0)+1;patch.wins=Object.assign({},wins,{c4:cw});}save(patch);};
+  const again4=()=>save({c4:{board:Array(42).fill(0),turn:F.win&&F.win!=='draw'?opp(F.win):opp(F.turn),win:null,line:[],last:-1,n:(F.n||0)+1}});
+  const fStatus=F.win?(F.win==='draw'?'A draw. Nobody blinked.':F.win===me?'You won this one':other+' won this one'):F.turn===me?'Your move':'Waiting for '+other;
+  // ---- sea battle ----
+  const S=arcadeSea(doc),fleets=S.fleets||{},myFleet=fleets[me],theirFleet=fleets[other],myShots=(S.shots||{})[me]||[],theirShots=(S.shots||{})[other]||[];
+  const cellsOf=(f)=>f?f.ships.reduce((a,s)=>a.concat(s.c),[]):[];
+  const sunk=(f,shots)=>f?f.ships.filter(s=>s.c.every(x=>shots.includes(x))):[];
+  const setSail=()=>{if(!me)return;const fl=Object.assign({},fleets,{[me]:{ships:draft.map(c=>({c})),ready:1}}),both=fl.Angelos&&fl.Antigoni;save({sea:Object.assign({},S,{fleets:fl,phase:both?'play':'place'})});};
+  const fire=(i)=>{if(!me||S.phase!=='play'||S.win||S.turn!==me||myShots.includes(i))return;const mine=[...myShots,i],tc=cellsOf(theirFleet),won=tc.every(x=>mine.includes(x));
+    const patch={sea:Object.assign({},S,{shots:Object.assign({},S.shots||{},{[me]:mine}),turn:won?me:other,win:won?me:null,phase:won?'done':'play',lastShot:{by:me,i,hit:tc.includes(i)?1:0}})};
+    if(won){const cw=Object.assign({},W0,wins.sea);cw[me]=(cw[me]||0)+1;patch.wins=Object.assign({},wins,{sea:cw});}save(patch);};
+  const againSea=()=>{setDraft(seaFleet());setSeaView('them');save({sea:{phase:'place',fleets:{},shots:{},turn:S.win?opp(S.win):'Angelos',win:null,n:(S.n||0)+1}});};
+  const sStatus=S.phase==='place'?(myFleet?'Waiting for '+other+' to set sail':'Place your fleet'):S.win?(S.win===me?'You sank the lot':other+' sank your fleet'):S.turn===me?'Your shot':'Waiting for '+other;
+  const ls=S.lastShot,lastLine=ls&&S.phase!=='place'?(ls.by===me?'You '+(ls.hit?'hit':'missed'):other+' '+(ls.hit?'hit you':'missed')):'';
+  const mySunk=sunk(myFleet,theirShots),theirSunk=sunk(theirFleet,myShots),myCells=cellsOf(myFleet),theirCells=cellsOf(theirFleet);
+  const chip=(txt,go)=>html`<span class=${'gchip'+(go?' go':'')}>${txt}</span>`;
+  const head=(title,em)=>html`<div class="swhead"><span>${g&&html`<button class="gback" onClick=${()=>setG(null)} aria-label="Back"><${HIco} n="back" s=${17}/></button>`}${title} <em>${em}</em></span><button class="hbtn hx" onClick=${onClose}><${HIco} n="x" s=${16}/></button></div>`;
+  const turnBar=(txt,mineNow)=>html`<div class=${'gturn'+(mineNow?' go':'')}>${txt}</div>`;
+  return html`
+    <div class="dsheet" onClick=${e=>{if(e.target.classList.contains('dsheet'))onClose();}}>
+      <div class="inner hsheet">
+        ${!g&&html`
+          ${head('The','games room')}
+          <div class="gboard"><span class="gsa">${ico('Angelos',18)} Angelos</span><b>${tot('Angelos')} <i>–</i> ${tot('Antigoni')}</b><span class="gsb">Antigoni ${ico('Antigoni',18)}</span></div>
+          <button class="gcard" onClick=${()=>setG('c4')}><span class="gart c4a">${[1,0,2,2,1,1,2,1,0].map((v,i)=>html`<i key=${i} class=${v===1?'a':v===2?'b':''}></i>`)}</span>
+            <span class="gx"><b>Four in a row</b><i>Drop a disc, line up four. One move at a time, from anywhere.</i></span>${chip(F.win?'Rematch?':F.turn===me?'Your move':'Their move',!F.win&&F.turn===me)}</button>
+          <button class="gcard" onClick=${()=>setG('sea')}><span class="gart seaa"><${HIco} n="waves" s=${26}/></span>
+            <span class="gx"><b>Sea battle</b><i>Hide your fleet in the Aegean. Take turns firing until one of you is sunk.</i></span>${chip(S.win?'Rematch?':S.phase==='place'?(myFleet?'Waiting':'Set sail'):S.turn===me?'Your shot':'Their shot',!S.win&&((S.phase==='place'&&!myFleet)||(S.phase==='play'&&S.turn===me)))}</button>
+          <div class="bkh"><span>The classics</span></div>
+          <div class="gseed">${[['tavli','Tavli'],['jalla','Jalla!'],['ttl','Two truths'],['duel','In sync'],['word','Word']].map(c=>html`<button class="kpill" key=${c[0]} onClick=${()=>onClassic(c[0])}>${c[1]}</button>`)}</div>`}
+
+        ${g==='c4'&&html`
+          ${head('Four','in a row')}
+          ${turnBar(fStatus,!F.win&&F.turn===me)}
+          <div class="c4">${F.board.map((v,i)=>html`<button key=${i+'-'+(F.n||0)} class=${'c4c'+(v===1?' a':v===2?' b':'')+(F.line.includes(i)?' win':'')+(i===F.last?' last':'')} onClick=${()=>drop(i%C4W)} aria-label=${'Column '+(i%C4W+1)}></button>`)}</div>
+          <div class="glegend"><span><i class="a"></i>Angelos · ${(wins.c4||{}).Angelos||0}</span><span><i class="b"></i>Antigoni · ${(wins.c4||{}).Antigoni||0}</span></div>
+          ${F.win&&html`<button class="btn terra wide mt10" onClick=${again4}>Play again</button>`}
+          ${!F.win&&html`<div class="sm" style="text-align:center">Tap any column to drop your disc.</div>`}`}
+
+        ${g==='sea'&&html`
+          ${head('Sea','battle')}
+          ${turnBar(sStatus,(S.phase==='place'&&!myFleet)||(S.phase==='play'&&!S.win&&S.turn===me))}
+          ${S.phase==='place'&&!myFleet&&html`
+            <div class="sea">${Array.from({length:SEA_N*SEA_N},(_,i)=>html`<span key=${i} class=${'seac'+(draft.some(s=>s.includes(i))?' ship':'')}></span>`)}</div>
+            <div class="row mt10" style="gap:8px"><button class="btn quiet" style="flex:1" onClick=${()=>setDraft(seaFleet())}>Shuffle the fleet</button><button class="btn terra" style="flex:1" onClick=${setSail}>Set sail</button></div>
+            <div class="sm" style="text-align:center">Four ships: one of four, one of three, two of two. ${other} never sees where.</div>`}
+          ${S.phase==='place'&&myFleet&&html`
+            <div class="sea">${Array.from({length:SEA_N*SEA_N},(_,i)=>html`<span key=${i} class=${'seac'+(myCells.includes(i)?' ship':'')}></span>`)}</div>
+            <div class="sealwait">Your fleet is hidden. The first shot is fired when ${other} sets sail.</div>`}
+          ${S.phase!=='place'&&html`
+            <div class="hseg" style="margin-bottom:10px">${[['them',other+'’s waters'],['me','My waters']].map(m=>html`<button key=${m[0]} class=${seaView===m[0]?'on':''} onClick=${()=>setSeaView(m[0])}>${m[1]}</button>`)}</div>
+            ${seaView==='them'?html`<div class="sea">${Array.from({length:SEA_N*SEA_N},(_,i)=>{const shot=myShots.includes(i),hit=shot&&theirCells.includes(i),dead=theirSunk.some(s=>s.c.includes(i));
+                return html`<button key=${i} class=${'seac'+(dead?' sunk':hit?' hit':shot?' miss':'')+(S.win&&!shot&&theirCells.includes(i)?' ship':'')} onClick=${()=>fire(i)} aria-label=${'Square '+(i+1)}></button>`;})}</div>
+              <div class="glegend"><span>${theirSunk.length} of ${SEA_FLEET.length} sunk</span><span>${lastLine}</span></div>`
+            :html`<div class="sea">${Array.from({length:SEA_N*SEA_N},(_,i)=>{const shot=theirShots.includes(i),hit=shot&&myCells.includes(i),dead=mySunk.some(s=>s.c.includes(i));
+                return html`<span key=${i} class=${'seac'+(dead?' sunk':hit?' hit':shot?' miss':myCells.includes(i)?' ship':'')}></span>`;})}</div>
+              <div class="glegend"><span>${SEA_FLEET.length-mySunk.length} of ${SEA_FLEET.length} still afloat</span><span>${lastLine}</span></div>`}
+            ${S.win&&html`<button class="btn terra wide mt10" onClick=${againSea}>Play again</button>`}
+            ${!S.win&&S.turn===me&&seaView==='them'&&html`<div class="sm" style="text-align:center">Tap a square to fire.</div>`}`}`}
+      </div>
+    </div>`;
+}
+
 function App(){
   const [authed,setAuthed]=useState(false);
   const [pinBuf,setPinBuf]=useState('');
@@ -2373,6 +2490,7 @@ function App(){
   const [booksDoc,setBooksDoc]=useState(null);         // trip_books: recs, the current read, hot takes, the shelf
   const [gardenDoc,setGardenDoc]=useState(null);       // trip_garden: what we're growing, weekly check-ins, things talked through
   const [milesDoc,setMilesDoc]=useState(null);         // trip_miles: where we each live, and every trip that closed the distance
+  const [arcadeDoc,setArcadeDoc]=useState(null);       // trip_arcade: four in a row, sea battle, and the running score
   const pingT=useRef(0);
   const [doorOpen,setDoorOpen]=useState(()=>{try{return localStorage.getItem('mel-door')===dkey(new Date());}catch(e){return false;}});
   const [ritual,setRitual]=useState(false);
@@ -2465,8 +2583,9 @@ function App(){
     const u25=sub('trip_eats',(s)=>setEatsDoc(s.exists()?s.data():{been:[]}));
     const u24=sub('trip_books',(s)=>setBooksDoc(s.exists()?s.data():{recs:[],cur:null,debates:[],done:[]}));
     const u26=sub('trip_garden',(s)=>setGardenDoc(s.exists()?s.data():{plants:[],checks:{},talks:[]}));
+    const u28=sub('trip_arcade',(s)=>setArcadeDoc(s.exists()?s.data():{}));
     const u27=sub('trip_miles',(s)=>setMilesDoc(s.exists()?s.data():{trips:[]}));
-    return ()=>{u1();u2();u3();u4();u5();u6();u7();u8();u9();u10();u17();u18();u19();u20();u11();u12();u13();u14();u15();u16();u21();u22();u23();u24();u25();u26();u27();};
+    return ()=>{u1();u2();u3();u4();u5();u6();u7();u8();u9();u10();u17();u18();u19();u20();u11();u12();u13();u14();u15();u16();u21();u22();u23();u24();u25();u26();u27();u28();};
   },[authed]);
 
   const guard=(loaded)=>{if(loaded===null){setErr('Still connecting — try again in a second.');return false;}return true;};
@@ -2836,6 +2955,7 @@ function App(){
     books:{data:booksDoc||{recs:[],cur:null,debates:[],done:[]},n:((booksDoc||{}).recs||[]).length+((booksDoc||{}).debates||[]).length+((booksDoc||{}).done||[]).length*3},
     garden:{data:gardenDoc||{plants:[],checks:{},talks:[]},n:((gardenDoc||{}).plants||[]).length+Object.keys((gardenDoc||{}).checks||{}).length+((gardenDoc||{}).talks||[]).length},
     miles:{data:milesDoc||{trips:[]},n:((milesDoc||{}).trips||[]).length},
+    arcade:{data:arcadeDoc||{},n:arcadeDoc&&arcadeDoc.wins?1:0},
   });
   async function runBackup(){
     try{
@@ -3717,6 +3837,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     if(id==='bucket'){setTab('list');return;}
     if(id==='ld'){setHSheet('miles');return;}
     if(id==='apart'){setTab('ld');return;}
+    if(id==='game'){setHSheet('arcade');return;}
     if(id==='notes'){setNoteView('wall');setTab('notes');return;}
     if(id==='letters'){setNoteView('letters');setTab('notes');return;}
     if(id==='kitchen'){setKKind('try');setTab('kitchen');return;}
@@ -3738,6 +3859,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   const gardenSub=gPlantsL.length?(gThirsty?gThirsty+' waiting for your water':'all watered — nicely done'):'plant the first thing';
   const bucketSub=(bucket||[]).length?doneCount+' of '+bucket.length+' done':'start the list';
   const mS=milesStats(milesDoc),mileSub=mS.past.length?mS.past.length+(mS.past.length===1?' reunion · ':' reunions · ')+Math.round(mS.totalKm*.621371).toLocaleString()+' miles flown':'log the first trip';
+  const aMoves=arcadeMoves(arcadeDoc,me),arcadeSub=aMoves.length?'your move in '+aMoves.join(' and '):'four in a row, sea battle, tavli';
   const houseMenu=[
     {id:'bed',name:'The bedroom',icon:'bed',items:[
       {key:'journal',icon:'bookopen',label:'Our journal',sub:(journal||[]).length?(journal||[]).length+' pages':'the first page is waiting',spot:'journal'},
@@ -3747,7 +3869,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       {key:'tv',icon:'film',label:swipeDeck.length?'Swipe the watchlist':'Movie night',sub:swipeDeck.length?swipeDeck.length+' waiting for your vote':(nextNight?fmtNight(nextNight.when):'plan the next one'),spot:'tv'},
       {key:'tvlist',icon:'tv',label:'Watchlist and dates',sub:tvList.filter(x=>!x.watched).length+' queued',spot:'tv'},
       {key:'books',icon:'books',label:'Book club',sub:bkCur?bkCur.title+' · you '+((bkCur.prog||{})[me]||0)+'% · '+other+' '+((bkCur.prog||{})[other]||0)+'%':(bkWait?bkWait+' picks waiting on you':'pick a book together'),spot:'books'},
-      {key:'game',icon:'dice',label:'Games',sub:'tavli, duels, JALLA!',spot:'game'}]},
+      {key:'game',icon:'dice',label:'Games',sub:arcadeSub,spot:'game'}]},
     {id:'kitchen',name:'Kitchen and dining',icon:'fork',items:[
       {key:'kitchen',icon:'book',label:'Recipes and the dinner wheel',sub:kN('try'),spot:'kitchen'},
       {key:'plans',icon:'cal',label:'Dinner plans',sub:kN('plan'),spot:'kitchen'},
@@ -3787,7 +3909,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     </div>`;
   const houseLayer=html`
     <${House3D} active=${tab==='home'} garden=${gStages} me=${me} other=${other} doorDone=${doorOpen} sealedN=${sealedN5} movieNight=${!!nextNight}
-      menu=${houseMenu} notice=${tab==='home'?err:''} gifts=${hGifts} shell=${{i:shellIdx,found:shellMine||!me}} stats=${shellStats}
+      menu=${['hall','kitchen','living','bed','out'].map(id=>houseMenu.find(x=>x.id===id)).filter(Boolean)} notice=${tab==='home'?err:''} gifts=${hGifts} shell=${{i:shellIdx,found:shellMine||!me}} stats=${shellStats}
       partnerBubble=${partnerBubble} partnerK=${lastPingFromThem?lastPingFromThem.k:''}
       onFeature=${featFromHouse} onDoor=${()=>{if(!doorOpen)setRitual(true);}} onGiftFound=${findGift} onShell=${foundShell}
       onEmote=${(k)=>sendPing(k)} onGift=${leaveGift} onMoment=${takeMeBack} onNotice=${()=>setErr('')}>
@@ -3800,6 +3922,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       ${hSheet==='books'&&html`<${BookClub} doc=${booksDoc} me=${me} other=${other} onSave=${(d)=>write('trip_books',d)} onClose=${()=>setHSheet(null)}/>`}
       ${hSheet==='garden'&&html`<${GardenSheet} doc=${gardenDoc} me=${me} other=${other} bucketSub=${bucketSub} onSave=${(d)=>write('trip_garden',d)} onBucket=${()=>{setHSheet(null);setTab('list');}} onClose=${()=>setHSheet(null)}/>`}
       ${hSheet==='miles'&&html`<${MilesSheet} doc=${milesDoc} me=${me} other=${other} onSave=${(d)=>write('trip_miles',d)} onApart=${()=>{setHSheet(null);setTab('ld');}} onClose=${()=>setHSheet(null)}/>`}
+      ${hSheet==='arcade'&&html`<${ArcadeSheet} doc=${arcadeDoc} me=${me} other=${other} onSave=${(d)=>write('trip_arcade',d)} onClassic=${(k)=>{setHSheet(null);setGGame(k);setTab('game');}} onClose=${()=>setHSheet(null)}/>`}
       ${hSheet==='wheel'&&html`<${DinnerWheel} pool=${wheelPool} onLock=${lockDinner} onClose=${()=>setHSheet(null)}
         onAdd=${()=>{setHSheet(null);setKKind('try');setTab('kitchen');}}/>`}
     <//>`;
