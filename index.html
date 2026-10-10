@@ -1282,8 +1282,10 @@ function buildWorld(T,wrap,opts){
     else if(kind==='cypress'){const P=['#1F5A38','#2A6B45','#17482C','#34784E'];for(let i=0;i<300;i++){const a=R(0,6.28),d=Math.sqrt(rnd())*104,x=128+Math.cos(a)*d,y=128+Math.sin(a)*d;leaf(x,y,a+R(-.7,.7),R(14,24),R(3,5),P[i%4],P[(i+1)%4]);}}
     else if(kind==='boug'){const P=['#D9308F','#F0509F','#C2247C','#E86BB0','#B81F70'];for(let i=0;i<5;i++)leaf(R(80,176),R(80,176),R(0,6.28),R(36,46),R(13,17),'#2C7437','#5DAA55');
       for(let i=0;i<30;i++){const a=R(0,6.28),d=Math.sqrt(rnd())*92,x=128+Math.cos(a)*d,y=128+Math.sin(a)*d,r0=R(0,6.28),c1=P[i%5],c2=P[(i+2)%5];for(let k=0;k<3;k++)leaf(x,y,r0+k*2.094,R(17,24),R(9,12),c1,c2);g.fillStyle='#FFF2C4';g.beginPath();g.arc(x,y,2.2,0,7);g.fill();}}
-    else if(kind==='flower'){for(let i=0;i<9;i++)leaf(R(70,186),R(70,186),R(0,6.28),R(34,46),R(9,13),'#2F7A3A','#6DB95E');const P=[['#FFFFFF','#FFE9A8'],['#FFD34D','#F2994A'],['#F6A6C1','#E0349A'],['#F26D5B','#FFC2A8'],['#C9B6F2','#8E78D6']];
-      for(let i=0;i<12;i++){const a=R(0,6.28),d=Math.sqrt(rnd())*96,x=128+Math.cos(a)*d,y=128+Math.sin(a)*d,p=P[i%5],n=6+Math.floor(rnd()*3),r0=R(0,6);for(let k=0;k<n;k++)leaf(x,y,r0+k*6.2832/n,R(11,15),R(4,6),p[0],p[1]);g.fillStyle='#F5B020';g.beginPath();g.arc(x,y,3,0,7);g.fill();}}
+    else if(kind==='flower'){ // lilies: six pointed petals, pale throat, rust-tipped stamens, long narrow leaves
+      for(let i=0;i<10;i++)leaf(R(64,192),R(64,192),R(0,6.28),R(40,54),R(5,7),'#2F7A3A','#6DB95E');const P=[['#F1E7A6','#FFFFFF'],['#F3BFD2','#FFFFFF'],['#F1E7A6','#FFF3F7'],['#EE9FBE','#FFE6EF']];
+      for(let i=0;i<7;i++){const a=R(0,6.28),d=Math.sqrt(rnd())*80,x=128+Math.cos(a)*d,y=128+Math.sin(a)*d,p=P[i%4],r0=R(0,6);for(let k=0;k<6;k++)leaf(x,y,r0+k*1.0472,R(27,33),R(7,9),p[0],p[1]);
+        g.strokeStyle='#C8862A';g.lineWidth=1.6;for(let k=0;k<5;k++){const sa=r0+.5+k*1.2566,ex=x+Math.cos(sa)*11,ey=y+Math.sin(sa)*11;g.beginPath();g.moveTo(x,y);g.lineTo(ex,ey);g.stroke();g.fillStyle='#B5651D';g.beginPath();g.arc(ex,ey,2.2,0,7);g.fill();}}}
     else if(kind==='lav'){g.lineCap='round';for(let i=0;i<26;i++){const x0=128+R(-62,62),hh=R(120,232),lean=R(-40,40);g.strokeStyle='#8FA07A';g.lineWidth=2.5;g.beginPath();g.moveTo(x0,256);g.quadraticCurveTo(x0+lean*.3,256-hh*.6,x0+lean,256-hh);g.stroke();
         for(let k=0;k<7;k++){g.fillStyle=['#8E78D6','#A48BE0','#7A64C4'][k%3];g.beginPath();g.ellipse(x0+lean*(.74+k*.04),256-hh*(.72+k*.045),4.6,6.2,0,0,7);g.fill();}}}
     else if(kind==='frond'){g.lineCap='round';g.strokeStyle='#5E7F3A';g.lineWidth=5;g.beginPath();g.moveTo(128,256);g.lineTo(128,6);g.stroke();for(let i=0;i<44;i++){const y=250-i*5.5,len=(64+44*Math.sin(i/44*Math.PI))*(1-i/62);[-1,1].forEach(sd=>{g.strokeStyle=['#4E8A3C','#62A04A','#3F7A34'][i%3];g.lineWidth=4.6;g.beginPath();g.moveTo(128,y);g.lineTo(128+sd*len,y-len*.45);g.stroke();});}}
@@ -2260,19 +2262,19 @@ const GARDEN_ASKS=['A moment this week I felt close to you','Something I’d lov
   'What I’m most looking forward to with you','How I’m really doing, in one honest line','A small thing you do that I never want you to stop','Something I’ve been meaning to tell you','What made me proud of us lately',
   'When I felt most heard by you','One way the distance was hard this week','One way we made the distance smaller this week','A habit of ours I want to keep forever','What I need from you when I go quiet'];
 const GROW_AT=[0,1,3,6,10,15,21];
-const BLOOMS=['#E86BB0','#F2994A','#8E78D6','#F26D5B','#F5B93A','#5FA8D3','#E0349A','#6DB95E'];
+const BLOOMS=['#FFFFFF','#F6C3D4','#FFDDA6','#F2A9C4','#FFF1B8','#FBD3DF','#FFFFFF','#F7BBA6'];   // lilies: white, blush, apricot
 const wkKey=(d)=>{d=d?new Date(d):new Date();const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())),day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y0=new Date(Date.UTC(t.getUTCFullYear(),0,1));return t.getUTCFullYear()+'-W'+String(Math.ceil(((t-y0)/864e5+1)/7)).padStart(2,'0');};
 const gardenGrowth=(p,checks)=>{let g=p.g0||0;const w=p.w||{};for(const k in w){if(w[k].Angelos&&w[k].Antigoni)g++;}const born=wkKey(p.ts);for(const k in (checks||{})){const c=checks[k];if(k>=born&&c.Angelos&&c.Antigoni)g++;}return g;};
 const gardenStage=(g)=>{let s=0;for(let i=0;i<GROW_AT.length;i++)if(g>=GROW_AT[i])s=i;return s;};
 function PlantArt({stage,dry,hue}){
   const h=[0,9,17,25,31,35,37][stage]||0,top=58-h,gr=dry?'#A9B59B':'#5FAE5A',gr2=dry?'#BAC4AE':'#7CC463',pairs=[0,1,1,2,2,3,3][stage]||0,col=dry?'#D8C7B8':(hue||'#E86BB0');
   const leaves=[];for(let i=0;i<pairs;i++){const y=58-h*(i+1)/(pairs+1)-1;leaves.push(html`<ellipse cx="30.5" cy=${y} rx="7.6" ry="3.5" transform=${'rotate(-26 30.5 '+y+')'} fill=${gr2}/><ellipse cx="45.5" cy=${y-2} rx="7.6" ry="3.5" transform=${'rotate(26 45.5 '+(y-2)+')'} fill=${gr}/>`);}
-  const flower=(x,y,r)=>html`${[0,1,2,3,4].map(k=>{const a=k*1.2566-1.57;return html`<circle cx=${x+Math.cos(a)*r} cy=${y+Math.sin(a)*r} r=${r*.82} fill=${col}/>`;})}<circle cx=${x} cy=${y} r=${r*.62} fill="#F8D25A"/>`;
+  const flower=(x,y,r)=>html`${[0,1,2,3,4,5].map(k=>{const a=k*1.0472-1.57,px=x+Math.cos(a)*r*.95,py=y+Math.sin(a)*r*.95;return html`<ellipse cx=${px} cy=${py} rx=${r*1.15} ry=${r*.46} transform=${'rotate('+(a*57.2958)+' '+px+' '+py+')'} fill=${col} stroke=${dry?'none':'#E3B9C8'} stroke-width=".5"/>`;})}<circle cx=${x} cy=${y} r=${r*.34} fill="#E9DC8A"/>${[0,1,2].map(k=>{const a=k*2.094-.6;return html`<circle cx=${x+Math.cos(a)*r*.62} cy=${y+Math.sin(a)*r*.62} r=${r*.16} fill="#B5651D"/>`;})}`;
   return html`<svg class="art" viewBox="0 0 76 86"><g transform=${dry?'rotate(7 38 60)':''}>
       ${stage>0&&html`<path d=${'M38 59 Q'+(stage>3?35:37)+' '+(58-h/2)+' 38 '+top} stroke=${gr} stroke-width="2.6" fill="none" stroke-linecap="round"/>`}
       ${leaves}
       ${stage===6&&html`<path d=${'M38 '+(top+12)+' q-9 -3 -12 -10'} stroke=${gr} stroke-width="2" fill="none" stroke-linecap="round"/><path d=${'M38 '+(top+15)+' q9 -3 12 -9'} stroke=${gr} stroke-width="2" fill="none" stroke-linecap="round"/>${flower(25,top+1,3.4)}${flower(51,top+5,3.4)}`}
-      ${stage===4&&html`<ellipse cx="38" cy=${top-2} rx="3.6" ry="5" fill=${col}/>`}
+      ${stage===4&&html`<ellipse cx="38" cy=${top-3} rx="3" ry="6" fill=${col} stroke=${dry?'none':'#E3B9C8'} stroke-width=".5"/>`}
       ${stage>=5&&flower(38,top-3,4.6)}
     </g>
     ${stage===0&&html`<ellipse cx="38" cy="57" rx="3.4" ry="2.2" fill="#8A5E3A"/>`}
@@ -2316,7 +2318,7 @@ function GardenSheet({doc,me,other,bucketSub,onSave,onBucket,onClose}){
         <div class="swhead"><span>Our <em>garden</em></span><button class="hbtn hx" onClick=${onClose}><${HIco} n="x" s=${16}/></button></div>
         <div class="gdsub">the ways we grow, together</div>
         <div class="gstats"><div class="gstat"><b>${D.plants.length}</b><span>growing</span></div><div class="gstat"><b>${grown}</b><span>times tended together</span></div><div class="gstat"><b>${doneTalks.length}</b><span>worked through</span></div></div>
-        <div class="hseg" style="margin-bottom:6px">${[['grow','Growing',0],['check','Check-in',!mine],['talk','Talk it through',openTalks.length>0]].map(m=>html`<button key=${m[0]} class=${view===m[0]?'on':''} onClick=${()=>setView(m[0])}>${m[1]}${m[2]&&html`<i class="ndot"></i>`}</button>`)}</div>
+        <div class="hseg" style="margin-bottom:6px">${[['grow','Growing',0],['check','Check-in',!mine],['talk','Talk it through',openTalks.length>0]].map(m=>html`<button key=${m[0]} class=${view===m[0]?'on':''} onClick=${()=>setView(m[0])}>${m[1]}${m[2]?html`<i class="ndot"></i>`:null}</button>`)}</div>
 
         ${view==='grow'&&html`
           ${D.plants.length===0&&html`<div class="swempty" style="padding:18px 10px 4px"><${PlantArt} stage=${0}/><div class="big" style="margin-top:6px">Nothing planted yet</div><div class="sm">Pick one thing you both want more of. It grows only when you both water it.</div></div>`}
