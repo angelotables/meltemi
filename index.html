@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="theme-color" content="#FBF1E6" />
-<title>Meltemi — A & A</title>
+<title>Meltemi · A & A</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23FAF6EF'/><text x='50' y='66' font-size='46' text-anchor='middle'>🌊</text></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -727,14 +727,14 @@ const MEL_PEOPLE=[['Angelos','angelos@helios.local'],['Antigoni','antigoni@helio
 const D=(k)=>doc(db,'gyrocity',k);
 
 const MEET='2026-07-29';
-const MEET_AT=Date.UTC(2026,6,29,11,50,0); // touchdown 14:50 Cyprus time Wed Jul 29 (UTC+3) — flight delayed from 09:30
+const MEET_AT=Date.UTC(2026,6,29,11,50,0); // touchdown 14:50 Cyprus time Wed Jul 29 (UTC+3), flight delayed from 09:30
 const TRIP_END='2026-08-22';
 const NOTE_COLORS=['#F6E7D7','#F4E2E6','#E3EEEF','#F4EDD8','#E8EFE2'];
 
 // ===== itinerary =====
 const ITIN=[
   {flag:'🇨🇾',place:'Cyprus',events:[
-    {d:'2026-07-29',t:'29 Jul',w:'✈️ Angelos arrives in Cyprus — we\u2019re together'},
+    {d:'2026-07-29',t:'29 Jul',w:'✈️ Angelos arrives in Cyprus, we\u2019re together'},
     {d:'2026-07-29',d2:'2026-08-01',t:'29–1 Aug',w:'🌊 Mercure Beach Resort, Larnaca'},
     {d:'2026-07-30',t:'30 Jul',w:'💒 Sophia & Oli\u2019s Cyprus Wedding'},
     {d:'2026-07-31',t:'31 Jul',w:'👼🏼 Antigoni christens Mali'},
@@ -781,7 +781,7 @@ const QOTD=[
   'What\u2019s something you\u2019ve never told me you\u2019re proud of?',
   'First thing you want to eat together in Cyprus?',
   'What do you miss most about me today?',
-  'Describe our first summer in three words — guess mine too.',
+  'Describe our first summer in three words, guess mine too.',
   'What\u2019s a fear you want to leave behind this summer?',
   'Which do you want more on this trip: adventure or stillness?',
   'What\u2019s the best meal we\u2019ve ever had together?',
@@ -819,7 +819,7 @@ const QOTD=[
   'What moment from this trip will we still talk about at 80?',
   'What are you looking forward to about tomorrow?',
   'What’s one thing you’d grab if our place caught fire (I’m already safe)?',
-  'Which of my outfits is your favorite — and which one has to go?',
+  'Which of my outfits is your favorite, and which one has to go?',
   'What would our couple documentary be called?',
   'What’s the pettiest thing you’ve ever been jealous about?',
   'If I cooked you one dish perfectly forever, what should it be?',
@@ -829,21 +829,21 @@ const QOTD=[
   'What’s the first thing you notice when I walk into a room?',
   'Which song would you put on to fix my bad mood?',
   'What’s something you were embarrassed about early on that’s funny now?',
-  'If we got matching tattoos (relax — hypothetically), what would they be?',
+  'If we got matching tattoos (relax, hypothetically), what would they be?',
   'What’s my most Greek quality? And my most New York one?',
   'What tiny tradition should we start this week and never stop?',
   'When do you feel proudest to be seen with me?',
   'What’s a conversation we’ve had that changed you a little?',
   'If tonight had a menu, what’s the dessert called?',
   'What do I do when I think no one’s watching that you’ve noticed?',
-  'Which fictional couple are we closest to — honestly?',
+  'Which fictional couple are we closest to, honestly?',
   'What’s something you want to be forgiven for that I never even counted?',
   'What’s the best text I’ve ever sent you?',
   'If we had a boat, what would we name her?',
   'What part of my laugh do you like best?',
   'What’s one thing distance taught you about us?',
   'What smell will forever equal this summer?',
-  'Who’s the better flirt — and prove it right now?',
+  'Who’s the better flirt, and prove it right now?',
   'What’s a moment you wanted to kiss me but didn’t?',
   'If our love had a color that isn’t on any flag, describe it.',
   'What’s the most at-peace you’ve ever felt next to me?',
@@ -870,7 +870,7 @@ const QOTD=[
   'What’s my superpower that I don’t take seriously enough?',
   'What tiny gift could I bring you tomorrow that would wreck you (happy tears)?',
   'What’s a word or phrase that’s only ours?',
-  'Whose family dinner is louder — and who thrives in it more?',
+  'Whose family dinner is louder, and who thrives in it more?',
   'What’s the best decision we’ve made together so far?',
   'What are you still shy about with me, even now?',
   'If you could bottle one hour of this summer, which one?',
@@ -879,7 +879,7 @@ const QOTD=[
   'Describe me in emojis only. I’ll grade it.',
 ];
 // Old dates keep the original dealing so answered days still show their real question.
-// From Jul 29 on, we walk the whole deck in a scrambled order — no repeats for 107 days.
+// From Jul 29 on, we walk the whole deck in a scrambled order, no repeats for 107 days.
 const qIndexFor=(k)=>{
   if(k<'2026-07-29')return parseInt(k.replace(/-/g,''),10)%47;
   const days=Math.round((new Date(k+'T12:00:00')-new Date('2026-07-29T12:00:00'))/86400000);
@@ -898,14 +898,14 @@ const PLACES=[
 const INTENTS=[['dinner','🍽 dinner'],['beaches','🏖 beaches'],['nightlife','🍸 nightlife'],['experiences','⛵ experiences'],['brunch','☕ brunch & coffee'],['gems','💎 hidden gems']];
 const MISSIONS={
   10:'Send each other the view from where you\u2019re standing, right now.',
-  9:'Each pick one song for the airport playlist — drop it in Notes.',
-  8:'Name your #1 must-do of the whole trip — put it on Our list.',
-  7:'Voice note. 30 seconds. No topic — just talk.',
+  9:'Each pick one song for the airport playlist, drop it in Notes.',
+  8:'Name your #1 must-do of the whole trip, put it on Our list.',
+  7:'Voice note. 30 seconds. No topic, just talk.',
   6:'Find your favorite photo of us and post it as today\u2019s daily photo.',
   5:'Plan one small surprise for the trip. Don\u2019t say what. Just mark done.',
   4:'Trade one thing you\u2019re nervous about + one you can\u2019t wait for.',
   3:'Tell the other one thing you\u2019re packing just for them.',
-  2:'Write a Journal note to tomorrow-you — read it on the plane.',
+  2:'Write a Journal note to tomorrow-you, read it on the plane.',
   1:'Last goodnight from far away. Make it count. 🌙',
 };
 const dkey=(d)=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -1103,21 +1103,21 @@ const HICONS={
 };
 const HIco=({n,s,f})=>html`<svg class="hico" width=${s||20} height=${s||20} viewBox="0 0 24 24" fill=${f?'currentColor':'none'} stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${(HICONS[n]||HICONS.dot).map((d,i)=>html`<path key=${i} d=${d}/>`)}</svg>`;
 const HOUSE_SPOTS=[
-  {id:'door',e:'door',label:'Knock — today’s question',p:[0,2.75,4.8],s:[0,5.9]},
+  {id:'door',e:'door',label:'Knock, today’s question',p:[0,2.75,4.8],s:[0,5.9]},
   {id:'knock',e:'chat',label:'Send a thinking-of-you',p:[2.0,1.85,6.2],s:[2.0,7.1]},
-  {id:'list',e:'leaf',label:'Tend our garden — the ways we grow',p:[-3.4,1.3,6.05],s:[-3.4,7.3]},
+  {id:'list',e:'leaf',label:'Tend our garden, the ways we grow',p:[-3.4,1.3,6.05],s:[-3.4,7.3]},
   {id:'concierge',e:'bell',label:'Ring the concierge',p:[-1.0,1.7,2.3],s:[-0.3,2.3]},
-  {id:'trip',e:'case',label:'Open the suitcase — our trips',p:[-0.95,1.15,4.0],s:[-0.25,3.5]},
+  {id:'trip',e:'case',label:'Open the suitcase, our trips',p:[-0.95,1.15,4.0],s:[-0.25,3.5]},
   {id:'photos',e:'image',label:'Look through our album',p:[1.05,2.55,3.8],s:[0.35,3.8]},
   {id:'journal',e:'bookopen',label:'Write in our journal',p:[-2.6,1.5,4.05],s:[-2.6,2.95]},
   {id:'notes',e:'note',label:'Read the wall of notes',p:[-1.55,2.4,2.3],s:[-2.4,2.3]},
   {id:'letters',e:'mail',label:'Open the drawer of letters',p:[-4.4,1.55,1.35],s:[-3.8,2.05]},
   {id:'tv',e:'film',label:'Movie night',p:[-3.2,2.4,-4.3],s:[-3.2,-3.5]},
   {id:'game',e:'dice',label:'Play a game together',p:[-2.6,1.1,-2.75],s:[-1.6,-2.75]},
-  {id:'books',e:'books',label:'Open the library — our book club',p:[-5,2.45,.45],s:[-4.8,-.25]},
+  {id:'books',e:'books',label:'Open the library, our book club',p:[-5,2.45,.45],s:[-4.8,-.25]},
   {id:'kitchen',e:'book',label:'Cook, plan, or spin for dinner',p:[4.1,1.55,-1.9],s:[5.1,-1.9]},
-  {id:'spots',e:'fork',label:'Our table — eaten and still to eat',p:[6.3,2.3,3.95],s:[5.55,3.95]},
-  {id:'ld',e:'plane',label:'The distance — every time we closed it',p:[-7.6,1.45,-.2],s:[-7.6,-1.15]},
+  {id:'spots',e:'fork',label:'Our table, eaten and still to eat',p:[6.3,2.3,3.95],s:[5.55,3.95]},
+  {id:'ld',e:'plane',label:'The distance, every time we closed it',p:[-7.6,1.45,-.2],s:[-7.6,-1.15]},
 ];
 const HOUSE_SHELLS=[[8.5,9.5],[-6,10.5],[11,3],[-12,7],[3.5,-9.5],[-4,-9],[12,-5],[-11.5,-7.5],[.5,12.5],[7,12],[-9.3,-3.2],[4.6,8.4],[-5.2,8.9],[9.5,-10]];
 const HOUSE_GIFTS=[['flower','a flower'],['coffee','a coffee'],['mail','a letter'],['heart','a heart'],['star','a star'],['music','a song'],['sun','some sun'],['shell','a seashell']];
@@ -1400,6 +1400,11 @@ function buildWorld(T,wrap,opts){
   soft(2.04,.26,1.74,M.linen,-5.3,.33,2.75,0,{r:.07,puff:.12});soft(1.42,.13,1.84,M.linen,-4.93,.515,2.75,0,{r:.06,puff:.5});soft(.42,.14,1.86,M.oat,-5.66,.53,2.75,0,{r:.07,puff:.3});
   soft(.44,.17,.68,M.linen,-6.02,.56,2.3,.06,{r:.085,puff:.5});soft(.44,.17,.68,M.linen,-6.02,.56,3.2,-.06,{r:.085,puff:.5});
   MD('throw_pillows_01_0',-5.72,2.6,Math.PI/2,.8,.55);MD('throw_pillows_01_1',-5.7,3.02,Math.PI/2+.3,.7,.55);
+  // Pengu, sitting up against the pillows
+  {const px=-5.46,py=.615,pz=2.8,PB=fab('#3F74B0'),PO=col('#F2A23A',.7);
+    SP(.135,PB,px,py+.15,pz,1,1.15,1.05);SP(.108,PB,px+.01,py+.37,pz,1,.95,1.04);SP(.108,M.linen,px+.072,py+.13,pz,.8,1.05,.8);SP(.08,M.linen,px+.07,py+.35,pz,.72,.82,.86);
+    put(new T.ConeGeometry(.032,.075,12),PO,px+.125,py+.345,pz,0,0,-Math.PI/2);[.036,-.036].forEach(dz=>{SP(.0125,M.dark,px+.103,py+.392,pz+dz);SP(.05,PO,px+.085,py+.02,pz+dz*1.9,1.35,.42,.9);});
+    [.135,-.135].forEach(dz=>SP(.05,PB,px+.01,py+.2,pz+dz,.55,1.45,.36));[[-.01,0,.07],[.02,.03,.06],[-.035,-.025,.055]].forEach(t=>put(new T.ConeGeometry(.017,t[2],8),PB,px+t[0],py+.475+t[2]/2,pz+t[1],0,0,t[0]*-6));}
   soft(.5,.07,1.5,M.dusty,-4.42,.595,2.75,0,{r:.035,puff:.3});
   for(let i=0;i<10;i++)soft(.1,1.3,.29,M.oat,-6.34,.75,1.4+i*.3,0,{r:.045,puff:0});
   block(-6.42,1.7,-4.07,3.8);
@@ -1497,7 +1502,15 @@ function buildWorld(T,wrap,opts){
   B(3.6,.12,.12,M.beamW,0,2.62,6.2);for(let i=0;i<6;i++)B(.07,.07,1.9,M.beamW,-1.5+i*.6,2.72,5.35);
   boug(-1.15,2.94,5.55,1,.3,.85,120);boug(1.2,2.92,5.25,.7,.26,.6,64);boug(-1.62,1.75,6.2,.22,.95,.22,46);boug(-.1,2.66,6.24,.9,.2,.2,44);boug(-2.3,2.5,4.72,.5,.5,.14,44);
   CY(.04,.04,1.1,M.white,2,.55,6.2,10);B(.26,.24,.44,M.blue,2,1.2,6.2);B(.02,.16,.1,M.red,2.14,1.36,6.3);block(1.9,6.1,2.1,6.3);
-  [5.6,6.5].forEach(z=>{B(2.4,.34,.6,M.wal,-3.4,.17,z);B(2.3,.04,.5,M.soil,-3.4,.33,z);canopy(M.fGreen,-3.4,.4,z,1.1,.07,.22,26,.2);block(-4.6,z-.3,-2.2,z+.3);});
+  [5.55,6.55].forEach((z,bi)=>{B(2.6,.4,.66,M.plaster,-3.4,.2,z);B(2.68,.05,.74,M.white,-3.4,.425,z);B(2.44,.03,.5,M.soil,-3.4,.44,z);
+    canopy(M.fGreen,-3.4,.58,z,1.15,.17,.25,90,.28);canopy(M.fFlower,-3.4,.74,z,1.1,.13,.22,bi?30:22,.3);for(let i=0;i<7;i++)tuft(M.fLawn,-4.45+i*.35,z+(i%2?.2:-.2),4,.3,.3,.44);block(-4.72,z-.35,-2.08,z+.35);});
+  // a trellis behind the beds with something climbing it, a bench to sit and look, stones leading over from the path
+  [-4.6,-3.4,-2.2].forEach(x=>CY(.028,.028,1.9,M.white,x,.95,5.08,8));[.75,1.25,1.75].forEach(y=>B(2.5,.035,.035,M.white,-3.4,y,5.08));for(let i=0;i<6;i++)B(.03,1.35,.03,M.white,-4.4+i*.4,1.25,5.08);
+  canopy(M.fGreen,-3.4,1.3,5.06,1.2,.62,.1,120,.3);canopy(M.fFlower,-3.4,1.45,5.1,1.1,.5,.1,26,.3);boug(-4.5,1.7,5.08,.3,.45,.12,26);
+  B(.46,.05,1.4,M.beamW,-5.5,.45,6.05);B(.05,.5,1.4,M.beamW,-5.72,.72,6.05);[[-.18,-.62],[.18,-.62],[-.18,.62],[.18,.62]].forEach(q=>B(.045,.45,.045,M.blk,-5.5+q[0],.225,6.05+q[1]));soft(.4,.07,.5,M.dusty,-5.48,.51,5.7,0,{r:.03,puff:.3});block(-5.78,5.32,-5.25,6.78);
+  CY(.11,.09,.2,M.steel,-1.9,.1,5.75,14);CY(.02,.03,.24,M.steel,-1.74,.17,5.75,8,0,-1);
+  [[-1.25,7.35],[-1.95,7.42],[-2.65,7.36]].forEach(q=>CY(.27,.27,.03,M.deck,q[0],.016,q[1],18));
+  [[-4.9,7.05],[-1.95,6.95]].forEach(q=>{CY(.025,.035,.4,M.blk,q[0],.2,q[1],8);SP(.06,M.glow,q[0],.44,q[1]);});
   {const tp=trunk(4.6,6.8,1.5,.1,3);[[0,2.15,0,.8],[.5,1.95,.3,.6],[-.5,2.05,.2,.6],[.1,2.55,-.3,.6],[-.2,1.85,-.5,.55]].forEach(p=>canopy(M.fGreen,tp[0]+p[0],p[1],tp[1]+p[2],p[3],p[3]*.8,p[3],72,.36));
     for(let i=0;i<12;i++){const a=i*2.1,r=.5+((i*7)%5)/10;SP(.055,M.lemon,tp[0]+Math.cos(a)*r,1.5+((i*7)%10)/9,tp[1]+Math.sin(a)*r,1,1.25,1);}block(4.45,6.65,4.75,6.95);}
   {const tp=trunk(-6.4,8.2,1.6,.17,4);[[0,2.3,0,.95],[.7,2.1,.2,.7],[-.7,2.2,-.1,.75],[0,2.75,.4,.65],[.2,2,-.7,.65]].forEach(p=>canopy(M.fOlive,tp[0]+p[0],p[1],tp[1]+p[2],p[3],p[3]*.75,p[3],84,.4));block(-6.6,8,-6.2,8.4);}
@@ -1541,8 +1554,8 @@ function buildWorld(T,wrap,opts){
 
   // ---------- dynamic pieces ----------
   // the garden beds: one plant for each thing you're growing, as tall as you have grown it together
-  const gPlants=[];for(let i=0;i<8;i++){const g=new T.Group();g.position.set(-4.3+(i%4)*.6,.33,i<4?5.6:6.5);
-    const a=new T.Mesh(canopyGeo(0,.34,0,.2,.34,.2,26,.24),M.fGreen),b=new T.Mesh(canopyGeo(0,.66,0,.17,.13,.17,12,.17),M.fFlower);a.frustumCulled=b.frustumCulled=false;g.add(a);g.add(b);g.visible=false;scene.add(g);gPlants.push({g,b});}
+  const gPlants=[];for(let i=0;i<8;i++){const g=new T.Group();g.position.set(-4.3+(i%4)*.6,.44,i<4?5.55:6.55);
+    const a=new T.Mesh(canopyGeo(0,.36,0,.2,.36,.2,34,.26),M.fGreen),b=new T.Mesh(canopyGeo(0,.7,0,.2,.16,.2,14,.3),M.fFlower);a.frustumCulled=b.frustumCulled=false;g.add(a);g.add(b);g.visible=false;scene.add(g);gPlants.push({g,b});}
   const seaM=new T.MeshStandardMaterial({color:NIGHT?'#0B3552':DUSK?'#1C7F96':'#14A6BD',roughness:.09,metalness:.12,envMapIntensity:1.5});
   const sea=new T.Mesh(new T.PlaneGeometry(900,900),seaM);sea.rotation.x=-Math.PI/2;sea.position.set(0,-.22,0);scene.add(sea);
   loader.load(HOUSE_ASSETS.tex.water.n,(t)=>{if(disposed)return;t.wrapS=t.wrapT=T.RepeatWrapping;t.repeat.set(80,80);seaM.normalMap=t;seaM.normalScale.set(.8,.8);seaM.needsUpdate=true;},undefined,()=>{});
@@ -1617,6 +1630,7 @@ function buildWorld(T,wrap,opts){
       A1=limb(.185,1.38,skin,skin,.27,.26,.043,.037,hand);A2=limb(-.185,1.38,skin,skin,.27,.26,.043,.037,hand);
       
       [.116,-.116].forEach(x=>{mesh(new T.TorusGeometry(.024,.0045,6,16),gold,x,1.555,.005).rotation.y=Math.PI/2;});
+      [.041,-.041].forEach(x=>{const b=mesh(new T.CapsuleGeometry(.0042,.03,3,8),hair3,x,1.647,.106);b.rotation.z=Math.PI/2+(x>0?-.16:.16);});
       mesh(new T.SphereGeometry(.128,16,12,0,Math.PI*2,0,Math.PI*.5),hair,0,1.61,-.015).rotation.x=-.3;
       const c1=[],c2=[],c3=[];let hs=7;const hr=()=>{hs=(Math.imul(hs,1664525)+1013904223)>>>0;return hs/4294967296;},sm3=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
       mesh(new T.SphereGeometry(.15,16,12),hair3,0,1.5,-.045).scale.set(1.02,1.3,.78);
@@ -1761,7 +1775,7 @@ function buildWorld(T,wrap,opts){
   const fit=()=>{const w=W(),h=HH();renderer.setPixelRatio(prEff());renderer.setSize(w,h,false);if(fx){fx.comp.setPixelRatio(prEff());fx.comp.setSize(w,h);}cam.aspect=w/h;cam.fov=w/h<.8?80:w/h<1.2?70:58;cam.updateProjectionMatrix();};
   fit();
 
-  // ---------- the arrival: three shots, cut on motion — a crane in over the water, an orbit, a dolly up the path ----------
+  // ---------- the arrival: three shots, cut on motion, a crane in over the water, an orbit, a dolly up the path ----------
   let cine=null;const _cl=new T.Vector3(),_ce=new T.Vector3(),beamMesh=meshOf.get(M.beam);
   const gameFov=()=>{const a=W()/HH();return a<.8?80:a<1.2?70:58;};
   const endCine=()=>{if(!cine)return;cine=null;CUT.uCutR.value=1.2;cam.fov=gameFov();cam.updateProjectionMatrix();if(beamMesh)beamMesh.visible=true;tag.visible=true;C.manual=-1e9;applyCam(1);if(opts.onCine)opts.onCine(0);};
@@ -1894,7 +1908,7 @@ function buildWorld(T,wrap,opts){
     setSealed(n){mailDot.visible=n>0;},
     setDoorBadge(on,label){doorSpot.off=!on;doorSpot.sp.visible=!!on;if(label)doorSpot.label=label;nearKey=null;},
     setFx(v){fxOn=!!v&&!!fx;fit();},
-    setGarden(st){gPlants.forEach((q,i)=>{const v=st?st[i]:undefined;if(v===undefined||v===null||v<0){q.g.visible=false;return;}q.g.visible=true;const k=.45+v*.19;q.g.scale.set(k,.5+v*.25,k);q.b.visible=v>=4;});},
+    setGarden(st){gPlants.forEach((q,i)=>{const v=st?st[i]:undefined;if(v===undefined||v===null||v<0){q.g.visible=false;return;}q.g.visible=true;const k=.7+v*.16;q.g.scale.set(k,.75+v*.26,k);q.b.visible=v>=3;});},
     arrive(){startCine();},
     setGifts(list,who){giftActs.forEach(dropActive);giftActs=[];(list||[]).forEach(g=>{const mine=g.by===who;
       giftActs.push(addActive({key:'gift:'+g.id,e:mine?(HICONS[g.kind]?g.kind:'gift'):'gift',plain:mine,passive:mine,label:mine?null:'Pick up what '+g.by+' left for you',x:g.x,y:mine?.55:.85,z:g.z,r:1.9,size:mine?.36:.62}));});},
@@ -1946,7 +1960,7 @@ function House3D(props){
           onFeature:(id)=>cb.current.onFeature(id),onDoor:()=>cb.current.onDoor(),onGiftFound:(id)=>{w.sparkle('heart');cb.current.onGiftFound(id);},
           onShell:()=>cb.current.onShell(),onPartner:()=>setFan('emo')});
         worldRef.current=w;window.__house=w;sync(w);w.setActive(!!cb.current.active);
-      }catch(e){console.error(e);say('The house couldn’t load — check your connection',7000);setLoading(false);}
+      }catch(e){console.error(e);say('The house couldn’t load, check your connection',7000);setLoading(false);}
     })();
     return ()=>{alive=false;};
   },[mode]);
@@ -2013,7 +2027,7 @@ function House3D(props){
     </div>`;
 }
 
-// Swipe the watchlist — yes/no on each title, a match when you both said yes.
+// Swipe the watchlist, yes/no on each title, a match when you both said yes.
 function SwipeDeck({deck,other,match,onSwipe,onClose,onList,onAdd}){
   const [nt,setNt]=useState('');const addIt=()=>{const t=nt.trim();if(!t)return;onAdd(t);setNt('');};
   const [dx,setDx]=useState(0);const [go,setGo]=useState(false);const st=useRef(null);
@@ -2044,7 +2058,7 @@ function SwipeDeck({deck,other,match,onSwipe,onClose,onList,onAdd}){
     </div>`;
 }
 
-// Spin for dinner — the wheel picks from your recipes and places.
+// Spin for dinner, the wheel picks from your recipes and places.
 function DinnerWheel({pool,onLock,onClose,onAdd}){
   const segsRef=useRef(null);
   if(!segsRef.current||segsRef.current.n!==pool.length){const a=pool.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}segsRef.current={n:pool.length,list:a.slice(0,8)};}
@@ -2068,14 +2082,14 @@ function DinnerWheel({pool,onLock,onClose,onAdd}){
           </div>
           ${pick&&html`<div class="whres"><div class="sm">tonight it’s</div><div class="big"><${HIco} n=${pick.kind==='spot'?'pin':'fork'} s=${22}/> ${pick.txt}</div>${pick.city&&html`<div class="sm">${pick.city}</div>`}
             <div class="row mt10"><button class="btn terra" style="flex:1" onClick=${()=>onLock(pick)}>Lock it in</button><button class="btn quiet" onClick=${go}>Again</button></div></div>`}
-          ${!pick&&html`<div class="sm" style="text-align:center;margin-top:12px">${spin?'round and round…':'give it a spin — no arguing with the wheel'}</div>`}
+          ${!pick&&html`<div class="sm" style="text-align:center;margin-top:12px">${spin?'round and round…':'give it a spin, no arguing with the wheel'}</div>`}
         `}
       </div>
     </div>`;
 }
 
-// The library — pick a book together, race through it, argue about it.
-const BOOK_TAKES=['The ending was earned.','The main character is secretly the villain.','It started better than it finished.','I’d give this to my mother.','The love story was the weakest part.','It should be a movie — and I know who’d star.','I saw the twist coming.','The best character wasn’t the main one.','It was fifty pages too long.','I’ll still think about this in a year.','The title is better than the book.','I’d read the sequel tomorrow.','Someone in this book reminds me of you.','The author was showing off.','The first chapter almost lost me.','I underlined something.','It made me want to book a trip.','We’d have survived this plot better than they did.','It deserved its hype.','I trust the narrator.'];
+// The library, pick a book together, race through it, argue about it.
+const BOOK_TAKES=['The ending was earned.','The main character is secretly the villain.','It started better than it finished.','I’d give this to my mother.','The love story was the weakest part.','It should be a movie, and I know who’d star.','I saw the twist coming.','The best character wasn’t the main one.','It was fifty pages too long.','I’ll still think about this in a year.','The title is better than the book.','I’d read the sequel tomorrow.','Someone in this book reminds me of you.','The author was showing off.','The first chapter almost lost me.','I underlined something.','It made me want to book a trip.','We’d have survived this plot better than they did.','It deserved its hype.','I trust the narrator.'];
 function BookClub({doc,me,other,onSave,onClose}){
   const [view,setView]=useState(null);const [t1,setT1]=useState('');const [t2,setT2]=useState('');
   const [drag,setDrag]=useState(null);const [take,setTake]=useState('');const [arg,setArg]=useState({});const [addOpen,setAddOpen]=useState(null);
@@ -2127,7 +2141,7 @@ function BookClub({doc,me,other,onSave,onClose}){
             ${[[me,shownP],[other,herP]].map(([w,p])=>html`
               <div class="lane" key=${w}><div class="fill" style=${{width:p+'%'}}></div><span class="tok" style=${{left:'calc('+p+'% - '+(p*.28)+'px)'}}>${who(w,15)}</span><span class="pc">${w} · ${p}%</span></div>`)}
           </div>
-          <div class="sm" style="text-align:center">${myP>=100&&herP>=100?'You both finished.':gap===0?'Neck and neck.':gap>0?'You’re '+gap+'% ahead — no spoilers.':other+' is '+(-gap)+'% ahead — catch up.'}</div>
+          <div class="sm" style="text-align:center">${myP>=100&&herP>=100?'You both finished.':gap===0?'Neck and neck.':gap>0?'You’re '+gap+'% ahead, no spoilers.':other+' is '+(-gap)+'% ahead, catch up.'}</div>
           <input class="bkrange" type="range" min="0" max="100" value=${shownP} onInput=${e=>setDrag(+e.target.value)} onChange=${e=>{setProg(+e.target.value);setDrag(null);}} />
           <div class="row" style="gap:7px;justify-content:center;flex-wrap:wrap">
             ${[5,10,25].map(n=>html`<button key=${n} class="kpill" onClick=${()=>setProg(myP+n)}>+${n}%</button>`)}
@@ -2139,7 +2153,7 @@ function BookClub({doc,me,other,onSave,onClose}){
           ${bookDeb.length===0&&html`<div class="sm" style="text-align:center;margin:12px 0">Draw a take, pick a side, see if you agree.</div>`}
           ${bookDeb.map(d=>{
             const locked=d.by!==me&&myP<(d.pct||0),mine=(d.votes||{})[me],hers=(d.votes||{})[other],both=mine&&hers;
-            if(locked)return html`<div class="take lock" key=${d.id}><${HIco} n="lock" s=${15}/> ${d.by} left a take at ${d.pct}% — it unlocks when you get there.</div>`;
+            if(locked)return html`<div class="take lock" key=${d.id}><${HIco} n="lock" s=${15}/> ${d.by} left a take at ${d.pct}%, it unlocks when you get there.</div>`;
             return html`
               <div class="take" key=${d.id}>
                 <div class="ts">“${d.s}”</div>
@@ -2147,9 +2161,9 @@ function BookClub({doc,me,other,onSave,onClose}){
                 ${!both&&html`<div class="row mt8" style="gap:8px">
                   <button class=${'tbtn yes'+(mine==='y'?' on':'')} onClick=${()=>side(d,'y')}>Agree</button>
                   <button class=${'tbtn no'+(mine==='n'?' on':'')} onClick=${()=>side(d,'n')}>Disagree</button></div>
-                  ${mine&&html`<div class="sm">Locked in. Waiting for ${other} — then both reveal.</div>`}`}
+                  ${mine&&html`<div class="sm">Locked in. Waiting for ${other}then both reveal.</div>`}`}
                 ${both&&html`
-                  <div class=${'verdict '+(mine===hers?'same':'split')}>${mine===hers?'You both '+(mine==='y'?'agree':'disagree'):'Split — you '+(mine==='y'?'agree':'disagree')+', '+other+' '+(hers==='y'?'agrees':'disagrees')}</div>
+                  <div class=${'verdict '+(mine===hers?'same':'split')}>${mine===hers?'You both '+(mine==='y'?'agree':'disagree'):'Split, you '+(mine==='y'?'agree':'disagree')+', '+other+' '+(hers==='y'?'agrees':'disagrees')}</div>
                   ${(d.args||[]).map((a,i)=>html`<div class=${'argm'+(a.by===me?' me':'')} key=${i}><b>${a.by}</b> ${a.txt}</div>`)}
                   <div class="row mt8" style="gap:7px"><input placeholder=${mine===hers?'Add a thought…':'Make your case…'} value=${arg[d.id]||''} onInput=${e=>setArg(Object.assign({},arg,{[d.id]:e.target.value}))} onKeyDown=${e=>{if(e.key==='Enter')argue(d);}} />
                     <button class="btn quiet" style="flex:0 0 auto" onClick=${()=>argue(d)}>Send</button></div>`}
@@ -2174,7 +2188,7 @@ function BookClub({doc,me,other,onSave,onClose}){
     </div>`;
 }
 
-// Our table — places we want to eat, and a photo diary of everywhere we've been.
+// Our table, places we want to eat, and a photo diary of everywhere we've been.
 const EAT_FACES=[['4','heart','Loved it'],['3','smile','Good'],['2','meh','Fine'],['1','frown','Skip it']];
 function EatsBook({want,doc,me,other,onSave,onWent,onAddSpot,onUpload,onView,onClose}){
   const [view,setView]=useState(null);const [form,setForm]=useState(null);const [busy,setBusy]=useState(false);
@@ -2183,7 +2197,7 @@ function EatsBook({want,doc,me,other,onSave,onWent,onAddSpot,onUpload,onView,onC
   const been=doc.been||[];
   const save=(list)=>onSave({been:list});
   const v=view||(been.length||!want.length?'been':'want');
-  const face=(r)=>{const f=EAT_FACES.find(x=>x[0]===r);return f?html`<span class=${'fc f'+r}><${HIco} n=${f[1]} s=${15} f=${f[1]==='heart'?1:0}/> ${f[2]}</span>`:html`<span class="fc none">—</span>`;};
+  const face=(r)=>{const f=EAT_FACES.find(x=>x[0]===r);return f?html`<span class=${'fc f'+r}><${HIco} n=${f[1]} s=${15} f=${f[1]==='heart'?1:0}/> ${f[2]}</span>`:html`<span class="fc none">·</span>`;};
   const cities=been.map(b=>(b.city||'').trim()).filter((c,i,a)=>c&&a.indexOf(c)===i);
   const shown=city?been.filter(b=>(b.city||'').trim()===city):been;
   const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
@@ -2211,7 +2225,7 @@ function EatsBook({want,doc,me,other,onSave,onWent,onAddSpot,onUpload,onView,onC
         </div>
         ${form&&html`
           <div class="take" style="border-color:var(--terra);margin-top:0">
-            <div class="ts" style="margin-bottom:10px">${form.src?'So — how was it?':'Log a place we went'}</div>
+            <div class="ts" style="margin-bottom:10px">${form.src?'So, how was it?':'Log a place we went'}</div>
             <input placeholder="The place" value=${form.name} onInput=${e=>setForm(Object.assign({},form,{name:e.target.value}))} />
             <div class="row mt8" style="gap:7px"><input placeholder="City" value=${form.city} onInput=${e=>setForm(Object.assign({},form,{city:e.target.value}))} />
               <input type="date" value=${form.when} onInput=${e=>setForm(Object.assign({},form,{when:e.target.value}))} /></div>
@@ -2229,7 +2243,7 @@ function EatsBook({want,doc,me,other,onSave,onWent,onAddSpot,onUpload,onView,onC
           ${cities.length>1&&html`<div class="row" style="gap:6px;flex-wrap:wrap;margin-bottom:10px">
             <button class=${'kpill'+(city===''?' on':'')} onClick=${()=>setCity('')}>All</button>
             ${cities.map(c=>html`<button key=${c} class=${'kpill'+(city===c?' on':'')} onClick=${()=>setCity(c)}>${c}</button>`)}</div>`}
-          ${been.length===0&&html`<div class="swempty"><div class="big">No tables yet</div><div class="sm">Log the first place you ate together — photos and all.</div></div>`}
+          ${been.length===0&&html`<div class="swempty"><div class="big">No tables yet</div><div class="sm">Log the first place you ate together, photos and all.</div></div>`}
           ${shown.map(b=>{const im=b.imgs||[],mine=(b.rate||{})[me],list=im.map(x=>({url:x.url,cap:b.name,by:'',at:fmt(b.when),v:x.v}));
             return html`
             <div class="eat" key=${b.id}>
@@ -2311,7 +2325,7 @@ function GardenSheet({doc,me,other,bucketSub,onSave,onBucket,onClose}){
       <div class="gwho"><span class=${w.Angelos?'on':''}>${who('Angelos',13)}</span><span class=${w.Antigoni?'on':''}>${who('Antigoni',13)}</span></div>
       ${iDid&&theyDid?html`<div class="gbtn grew"><${HIco} n="check" s=${14}/> Grew ${p.every==='week'?'this week':'today'}</div>`
         :iDid?html`<div class="gbtn done">Waiting for ${other}</div>`
-        :html`<button class="gbtn" onClick=${()=>water(p)}><${HIco} n="drop" s=${14}/> ${dry?'Thirsty — water it':theyDid?other+' watered — your turn':'Water'}</button>`}
+        :html`<button class="gbtn" onClick=${()=>water(p)}><${HIco} n="drop" s=${14}/> ${dry?'Thirsty, water it':theyDid?other+' watered, your turn':'Water'}</button>`}
     </div>`;};
   return html`
     <div class="dsheet" onClick=${e=>{if(e.target.classList.contains('dsheet'))onClose();}}>
@@ -2719,7 +2733,7 @@ function App(){
   const openDoor=()=>{try{localStorage.setItem('mel-door',dkey(new Date()));}catch(e){}setDoorOpen(true);};
   const [liTxt,setLiTxt]=useState('');
   const [letOpen,setLetOpen]=useState(false);
-  const [noteView,setNoteView]=useState('wall'); // 'wall' | 'letters' — letters live on their own page now
+  const [noteView,setNoteView]=useState('wall'); // 'wall' | 'letters'letters live on their own page now
   const [letTxt,setLetTxt]=useState('');
   const [letDate,setLetDate]=useState('2026-08-21');
   const [tmb,setTmb]=useState(null);
@@ -2769,13 +2783,13 @@ function App(){
 
   const srvSeen=useRef({});
   useEffect(()=>{
-    if(!authed)return; // everything lives behind the login now — subscribe only after the PIN signs us in
+    if(!authed)return; // everything lives behind the login now, subscribe only after the PIN signs us in
     // A snapshot is TRUSTED only if it came from the server, or is a cache copy of a doc that exists.
     // A cold-cache "this doc doesn't exist" is never believed, and cache data never replaces loaded data.
     const sub=(key,apply)=>onSnapshot(D(key),(s)=>{
       const fromCache=!!(s.metadata&&s.metadata.fromCache);
-      if(fromCache&&srvSeen.current[key])return;            // already have real data — ignore cache echoes
-      if(fromCache&&!s.exists())return;                     // cold cache claiming "empty" — never believe it
+      if(fromCache&&srvSeen.current[key])return;            // already have real data, ignore cache echoes
+      if(fromCache&&!s.exists())return;                     // cold cache claiming "empty"never believe it
       if(!fromCache)srvSeen.current[key]=true;
       apply(s);
     },()=>setErr('No connection.'));
@@ -2810,7 +2824,7 @@ function App(){
     return ()=>{u1();u2();u3();u4();u5();u6();u7();u8();u9();u10();u17();u18();u19();u20();u11();u12();u13();u14();u15();u16();u21();u22();u23();u24();u25();u26();u27();u28();};
   },[authed]);
 
-  const guard=(loaded)=>{if(loaded===null){setErr('Still connecting — try again in a second.');return false;}return true;};
+  const guard=(loaded)=>{if(loaded===null){setErr('Still connecting, try again in a second.');return false;}return true;};
   const write=(key,data)=>setDoc(D(key),data).catch(e=>setErr('Save failed. '+(e.message||e)));
 
   useEffect(()=>{
@@ -2832,7 +2846,7 @@ function App(){
   }
   // The PIN is our shared account password. First code ever typed sets it; after that,
   // the right code signs us in and a wrong one is turned away by Firebase.
-  // Each person has their own PIN. Whichever account it opens is who you are — no choosing.
+  // Each person has their own PIN. Whichever account it opens is who you are, no choosing.
   async function submitPin(code){
     setBusy(true);
     const pw=PIN_PAD+code;let who=null,net=false;
@@ -2841,7 +2855,7 @@ function App(){
       catch(e){if(e&&e.code==='auth/network-request-failed')net=true;}
     }
     if(who){setMe(who);setAuthed(true);setPinBuf('');}
-    else{if(net)setErr('No connection — try again.');setPinBad(true);setPinBuf('');}
+    else{if(net)setErr('No connection, try again.');setPinBad(true);setPinBuf('');}
     setBusy(false);
   }
   const pickMe=(n)=>{setMe(n);localStorage.setItem('mel-me',n);};
@@ -2853,7 +2867,7 @@ function App(){
   const during=tk>=MEET&&tk<=TRIP_END;
   const after=tk>TRIP_END;
   const tripDay=during?TRIP_DAYS.indexOf(tk)+1:0;
-  const linkday=tk===MEET&&msLeft<=0; // the day we link up — celebrate
+  const linkday=tk===MEET&&msLeft<=0; // the day we link up, celebrate
   // final 48h: tick every second so the touchdown countdown is real
   useEffect(()=>{
     if(!(msLeft>0&&msLeft<172800000))return;
@@ -2879,7 +2893,7 @@ function App(){
   async function uploadBlob(file){
     const id=Date.now().toString(36)+Math.floor(Math.random()*99);
     if((file.type||'').startsWith('video/')){
-      if(file.size>150*1024*1024)throw new Error('that video is over 150MB — trim it a little first');
+      if(file.size>150*1024*1024)throw new Error('that video is over 150MB, trim it a little first');
       const ext=file.type.includes('quicktime')?'mov':file.type.includes('webm')?'webm':'mp4';
       const path=sref(storage,`invoices/trip/${id}.${ext}`);
       await uploadBytes(path,file,{contentType:file.type||'video/mp4'});
@@ -2932,7 +2946,7 @@ function App(){
     if(!guard(notes))return;
     const t=nTxt.trim();
     const vN=(vNote&&vNote.for==='note')?vNote:null;
-    if(!t&&!vN){setErr('Write the note — or record one.');return;}
+    if(!t&&!vN){setErr('Write the note, or record one.');return;}
     if(!me){setErr('Tap who you are (top right).');return;}
     setErr('');
     const id=Date.now().toString(36);
@@ -2947,7 +2961,7 @@ function App(){
       const ext=vN.mime==='audio/mp4'?'m4a':'webm';
       const path=sref(storage,`invoices/trip/voice-note-${id}.${ext}`);
       uploadBytes(path,vN.blob).then(()=>getDownloadURL(path)).then(url=>finish({url,sec:vN.sec}))
-        .catch(e=>setErr('Voice upload failed — '+(e.message||e)));
+        .catch(e=>setErr('Voice upload failed'+(e.message||e)));
     }else finish(null);
   }
   function delNote(id){if(!guard(notes))return;write('trip_notes',{list:notes.filter(x=>x.id!==id)});}
@@ -3065,7 +3079,7 @@ function App(){
     ids.splice(before?ti:ti+1,0,id);
     write('trip_meta',{...(meta||{}),legOrder:{...((meta||{}).legOrder||{}),[li]:ids}});
   }
-  // window-listener drag engine — reliable on iOS
+  // window-listener drag engine, reliable on iOS
   const dragRef=useRef(null);
   useEffect(()=>{
     if(!drag)return;
@@ -3111,7 +3125,7 @@ function App(){
   }
   function promoteNote(k,n3){
     const raw=String(n3.txt||'').replace(/^📍\s*/,'');
-    const cut=raw.indexOf(' — ');
+    const cut=raw.indexOf('·');
     const w=cut>0?raw.slice(0,cut):raw;
     const x=cut>0?raw.slice(cut+3):'';
     if(!me){setErr('Tap who you are (top right).');return;}
@@ -3256,11 +3270,11 @@ function App(){
       const opened=(letters||[]).filter(L=>tk>=L.openAt);
       const sealedCount=(letters||[]).length-opened.length;
       const line='\n----------------------------------------\n';
-      const jTx=(journal||[]).slice().reverse().map(j=>`${j.at} — ${j.by}${line}${j.txt||''}${(j.imgs||[]).length?`\n[${j.imgs.length} photo(s) in photos/journal/]`:''}`).join('\n\n');
-      const nTx=(notes||[]).slice().reverse().map(n2=>`${n2.at} — ${n2.by}${line}${n2.txt}`).join('\n\n');
-      const lTx=opened.map(L=>`Sealed ${L.at} by ${L.by} — opened ${L.openAt}${line}${L.txt}`).join('\n\n')+(sealedCount?`\n\n(${sealedCount} letter(s) still sealed — export again after they open.)`:'');
-      const qTx=Object.keys(qotd||{}).sort().map(k=>{const q=qotd[k];if(!(q.Angelos&&q.Antigoni))return '';return `${k} — ${QOTD[qIndexFor(k)]}${line}☀️ Angelos: ${q.Angelos.txt}\n🌊 Antigoni: ${q.Antigoni.txt}`;}).filter(Boolean).join('\n\n');
-      const dTx=Object.keys(daysDoc||{}).sort().map(k=>{const dd4=dayData(k);if(!dd4.notes.length)return '';return `${prettyDay(k)} — ${placeOf(k)}${line}`+dd4.notes.map(n3=>`${n3.by}: ${n3.txt}`).join('\n');}).filter(Boolean).join('\n\n');
+      const jTx=(journal||[]).slice().reverse().map(j=>`${j.at}·${j.by}${line}${j.txt||''}${(j.imgs||[]).length?`\n[${j.imgs.length} photo(s) in photos/journal/]`:''}`).join('\n\n');
+      const nTx=(notes||[]).slice().reverse().map(n2=>`${n2.at}·${n2.by}${line}${n2.txt}`).join('\n\n');
+      const lTx=opened.map(L=>`Sealed ${L.at} by ${L.by}opened ${L.openAt}${line}${L.txt}`).join('\n\n')+(sealedCount?`\n\n(${sealedCount} letter(s) still sealed, export again after they open.)`:'');
+      const qTx=Object.keys(qotd||{}).sort().map(k=>{const q=qotd[k];if(!(q.Angelos&&q.Antigoni))return '';return `${k}·${QOTD[qIndexFor(k)]}${line}☀️ Angelos: ${q.Angelos.txt}\n🌊 Antigoni: ${q.Antigoni.txt}`;}).filter(Boolean).join('\n\n');
+      const dTx=Object.keys(daysDoc||{}).sort().map(k=>{const dd4=dayData(k);if(!dd4.notes.length)return '';return `${prettyDay(k)}·${placeOf(k)}${line}`+dd4.notes.map(n3=>`${n3.by}: ${n3.txt}`).join('\n');}).filter(Boolean).join('\n\n');
       files.push({name:'our-journal.txt',data:enc.encode(jTx||'(empty)')});
       files.push({name:'our-notes.txt',data:enc.encode(nTx||'(empty)')});
       files.push({name:'our-letters.txt',data:enc.encode(lTx||'(none opened yet)')});
@@ -3272,7 +3286,7 @@ function App(){
       for(const [k,v] of Object.entries(packs))if(k!=='letters')out[k]=v.data;
       out.letters={list:opened};
       files.push({name:'data.json',data:enc.encode(JSON.stringify(out,null,1))});
-      files.push({name:'README.txt',data:enc.encode('MELTEMI — Angelos & Antigoni, Summer 2026\nOur first summer, in one folder.\n\nphotos/album — the shared album\nphotos/days — every day\u2019s gallery\nphotos/journal — pictures from journal pages\n*.txt — everything we wrote\ndata.json — a full machine-readable copy\n\nKeep this somewhere safe. \ud83c\udf0a\u2600\ufe0f')});
+      files.push({name:'README.txt',data:enc.encode('MELTEMI, Angelos & Antigoni, Summer 2026\nOur first summer, in one folder.\n\nphotos/album, the shared album\nphotos/days, every day\u2019s gallery\nphotos/journal, pictures from journal pages\n*.txt, everything we wrote\ndata.json, a full machine-readable copy\n\nKeep this somewhere safe. \ud83c\udf0a\u2600\ufe0f')});
       const blob=zipStore(files);
       const a=document.createElement('a');
       a.href=URL.createObjectURL(blob);
@@ -3280,7 +3294,7 @@ function App(){
       a.click();
       if(meta!==null)write('trip_meta',{...meta,lastExport:tk});
       setExporting(null);
-      flash(failed?`Exported — ${failed} photo(s) couldn\u2019t be fetched`:'The whole summer, saved \ud83d\udce6');
+      flash(failed?`Exported${failed} photo(s) couldn\u2019t be fetched`:'The whole summer, saved \ud83d\udce6');
     }catch(e){setExporting(null);setErr('Export failed. ('+(e.message||e)+')');}
   }
 
@@ -3315,7 +3329,7 @@ function App(){
     r.readAsText(file);
   }
   function doRestore(){
-    if(journal===null||notes===null||photos===null||daysDoc===null||bucket===null||letters===null||qotd===null||meta===null){setErr('Still connecting — try again in a second.');return;}
+    if(journal===null||notes===null||photos===null||daysDoc===null||bucket===null||letters===null||qotd===null||meta===null){setErr('Still connecting, try again in a second.');return;}
     const d=restorePrev.data;
     write('trip_journal',{list:mergeLists(journal,d.journal?.list)});
     write('trip_notes',{list:mergeLists(notes,d.notes?.list)});
@@ -3342,7 +3356,7 @@ function App(){
     write('trip_qotd',{byDate:mergedQ});
     if(!meta.pin&&d.meta?.pin)write('trip_meta',{...meta,pin:d.meta.pin});
     setRestorePrev(null);
-    flash('Restored — everything merged back \ud83d\udee1');
+    flash('Restored, everything merged back \ud83d\udee1');
   }
 
   // ---- concierge (AI + live web search) ----
@@ -3354,7 +3368,7 @@ function App(){
   },[tk]);
   const cSel=cPlace||placeNow;
   function saveAiKey(){
-    if(aiMeta===null){setErr('Still connecting — try again in a second.');return;}
+    if(aiMeta===null){setErr('Still connecting, try again in a second.');return;}
     if(!aiKeyIn.trim())return;
     setDoc(D('helios_ai'),{...aiMeta,key:aiKeyIn.trim()}).catch(e=>setErr('Save failed. '+(e.message||e)));
     setAiKeyIn('');flash('Concierge online');
@@ -3370,7 +3384,7 @@ function App(){
     setCBusy(true);setCRes(null);setCRaw('');setErr('');
     try{
       const prompt=`You are a sharp local concierge with live web search. Research CURRENT (August 2026) options and recommend 4-6 places.
-WHO: A couple on their first summer trip together — he runs restaurants in NYC (high food standards), she is Greek-Cypriot (absolutely no tourist traps; where locals actually go).
+WHO: A couple on their first summer trip together, he runs restaurants in NYC (high food standards), she is Greek-Cypriot (absolutely no tourist traps; where locals actually go).
 WHERE: ${P2.label}. WHEN: ${when} (August 2026). LOOKING FOR: ${intent}. ${extra?('SPECIFIC ASK: '+extra):''}
 Search the web for current, open, well-reviewed options. Then output ONLY a JSON array, no other text, no markdown fences:
 [{"name":"...","area":"neighborhood/beach","price":"€|€€|€€€","why":"one sentence on why it fits THIS couple","tip":"one practical tip (booking, timing, what to order)"}]`;
@@ -3386,8 +3400,8 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       let parsed=null;
       if(s2>-1&&e2>s2){try{parsed=JSON.parse(txt.slice(s2,e2+1));}catch(e){}}
       if(Array.isArray(parsed)&&parsed.length){setCRes(parsed.slice(0,6));}
-      else setCRaw(txt.trim()||'No answer — try again.');
-    }catch(e){setErr('Concierge failed — '+(e.message||e));}
+      else setCRaw(txt.trim()||'No answer, try again.');
+    }catch(e){setErr('Concierge failed'+(e.message||e));}
     setCBusy(false);
   }
   function saveFind(f){
@@ -3400,8 +3414,8 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   function findToDay(f,k){
     if(!guard(daysDoc))return;
     const cur=dayData(k);
-    saveDayDoc(k,{notes:[...cur.notes,{id:Date.now().toString(36),txt:'📍 '+f.name+(f.area?' · '+f.area:'')+(f.tip?' — '+f.tip:(f.why?' — '+f.why:'')),by:me||'',at:nowStamp()}]});
-    setAddingDay(null);flash('Sent to '+prettyDay(k)+' — promote it to the plan from that page');
+    saveDayDoc(k,{notes:[...cur.notes,{id:Date.now().toString(36),txt:'📍 '+f.name+(f.area?' · '+f.area:'')+(f.tip?'·'+f.tip:(f.why?'·'+f.why:'')),by:me||'',at:nowStamp()}]});
+    setAddingDay(null);flash('Sent to '+prettyDay(k)+'promote it to the plan from that page');
   }
   // ---- ΤΑΒΛΙ ----
   const tvState=tavli&&tavli.state?tavli.state:null;
@@ -3415,7 +3429,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     const st=TV_START();
     st.turn=Math.random()<0.5?'A':'B';
     tvWrite({state:st});
-    flash((st.turn==='A'?'☀️ Angelos':'🌊 Antigoni')+' opens — roll!');
+    flash((st.turn==='A'?'☀️ Angelos':'🌊 Antigoni')+' opens, roll!');
   }
   function tvRoll(){
     if(!tvState||tvState.rem.length>0||tvState.winner)return;
@@ -3425,7 +3439,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     const st={...tvState,rem,lastRoll:[d1,d2]};
     const f=tvFirsts(st,st.turn,rem);
     if(f.len===0){
-      flash('No moves — '+(st.turn==='A'?'☀️':'🌊')+' rolled '+d1+'·'+d2+' and passes');
+      flash('No moves'+(st.turn==='A'?'☀️':'🌊')+' rolled '+d1+'·'+d2+' and passes');
       tvWrite({state:{...st,rem:[],turn:st.turn==='A'?'B':'A'}});
     }else{
       tvWrite({state:st});
@@ -3439,7 +3453,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     if(!ns.winner){
       const f=tvFirsts(ns,ns.turn,ns.rem);
       if(ns.rem.length===0||f.len===0){
-        if(ns.rem.length>0&&f.len===0)flash('Dice stuck — turn passes');
+        if(ns.rem.length>0&&f.len===0)flash('Dice stuck, turn passes');
         ns={...ns,rem:[],turn:ns.turn==='A'?'B':'A'};
       }
     }
@@ -3461,7 +3475,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     if(s.some(x=>!x)){setErr('Fill all three statements.');return;}
     if(ttlDraft.lie===undefined){setErr('Mark which one is the lie.');return;}
     write('trip_ttl',{rounds:[{id:Date.now().toString(36),by:me,at:nowStamp(),stmts:s,lie:ttlDraft.lie},...ttl].slice(0,40)});
-    setTtlDraft(null);flash('Posted — let them sweat 🤥');
+    setTtlDraft(null);flash('Posted, let them sweat 🤥');
   }
   function guessTtl(r,idx){
     if(!guard(ttl))return;
@@ -3480,7 +3494,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     setDuelBusy(true);setErr('');
     try{
       const recent=(duel||[]).slice(0,8).map(r=>r.q).join(' | ');
-      const prompt=`Generate ONE playful "who is more likely to..." question for a couple (Angelos — NYC restaurant guy, sun emoji; Antigoni — Greek-Cypriot singer, sea emoji). Fun, specific, slightly cheeky, never mean. Not similar to these already used: ${recent||'none'}. Output ONLY JSON, no fences: {"q":"Who is more likely to ..."}`;
+      const prompt=`Generate ONE playful "who is more likely to..." question for a couple (Angelos, NYC restaurant guy, sun emoji; Antigoni, Greek-Cypriot singer, sea emoji). Fun, specific, slightly cheeky, never mean. Not similar to these already used: ${recent||'none'}. Output ONLY JSON, no fences: {"q":"Who is more likely to ..."}`;
       const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
         headers:{'x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json'},
         body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:150,messages:[{role:'user',content:prompt}]})});
@@ -3490,7 +3504,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       const o=JSON.parse(txt);
       if(!o.q)throw new Error('bad question');
       write('trip_duel',{rounds:[{id:Date.now().toString(36),q:String(o.q),at:nowStamp(),ans:{}},...duel].slice(0,60)});
-    }catch(e){setErr('Question failed — '+(e.message||e));}
+    }catch(e){setErr('Question failed'+(e.message||e));}
     setDuelBusy(false);
   }
   function answerDuel(r,pick){
@@ -3537,15 +3551,15 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     write('trip_word',{byDate});
     setWIn2('');
     if(done)flash('Solved in '+guesses.length+'! 🔤');
-    else if(guesses.length>=6)flash('Out of guesses — it was '+wTarget);
+    else if(guesses.length>=6)flash('Out of guesses, it was '+wTarget);
   }
   const wVerdict=(()=>{
     const mD=wMine.done,tD=wTheirs.done;
     if(mD&&tD){
       if(wMine.tries!==wTheirs.tries)return wMine.tries<wTheirs.tries?'👑 You took today':'👑 They took today';
-      return (wMine.solvedAt||0)<(wTheirs.solvedAt||0)?'👑 You took today — by speed':'👑 They took today — by speed';
+      return (wMine.solvedAt||0)<(wTheirs.solvedAt||0)?'👑 You took today, by speed':'👑 They took today, by speed';
     }
-    if(mD&&!tD)return 'Solved — waiting to see if they can match it';
+    if(mD&&!tD)return 'Solved, waiting to see if they can match it';
     if(!mD&&tD)return 'They solved it. No pressure. 👀';
     return null;
   })();
@@ -3576,7 +3590,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       const im=await uploadBlob(file);
       const cur=dailyp[tk]||{};
       write('trip_dailyphoto',{byDate:{...dailyp,[tk]:{...cur,[me]:{...im,at:nowStamp()}}}});
-      flash('Posted — reveals when you\u2019ve both shared');
+      flash('Posted, reveals when you\u2019ve both shared');
     }catch(e){setErr('Photo failed. ('+(e.message||e)+')');}
     setDpUp(false);
   }
@@ -3761,7 +3775,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
           return {...v,sec:v.sec+1};
         });
       },1000);
-    }catch(e){setErr('Microphone unavailable — check permissions.');}
+    }catch(e){setErr('Microphone unavailable, check permissions.');}
   }
   function stopVoice(){if(vRec){try{vRec.mr.stop();}catch(e){}}}
   function discardVoice(){if(vNote){URL.revokeObjectURL(vNote.url);}setVNote(null);}
@@ -3769,7 +3783,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     if(!guard(letters))return;
     const t=letTxt.trim();
     const vL=(vNote&&vNote.for==='letter')?vNote:null;
-    if(!t&&!vL){setErr('Write the letter — or record one.');return;}
+    if(!t&&!vL){setErr('Write the letter, or record one.');return;}
     if(!me){setErr('Tap who you are (top right).');return;}
     if(!/^\d{4}-\d{2}-\d{2}$/.test(letDate)){setErr('Pick an open date (YYYY-MM-DD).');return;}
     setErr('');
@@ -3786,7 +3800,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       const ext=vL.mime==='audio/mp4'?'m4a':'webm';
       const path=sref(storage,`invoices/trip/voice-letter-${id}.${ext}`);
       uploadBytes(path,vL.blob).then(()=>getDownloadURL(path)).then(url=>finish({url,sec:vL.sec}))
-        .catch(e=>setErr('Voice upload failed — '+(e.message||e)));
+        .catch(e=>setErr('Voice upload failed'+(e.message||e)));
     }else finish(null);
   }
   function delLetter(id){if(!guard(letters))return;write('trip_letters',{list:letters.filter(x=>x.id!==id)});setArmDel(null);}
@@ -3798,7 +3812,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     const rec={by:me,at:nowStamp(),ts:Date.now()};
     if(typeof kind==='string')rec.k=kind;
     write('trip_pings',{list:[rec,...pings].slice(0,40)});
-    flash(kind==='hug'?'Sent a hug':kind==='kiss'?'Sent a kiss':kind==='wave'?'Sent a wave':kind==='dance'?'Sent a little dance':'Sent — they’ll see it');
+    flash(kind==='hug'?'Sent a hug':kind==='kiss'?'Sent a kiss':kind==='wave'?'Sent a wave':kind==='dance'?'Sent a little dance':'Sent, they’ll see it');
   }
   function saveScore(sc){
     if(gscores===null||!me)return;
@@ -3809,7 +3823,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     for(const p of (photos||[]))pool.push({url:p.url,cap:p.cap||'',sub:p.at,by:p.by});
     for(const k of Object.keys(daysDoc||{}))for(const im of ((daysDoc[k].photos)||[]))pool.push({url:im.url,cap:prettyDay(k),sub:placeOf(k),by:im.by||''});
     for(const j of (journal||[]))for(const im of (j.imgs||[]))pool.push({url:im.url,cap:j.txt?j.txt.slice(0,60):'',sub:j.at,by:j.by});
-    if(pool.length===0){flash('No memories yet — soon');return;}
+    if(pool.length===0){flash('No memories yet, soon');return;}
     const pick=pool[Math.floor(Math.random()*pool.length)];
     setViewImg({url:pick.url,cap:pick.cap,by:pick.by,at:pick.sub});
   }
@@ -3824,7 +3838,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         <div class="ldiv"></div>
         <div class="soft">
           ${busy?'Opening…':'Your code'}
-          ${pinBad&&html`<div style="color:#A4442C;font-weight:600;margin-top:5px">Not it — try again</div>`}
+          ${pinBad&&html`<div style="color:#A4442C;font-weight:600;margin-top:5px">Not it, try again</div>`}
         </div>
         <div class=${'dots'+(pinBad?' bad':'')}>${dots}</div>
           <div class="pad">
@@ -3891,7 +3905,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       <div class="card" style="padding:14px 15px">
         <input placeholder='Anything specific… "rooftop dinner for our last night"' value=${cTxt} onInput=${e=>setCTxt(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')askConcierge();}} />
         ${aiMeta!==null&&!aiMeta.key&&html`
-          <div class="soft" style="margin-top:10px">One-time setup — paste the same AI key you use in HELIOS:</div>
+          <div class="soft" style="margin-top:10px">One-time setup, paste the same AI key you use in HELIOS:</div>
           <div class="row mt8">
             <input placeholder="sk-ant-…" value=${aiKeyIn} onInput=${e=>setAiKeyIn(e.target.value)} />
             <button class="btn" style="flex:0 0 auto" onClick=${saveAiKey}>Save</button>
@@ -3989,7 +4003,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         </div>
         <button class="jarbtn" style="margin:16px 0 4px" onClick=${sendMiss}>i miss you, into the jar 🫙</button>
         ${missWeek.length>0&&html`
-          <div class="taunt" style="margin-top:10px">${missWeek.length} misses this week — ${missA===missB?html`perfectly even 🤍`:missA>missB?html`<${Sig} who="Angelos"/> Angelos leads ${missA}–${missB}`:html`<${Sig} who="Antigoni"/> Antigoni leads ${missB}–${missA}`}</div>`}
+          <div class="taunt" style="margin-top:10px">${missWeek.length} misses this week${missA===missB?html`perfectly even 🤍`:missA>missB?html`<${Sig} who="Angelos"/> Angelos leads ${missA}–${missB}`:html`<${Sig} who="Antigoni"/> Antigoni leads ${missB}–${missA}`}</div>`}
       `}
       ${(during||after)&&html`
         <div class="hero" style="padding:20px 10px 6px">
@@ -4080,7 +4094,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   const kN=(k)=>{const n=(kitchen||[]).filter(x=>(x.kind||'try')===k&&!x.done).length;return n?n+' waiting':'nothing yet';};
   const gPlantsL=((gardenDoc||{}).plants||[]),gStages=gPlantsL.slice(0,8).map(p=>gardenStage(gardenGrowth(p,(gardenDoc||{}).checks)));
   const gThirsty=me?gPlantsL.filter(p=>!(((p.w||{})[p.every==='week'?wkKey():tk]||{})[me])).length:0;
-  const gardenSub=gPlantsL.length?(gThirsty?gThirsty+' waiting for your water':'all watered — nicely done'):'plant the first thing';
+  const gardenSub=gPlantsL.length?(gThirsty?gThirsty+' waiting for your water':'all watered, nicely done'):'plant the first thing';
   const bucketSub=(bucket||[]).length?doneCount+' of '+bucket.length+' done':'start the list';
   const mS=milesStats(milesDoc),mileSub=mS.past.length?mS.past.length+(mS.past.length===1?' reunion · ':' reunions · ')+Math.round(mS.totalKm*.621371).toLocaleString()+' miles flown':'log the first trip';
   const aMoves=arcadeMoves(arcadeDoc,me),arcadeSub=aMoves.length?'your move in '+aMoves.join(' and '):'four in a row, sea battle';
@@ -4100,7 +4114,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       {key:'plans',icon:'cal',label:'This week’s dinners',sub:kN('plan'),spot:'kitchen'},
       {key:'spots',icon:'pin',label:'Our table',sub:eatWant.length+' to try · '+eatBeen+' visited',spot:'spots'}]},
     {id:'hall',name:'The hall',icon:'door',items:[
-      {key:'door',icon:'door',label:'Today’s question',sub:myA?(theirA?'you both answered — read them':'sealed, waiting for '+other):(theirA?other+' answered — your turn':'a new one is waiting'),spot:'door'},
+      {key:'door',icon:'door',label:'Today’s question',sub:myA?(theirA?'you both answered, read them':'sealed, waiting for '+other):(theirA?other+' answered, your turn':'a new one is waiting'),spot:'door'},
       {key:'photos',icon:'image',label:'The album',sub:(photos||[]).length?(photos||[]).length+' memories':'hang the first',spot:'photos'},
       {key:'trip',icon:'case',label:'Our trips',sub:'days, plans, photos',spot:'trip'},
       {key:'concierge',icon:'bell',label:'The concierge',sub:'ask for ideas anywhere',spot:'concierge'}]},
@@ -4115,7 +4129,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   const partnerBubble=lastPingFromThem?((EMO5[lastPingFromThem.k]||'thought of you')+' '+relTime(lastPingFromThem.ts)):'';
   const [qSeen,setQSeen]=useState(()=>{try{return localStorage.getItem('mel-qseen')||'';}catch(e){return '';}});
   useEffect(()=>{if(ritual&&myA&&theirA&&qSeen!==tk){try{localStorage.setItem('mel-qseen',tk);}catch(e){}setQSeen(tk);}},[ritual,!!myA,!!theirA]);
-  const qReveal=!!(myA&&theirA&&qSeen!==tk),doorBadge=!doorOpen||qReveal,doorLabel=qReveal?'Read both answers':'Knock — today’s question';
+  const qReveal=!!(myA&&theirA&&qSeen!==tk),doorBadge=!doorOpen||qReveal,doorLabel=qReveal?'Read both answers':'Knock, today’s question';
   const loveQ=(v)=>{if(!guard(qotd)||!me)return;const cur=qotd[tk]||{};write('trip_qotd',{byDate:{...qotd,[tk]:{...cur,love:{...(cur.love||{}),[me]:v?1:0}}}});};
   const ritualSheet=ritual&&html`<${DoorSheet} tk=${tk} q=${todaysQ} qotd=${qotd} me=${me} other=${other} doorOpen=${doorOpen} val=${qAns} onVal=${setQAns}
       onSeal=${()=>{if(!qAns.trim()){setErr('Write your answer first.');return;}answerQ();openDoor();}} onEnter=${()=>{openDoor();setRitual(false);}}
@@ -4144,7 +4158,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     <//>`;
   const bedroomTab=html`
     <div class="roomhub">
-      <div class="hcap">the lamp’s on — what are we reaching for?</div>
+      <div class="hcap">the lamp’s on, what are we reaching for?</div>
       <button class="furn" onClick=${()=>setTab('journal')}>
         <span class="fic"></span>
         <span><div class="ft">The desk · our journal</div><div class="fs">${(journal||[]).length?(journal||[]).length+' pages written':'the first page is waiting'}</div></span>
@@ -4190,13 +4204,13 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         ${kKinds.map(([v5,l5])=>html`<button key=${v5} class=${'kpill'+(kKind===v5?' on':'')} onClick=${()=>setKKind(v5)}>${l5}</button>`)}
       </div>
       <div class="card" style="margin-top:12px">
-        <input placeholder=${kKind==='spot'?'The place — ‘Ta Kanaria, tiny fish taverna’':kKind==='plan'?'The dish — ‘your mom’s pastitsio, Sunday’':'The dish to master — ‘seafood orzo like Naxos’'} value=${kTxt} onInput=${e=>setKTxt(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')kAdd();}} />
-        ${kKind==='spot'&&html`<input class="mt8" placeholder="Which city? — Athens, NYC, Larnaca…" value=${kCity} onInput=${e=>setKCity(e.target.value)} />`}
+        <input placeholder=${kKind==='spot'?'The place, ‘Ta Kanaria, tiny fish taverna’':kKind==='plan'?'The dish, ‘your mom’s pastitsio, Sunday’':'The dish to master, ‘seafood orzo like Naxos’'} value=${kTxt} onInput=${e=>setKTxt(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')kAdd();}} />
+        ${kKind==='spot'&&html`<input class="mt8" placeholder="Which city?, Athens, NYC, Larnaca…" value=${kCity} onInput=${e=>setKCity(e.target.value)} />`}
         ${kKind==='plan'&&html`<input class="mt8" type="date" value=${kWhen} onInput=${e=>setKWhen(e.target.value)} />`}
         <button class="btn terra wide mt10" onClick=${kAdd}>${kKind==='spot'?'Save the spot':kKind==='plan'?'Put it on the stove':'Into the recipe box'}</button>
         ${kKind==='spot'&&html`<button class="btn quiet wide mt8" onClick=${()=>setTab('concierge')}> Ask the concierge for ideas →</button>`}
       </div>
-      ${kitchen!==null&&kFiltered.length===0&&html`<div class="empty" style="padding:16px 0">${kKind==='spot'?'No spots saved yet — where are we eating?':kKind==='plan'?'Nothing on the stove yet.':'The recipe box is empty — scandalous.'}</div>`}
+      ${kitchen!==null&&kFiltered.length===0&&html`<div class="empty" style="padding:16px 0">${kKind==='spot'?'No spots saved yet, where are we eating?':kKind==='plan'?'Nothing on the stove yet.':'The recipe box is empty, scandalous.'}</div>`}
       ${kFiltered.map(it=>html`
         <div class=${'krow'+(it.done?' done':'')} key=${it.id}>
           <button class="kchk" onClick=${()=>kToggle(it)}>${it.done?'✓':''}</button>
@@ -4220,25 +4234,25 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       ${tvDates.sort((a,b)=>a.when<b.when?-1:1).map(d3=>html`
         <div class="krow" key=${d3.id}>
           <span class="rowic"><${HIco} n="film"/></span>
-          <div class="kt">${fmtNight(d3.when)}${d3.title?html` — <em style="font-family:var(--serif)">${d3.title}</em>`:''}
+          <div class="kt">${fmtNight(d3.when)}${d3.title?html`·<em style="font-family:var(--serif)">${d3.title}</em>`:''}
             <div class="ksub">planned by ${d3.by}</div>
           </div>
           <button class="jx" onClick=${()=>tvDelDate(d3.id)}>✕</button>
         </div>`)}
       <div class="card" style="margin-top:14px">
-        <div class="eyebrow" style="margin-bottom:9px">The watchlist — both hearts = we watch it</div>
+        <div class="eyebrow" style="margin-bottom:9px">The watchlist, both hearts = we watch it</div>
         <div class="row">
           <input placeholder="A movie or show for us…" value=${tvIn} onInput=${e=>setTvIn(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')tvAdd();}} />
           <button class="btn terra" style="flex:0 0 auto" onClick=${tvAdd}>Add</button>
         </div>
       </div>
-      ${tvdoc!==null&&tvUnwatched.length===0&&html`<div class="empty" style="padding:14px 0">Nothing queued — someone name a movie.</div>`}
+      ${tvdoc!==null&&tvUnwatched.length===0&&html`<div class="empty" style="padding:14px 0">Nothing queued, someone name a movie.</div>`}
       ${tvUnwatched.map(it=>{
         const vA=(it.votes||{}).Angelos,vB=(it.votes||{}).Antigoni,both=vA&&vB;
         return html`
         <div class="krow" key=${it.id}>
           <div class="kt">${it.title}
-            <div class="ksub">${it.by} · ${both?html`<span class="bothbadge">BOTH IN  — watch it together</span>`:(vA||vB)?'one heart in':'no votes yet'}</div>
+            <div class="ksub">${it.by} · ${both?html`<span class="bothbadge">BOTH IN, watch it together</span>`:(vA||vB)?'one heart in':'no votes yet'}</div>
           </div>
           <span class="rowic">${vA&&html`<${HIco} n="sun" s=${14}/>`}${vB&&html`<${HIco} n="waves" s=${14}/>`}</span>
           <button class=${'vheart'+(me&&(it.votes||{})[me]?' on':'')} title="my vote" onClick=${()=>tvVote(it)}><${HIco} n="heart" s=${18} f=${me&&(it.votes||{})[me]?1:0}/></button>
@@ -4294,7 +4308,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       ${during&&html`
         <button class="card" style="width:100%;text-align:left;cursor:pointer;font-family:inherit;padding:15px 17px" onClick=${()=>setTab('concierge')}>
           <div class="eyebrow">The concierge suggests</div>
-          <div style="font-family:var(--serif);font-size:15.5px;margin-top:8px">Tonight in <em>${placeOf(tk)}</em> — ask the front desk ›</div>
+          <div style="font-family:var(--serif);font-size:15.5px;margin-top:8px">Tonight in <em>${placeOf(tk)}</em>ask the front desk ›</div>
         </button>`}
       <button class="pingbtn" onClick=${sendPing}>💭 thinking of you…</button>
       ${lastPingFromThem&&html`<div class="pingline">${lastPingFromThem.by==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} ${lastPingFromThem.by} was thinking of you · ${relTime(lastPingFromThem.ts)}</div>`}
@@ -4305,14 +4319,14 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         return html`<div class="card" style="padding:15px 17px">
           <div class="eyebrow">This evening</div>
           <div style="font-family:var(--serif);font-size:15.5px;line-height:1.5;margin-top:8px">
-            ${!mine?html`Tonight’s question is <em>waiting for you</em> — answer it before the goodnight. ✍️`
-                   :html`Your answer is in — <em>hers is on its way</em>. <${Sig} who="Antigoni"/>`}
+            ${!mine?html`Tonight’s question is <em>waiting for you</em>answer it before the goodnight. ✍️`
+                   :html`Your answer is in<em>hers is on its way</em>. <${Sig} who="Antigoni"/>`}
           </div>
         </div>`;
       })()}
       <div class="qcard">
         <div class="qmono">A & A</div>
-        ${during&&html`<div style="text-align:center;font-family:var(--serif);font-style:italic;font-size:13px;color:var(--soft);margin-bottom:4px">tonight, at dinner —</div>`}
+        ${during&&html`<div style="text-align:center;font-family:var(--serif);font-style:italic;font-size:13px;color:var(--soft);margin-bottom:4px">tonight, at dinner</div>`}
         <div class="eyebrow">Question of the day</div>
         <div class="qq">${todaysQ}</div>
         ${!me&&html`<div class="sealwait">Tap who you are (top right) to answer.</div>`}
@@ -4396,7 +4410,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         <div class="card" style=${{background:(notes[0].col||NOTE_COLORS[0])}}>
           <div class="eyebrow">Latest note</div>
           <div style="font-family:var(--serif);font-size:20px;line-height:1.55;margin-top:8px">${notes[0].txt}</div>
-          <div class="soft" style="margin-top:10px;font-size:11px;letter-spacing:.1em">— ${notes[0].by.toUpperCase()}, ${notes[0].at}</div>
+          <div class="soft" style="margin-top:10px;font-size:11px;letter-spacing:.1em">·${notes[0].by.toUpperCase()}, ${notes[0].at}</div>
         </div>`}
       ${(photos||[]).length>0&&html`
         <div class="card">
@@ -4415,12 +4429,12 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         const dsince=le?Math.round((new Date(tk+'T12:00:00')-new Date(le+'T12:00:00'))/86400000):null;
         if(le&&dsince<7)return '';
         return html`<div style="text-align:center;font-size:12.5px;color:var(--terra);font-weight:600;margin:10px 0 0">
-          🛟 ${le?`it\u2019s been ${dsince} days since your last export`:'you haven\u2019t exported yet'} — two taps keeps everything safe forever</div>`;
+          🛟 ${le?`it\u2019s been ${dsince} days since your last export`:'you haven\u2019t exported yet'}two taps keeps everything safe forever</div>`;
       })()}
       <div style="text-align:center;margin:12px 0 6px;display:flex;flex-direction:column;gap:9px">
         ${exporting
           ?html`<div class="soft">📦 ${exporting}</div>`
-          :html`<button class="ghost" style="font-size:12.5px" onClick=${exportSummer}>📦 export the whole summer — photos included</button>`}
+          :html`<button class="ghost" style="font-size:12.5px" onClick=${exportSummer}>📦 export the whole summer, photos included</button>`}
         <label class="ghost" style="font-size:11.5px;cursor:pointer">↩ restore from a backup file
           <input type="file" accept=".json,application/json" style="display:none" onChange=${e=>{const f=e.target.files[0];if(f)pickRestore(f);e.target.value='';}} />
         </label>
@@ -4431,7 +4445,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
           <div style="font-family:var(--serif);font-size:16.5px;line-height:1.7;margin-top:8px">
             ${Object.entries(restorePrev.counts).filter(([,v])=>v>0).map(([k,v])=>html`<div key=${k}>${v} ${k}</div>`)}
           </div>
-          <div class="soft" style="margin-top:8px">Restoring only adds back anything missing — it can never overwrite or delete what\u2019s in the app now.</div>
+          <div class="soft" style="margin-top:8px">Restoring only adds back anything missing, it can never overwrite or delete what\u2019s in the app now.</div>
           <div class="row mt10">
             <button class="btn terra" onClick=${doRestore}>Restore</button>
             <button class="ghost" onClick=${()=>setRestorePrev(null)}>cancel</button>
@@ -4465,7 +4479,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
           ${dayUp?(dayUp===true?'Uploading…':`Uploading ${dayUp}…`):'📷 Add photos & videos to this day'}
           <input type="file" accept="image/*,video/*" multiple style="display:none" disabled=${!!dayUp} onChange=${e=>{const fs=Array.from(e.target.files||[]);if(fs.length)addDayPhotos(fs);e.target.value='';}} />
         </label>
-        ${dd2.photos.length===0&&html`<div class="empty" style="padding:10px 0 16px">Every photo you add lands here —<br/>the whole day, together.</div>`}
+        ${dd2.photos.length===0&&html`<div class="empty" style="padding:10px 0 16px">Every photo you add lands here<br/>the whole day, together.</div>`}
         ${dd2.photos.length>0&&html`
           <div class="pgrid" style="margin-bottom:6px">
             ${dd2.photos.map((im,i4)=>html`
@@ -4579,7 +4593,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         </div>
       </div>
       ${journal===null&&html`<div class="empty">opening the book…</div>`}
-      ${journal!==null&&journal.length===0&&html`<div class="empty">The first page is waiting.<br/>Start tonight — future you will thank you.</div>`}
+      ${journal!==null&&journal.length===0&&html`<div class="empty">The first page is waiting.<br/>Start tonight, future you will thank you.</div>`}
       ${(journal||[]).map(j=>html`
         <div class="jentry" key=${j.id}>
           <div style="display:flex;justify-content:space-between;align-items:baseline">
@@ -4617,7 +4631,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         </div>
         <div class="row mt8" style="align-items:center;gap:8px">
           ${vRec&&vRec.for==='note'?html`
-            <button class="btn terra" onClick=${stopVoice}>◼ ${vRec.sec}s — stop</button>
+            <button class="btn terra" onClick=${stopVoice}>◼ ${vRec.sec}s, stop</button>
           `:vNote&&vNote.for==='note'?html`
             <span style="display:flex;align-items:center;gap:8px;flex:1">
               <audio controls src=${vNote.url} style="height:32px;max-width:160px"></audio>
@@ -4638,7 +4652,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       </div>
       ${letOpen&&html`
         <div class="card">
-          <textarea placeholder="A letter for later — sealed for both of us until the day it opens…" value=${letTxt} onInput=${e=>setLetTxt(e.target.value)}></textarea>
+          <textarea placeholder="A letter for later, sealed for both of us until the day it opens…" value=${letTxt} onInput=${e=>setLetTxt(e.target.value)}></textarea>
           <div class="eyebrow" style="margin:12px 0 8px">Opens on</div>
           <div class="row mb10" style="flex-wrap:wrap;gap:7px">
             ${[['2026-08-21','Last night in Athens'],['2026-08-22','The flight home'],['2027-07-29','One year from July 29']].map(([d3,l])=>html`
@@ -4647,7 +4661,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
           <input placeholder="YYYY-MM-DD" value=${letDate} onInput=${e=>setLetDate(e.target.value)} />
           <div class="row mt10">
             ${vRec?html`
-              <button class="btn terra" onClick=${stopVoice}>◼ ${vRec.sec}s — stop</button>
+              <button class="btn terra" onClick=${stopVoice}>◼ ${vRec.sec}s, stop</button>
             `:vNote&&vNote.for==='letter'?html`
               <span style="display:flex;align-items:center;gap:8px;flex:1">
                 <audio controls src=${vNote.url} style="height:34px;max-width:170px"></audio>
@@ -4696,7 +4710,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
                 <span style="color:var(--aegean)"><${MicMark}/></span>
                 <audio controls src=${n2.voice.url} style="height:30px;width:100%"></audio>
               </div>`}
-            <div class="by2">— ${n2.by.toUpperCase()}</div>
+            <div class="by2">·${n2.by.toUpperCase()}</div>
           </div>`)}
       </div>
       `}
@@ -4714,7 +4728,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
           <button class="btn terra" style="flex:0 0 auto" onClick=${addBucket}>Add</button>
         </div>
       </div>
-      ${bucket!==null&&bucket.length===0&&html`<div class="empty">Start the list —<br/>swims, plates, tiny missions.</div>`}
+      ${bucket!==null&&bucket.length===0&&html`<div class="empty">Start the list<br/>swims, plates, tiny missions.</div>`}
       ${(bucket||[]).length>0&&html`
         <div class="card" style="padding:8px 16px">
           ${[...bucket].sort((a,b)=>(a.done===b.done)?0:(a.done?1:-1)).map(it=>html`
@@ -4803,13 +4817,13 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
                     <button class="btn quiet" style="flex:1" onClick=${()=>answerDuel(r,'Angelos')}><${Sig} who="Angelos"/> Angelos</button>
                     <button class="btn quiet" style="flex:1" onClick=${()=>answerDuel(r,'Antigoni')}><${Sig} who="Antigoni"/> Antigoni</button>
                   </div>`}
-                ${mineA&&!done&&html`<div class="soft" style="font-size:12px">You said ${mineA==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} — waiting for their answer…</div>`}
+                ${mineA&&!done&&html`<div class="soft" style="font-size:12px">You said ${mineA==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`}waiting for their answer…</div>`}
                 ${done&&html`
                   <div style="font-size:13.5px">
                     <${Sig} who="Angelos"/> said <b>${r.ans.Angelos==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`}</b> · <${Sig} who="Antigoni"/> said <b>${r.ans.Antigoni==='Angelos'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`}</b><br/>
                     ${r.ans.Angelos===r.ans.Antigoni
                       ?html`<span style="color:var(--aegean);font-weight:700">✦ IN SYNC</span>`
-                      :html`<span style="color:var(--gold2);font-weight:700">clash — someone’s in denial 😄</span>`}
+                      :html`<span style="color:var(--gold2);font-weight:700">clash, someone’s in denial 😄</span>`}
                   </div>`}
               </div>`;})}
           ${duel!==null&&duel.length===0&&html`<div class="empty">One question. Two secret answers.<br/>How in sync are you really?</div>`}
@@ -4839,7 +4853,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
               </div>
               <div class="soft" style="font-size:10.5px;text-align:center;margin-top:8px">${6-wMine.guesses.length} guesses left · <span style="color:var(--aegean)">■ right spot</span> · <span style="color:var(--gold2)">■ wrong spot</span></div>`}
             ${wMine.done&&html`<div style="text-align:center;font-family:var(--serif);font-size:17px;margin-top:8px">Solved in <b>${wMine.tries}</b> ✨</div>`}
-            ${!wMine.done&&wMine.guesses.length>=6&&html`<div style="text-align:center;font-family:var(--serif);font-size:16px;margin-top:8px">It was <b>${wTarget}</b> — tomorrow, revenge.</div>`}
+            ${!wMine.done&&wMine.guesses.length>=6&&html`<div style="text-align:center;font-family:var(--serif);font-size:16px;margin-top:8px">It was <b>${wTarget}</b>tomorrow, revenge.</div>`}
           </div>
           <div class="card" style="padding:13px 16px">
             <div class="soft" style="font-size:12px">
@@ -4851,13 +4865,13 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       ${gGame==='tavli'&&html`
         <${Fragment}>
           <div class="card" style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
-            <span style="font-family:var(--serif);font-size:16px"><${Sig} who="Angelos"/> ${tvSeries.Angelos||0} <span class="soft">—</span> ${tvSeries.Antigoni||0} <${Sig} who="Antigoni"/></span>
+            <span style="font-family:var(--serif);font-size:16px"><${Sig} who="Angelos"/> ${tvSeries.Angelos||0} <span class="soft">·</span> ${tvSeries.Antigoni||0} <${Sig} who="Antigoni"/></span>
             <button class="pchip" onClick=${()=>tvWrite({mode:tvMode==='couch'?'remote':'couch'})}>${tvMode==='couch'?'🛋 couch':'🌍 remote'}</button>
           </div>
           ${!tvState?html`
             <div class="card" style="text-align:center;padding:26px 18px">
               <div style="font-family:var(--serif);font-size:24px">Το <em>τάβλι</em> μας</div>
-              <div class="soft" style="margin:8px 0 14px">The kafeneio classic — one move at a time,<br/>from anywhere on earth.</div>
+              <div class="soft" style="margin:8px 0 14px">The kafeneio classic, one move at a time,<br/>from anywhere on earth.</div>
               <button class="btn terra" onClick=${tvNewGame}>Set the board 🎲</button>
             </div>
           `:html`
@@ -4924,7 +4938,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
                 })()}
                 <div class="row mt8" style="align-items:center;gap:10px;flex-wrap:wrap">
                   ${tvState.bar[tvState.turn]>0&&tvAllowed.some(f=>f.from===-1)&&html`
-                    <button class="pchip on" onClick=${()=>setTvSel(tvSel===-1?null:-1)}>${tvState.turn==='A'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} on the bar — tap, then the entry point</button>`}
+                    <button class="pchip on" onClick=${()=>setTvSel(tvSel===-1?null:-1)}>${tvState.turn==='A'?html`<${Sig} who="Angelos"/>`:html`<${Sig} who="Antigoni"/>`} on the bar, tap, then the entry point</button>`}
                   ${tvSel===-1&&tvTargets.map(t=>html`
                     <button class="pchip" key=${'bt'+t.to} onClick=${()=>tvDoMove(t)}>enter ${t.to+1}</button>`)}
                   ${tvTargets.some(t=>t.to===24)&&html`
@@ -4933,7 +4947,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
                 <div class="row mt8" style="justify-content:space-between;align-items:center">
                   <span style="font-family:var(--serif);font-size:15px">
                     ${tvState.winner
-                      ?html`👑 ${tvState.winner==='A'?html`<${Sig} who="Angelos"/> Angelos`:html`<${Sig} who="Antigoni"/> Antigoni`} — <em>νίκη!</em>`
+                      ?html`👑 ${tvState.winner==='A'?html`<${Sig} who="Angelos"/> Angelos`:html`<${Sig} who="Antigoni"/> Antigoni`}·<em>νίκη!</em>`
                       :html`${tvState.turn==='A'?html`<${Sig} who="Angelos"/> Angelos`:html`<${Sig} who="Antigoni"/> Antigoni`}${tvState.rem.length?html` · dice <b>${tvState.rem.join(' · ')}</b>`:html` <em>to roll</em>`}`}
                   </span>
                   ${!tvState.winner&&tvState.rem.length===0&&(tvCanAct
@@ -4993,8 +5007,8 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       return `<div class="entry">
         <div class="edate">${fmt(k)}</div>
         <div class="eq">“${esc(QOTD[qIndexFor(k)])}”</div>
-        <div class="ea"><b>☀️ Angelos</b> — ${e.Angelos?esc(e.Angelos.txt):'<i>never answered… suspicious.</i>'}</div>
-        <div class="ea"><b>🌊 Antigoni</b> — ${e.Antigoni?esc(e.Antigoni.txt):'<i>never answered… suspicious.</i>'}</div>
+        <div class="ea"><b>☀️ Angelos</b>·${e.Angelos?esc(e.Angelos.txt):'<i>never answered… suspicious.</i>'}</div>
+        <div class="ea"><b>🌊 Antigoni</b>·${e.Antigoni?esc(e.Antigoni.txt):'<i>never answered… suspicious.</i>'}</div>
       </div>`;
     }).filter(Boolean).join('');
     const jHtml=(journal||[]).slice().reverse().map(j=>`<div class="entry">
@@ -5007,10 +5021,10 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     const lHtml=opened.map(L=>`<div class="entry letterp">
       <div class="edate">From ${L.by==='Angelos'?'☀️ Angelos':'🌊 Antigoni'} · sealed ${esc(L.at)} · opened ${esc(L.openAt)}</div>
       ${L.txt?`<div class="ej">${esc(L.txt)}</div>`:''}
-      ${L.voice?`<div class="ea"><i>🎙 this one was spoken aloud — ${L.voice.sec||''}s of voice, kept safe in the app.</i></div>`:''}
+      ${L.voice?`<div class="ea"><i>🎙 this one was spoken aloud${L.voice.sec||''}s of voice, kept safe in the app.</i></div>`:''}
     </div>`).join('')+(sealedN?`<div class="entry"><i>…and ${sealedN} letter${sealedN===1?'':'s'} still sealed, waiting for their day.</i></div>`:'');
-    const phHtml=(photos||[]).slice(0,60).map(p=>`<figure><img src="${p.url}"/><figcaption>${esc(p.cap||'')}${p.by?` — ${p.by==='Angelos'?'☀️':'🌊'}`:''}</figcaption></figure>`).join('');
-    const doc2=`<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Meltemi — The First Summer</title>
+    const phHtml=(photos||[]).slice(0,60).map(p=>`<figure><img src="${p.url}"/><figcaption>${esc(p.cap||'')}${p.by?`·${p.by==='Angelos'?'☀️':'🌊'}`:''}</figcaption></figure>`).join('');
+    const doc2=`<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Meltemi · The First Summer</title>
       <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
       <style>
         @page{size:A4;margin:16mm}
@@ -5045,7 +5059,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         <div class="rule"></div>
         <div class="title">The First<br/>Summer</div>
         <div class="mono">A &amp; A</div>
-        <div class="route">New York · Larnaca · Athens — Summer 2026</div>
+        <div class="route">New York · Larnaca · Athens, Summer 2026</div>
       </div>
       <div class="pg"><div class="sec">Volume I</div><h2>The <em>questions</em></h2><p style="color:#9A9184;font-style:italic">One a day, both of us, no matter the ocean.</p>${qHtml||'<div class="entry"><i>The questions begin…</i></div>'}</div>
       <div class="pg"><div class="sec">Volume II</div><h2>The <em>pages</em></h2>${jHtml||'<div class="entry"><i>The journal awaits its first page.</i></div>'}</div>
@@ -5068,14 +5082,14 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       <div class="qcard" style="margin-bottom:16px;text-align:center">
         <div class="qmono">A & A</div>
         <div style="font-family:var(--serif);font-size:20px;margin:6px 0 4px">The <em>First Summer</em> Book</div>
-        <div class="soft" style="margin-bottom:12px">Every question, page, letter and photo — pressed into a keepsake you can print.</div>
+        <div class="soft" style="margin-bottom:12px">Every question, page, letter and photo, pressed into a keepsake you can print.</div>
         <button class="btn terra" onClick=${buildBook}>📖 Press the summer into pages</button>
       </div>
 
     <${Fragment}>
       <div class="card">
         <div class="eyebrow" style="margin-bottom:10px">Add a memory</div>
-        <input placeholder="Caption (optional) — 'first swim'" value=${capIn} onInput=${e=>setCapIn(e.target.value)} class="mb10" />
+        <input placeholder="Caption (optional)'first swim'" value=${capIn} onInput=${e=>setCapIn(e.target.value)} class="mb10" />
         <label class="btn wide" style=${{opacity:uploading?0.6:1,display:'block',textAlign:'center'}}>
           ${uploading?(uploading===true?'Uploading…':`Uploading ${uploading}…`):'📷 Upload photos & videos'}
           <input type="file" accept="image/*,video/*" multiple style="display:none" disabled=${!!uploading} onChange=${e=>{const fs=Array.from(e.target.files||[]);if(fs.length)uploadPhotos(fs);e.target.value='';}} />
@@ -5120,7 +5134,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
           ${V.v?html`<video key=${V.url} src=${V.url} controls autoplay playsinline></video>`:html`<img key=${V.url} src=${V.url} />`}
           ${V.cap&&html`<div class="cap">${V.cap}</div>`}
           ${(V.by||V.at)&&html`<div class="vby">${V.by?V.by.toUpperCase():''}${V.at?' · '+V.at:''}</div>`}
-          ${viewImg.list&&viewImg.list.length>1&&html`<div class="vcount">${viewImg.idx+1} / ${viewImg.list.length} — swipe</div>`}
+          ${viewImg.list&&viewImg.list.length>1&&html`<div class="vcount">${viewImg.idx+1} / ${viewImg.list.length}swipe</div>`}
           <div class="row mt12" style="width:auto;gap:12px">
             ${V.del&&(armDel==='view'
               ?html`<button class="btn terra" onClick=${()=>{if(V.del.kind==='photo')delPhoto(V.del.p);else delDayPhoto(V.del.im);setArmDel(null);}}>Really delete</button><button class="ghost" style="color:#fff" onClick=${()=>setArmDel(null)}>keep</button>`
@@ -5146,8 +5160,8 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     <//>`;
 }
 
-// Render straight away — the PIN screen is what signs us in now, so we no longer wait on auth.
-// PAUSED: while true, the app renders only the message below — no login, nothing loads,
+// Render straight away, the PIN screen is what signs us in now, so we no longer wait on auth.
+// PAUSED: while true, the app renders only the message below, no login, nothing loads,
 // nothing underneath is changed. Set to false to bring Meltemi back exactly as it was.
 const PAUSED=false; // the house is open again
 const PausedScreen=()=>html`
