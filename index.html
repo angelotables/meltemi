@@ -479,6 +479,37 @@
   .seac.miss::after{content:'';width:8px;height:8px;border-radius:50%;background:rgba(27,79,107,.42)}
   .seac.hit{background:#F26D5B}.seac.hit::after{content:'';width:10px;height:10px;border-radius:50%;background:#fff}
   .seac.sunk{background:#8E3B2F}.seac.sunk::after{content:'';width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.75)}
+  .khero{border-radius:24px;padding:18px 18px 14px;color:#fff;background:linear-gradient(155deg,#C98B5E,#A4603C 60%,#7E4630);box-shadow:0 12px 30px rgba(164,96,60,.3);margin-bottom:12px}
+  .khero.on{background:linear-gradient(155deg,#E0884A,#C2562F 60%,#8E3622)}
+  .khero .kt1{font-family:var(--serif);font-size:30px;line-height:1.12;margin-top:4px}
+  .kin{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .kin span{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;background:rgba(255,255,255,.16);border-radius:999px;padding:6px 11px;opacity:.75}
+  .kin span.on{background:#fff;color:#8E3622;opacity:1}
+  .kboth{font-family:var(--serif);font-style:italic;font-size:16px;margin-top:10px}
+  .kbtn{flex:1;border:1.5px solid rgba(255,255,255,.7);background:transparent;color:#fff;border-radius:999px;padding:11px 10px;font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+  .kbtn.solid{background:#fff;color:#8E3622;border-color:#fff}
+  .kbtn:active{transform:scale(.97)}
+  .klink{display:block;width:100%;background:none;border:none;color:rgba(255,255,255,.85);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;padding:10px 0 2px;text-align:center}
+  .klink.dark{color:var(--aegean);display:flex;align-items:center;gap:5px}
+  .rtile{position:relative;aspect-ratio:1/1.08;border:none;border-radius:20px;padding:12px;color:#fff;text-align:left;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;background-size:cover;background-position:center;box-shadow:0 8px 20px rgba(0,0,0,.14);min-width:0}
+  .rtile:active{transform:scale(.97)}
+  .rtag{position:absolute;top:10px;left:10px;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.26);border-radius:999px;padding:4px 9px}
+  .rtag.made{background:#fff;color:#2E6B3A}
+  .rname{font-family:var(--serif);font-size:19px;line-height:1.15;text-shadow:0 2px 10px rgba(0,0,0,.3)}
+  .rby{font-size:10.5px;font-weight:600;opacity:.92;margin-top:5px;display:flex;align-items:center;gap:4px}
+  .kday{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:11px 12px;margin-top:8px;min-height:58px}
+  .kd1{flex:0 0 84px}.kd1 b{display:block;font-family:var(--serif);font-size:16px;font-weight:500;color:var(--ink)}.kd1 i{display:block;font-style:normal;font-size:11px;color:var(--soft)}
+  .kd2{flex:1;min-width:0;font-size:14.5px;color:var(--ink);font-weight:600;line-height:1.3}.kd2 i{display:block;font-style:normal;font-weight:400;font-size:11.5px;color:var(--soft)}
+  .kd2.done{color:#2E6B3A;display:flex;align-items:center;gap:6px}
+  .kadd{flex:1;border:1.5px dashed var(--hair);background:none;border-radius:12px;padding:10px;color:var(--soft);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+  .kx{border:none;background:var(--paper);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--soft);cursor:pointer;flex:0 0 auto}
+  .kgal{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.kgal img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;cursor:pointer}
+  .dq{background:linear-gradient(160deg,#FFF7E3,#FBE6C2);border:1px solid #F1DDB0;border-radius:24px;padding:20px 20px 22px;margin-bottom:14px;box-shadow:0 10px 26px rgba(180,133,79,.14)}
+  .dq .dqm{font-family:var(--serif);font-size:58px;line-height:1;height:30px;color:#E3B76A}
+  .dq .dqt{font-family:var(--serif);font-size:23px;line-height:1.28;color:var(--ink)}
+  .gans .gtx{flex:1;min-width:0}
+  .lovebtn{border:none;background:none;padding:2px;color:#D9D2C4;cursor:pointer;flex:0 0 auto;display:flex}
+  .lovebtn.on{color:#E0607E}
   .ndot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--terra);margin-left:5px;vertical-align:middle}
   .gdsub{font-family:var(--serif);font-style:italic;color:var(--soft);font-size:14px;margin:-10px 8px 14px}
   .gstats{display:flex;gap:8px;margin:0 0 14px}
@@ -1804,6 +1835,7 @@ function buildWorld(T,wrap,opts){
     setDoorDone(v){doorTarget=v?1:0;doorSpot.off=!!v;doorSpot.sp.visible=!v;},
     setMovie(on){const o=tvM.map;tvM.map=tvTex(!!on);tvM.needsUpdate=true;if(o)o.dispose();},
     setSealed(n){mailDot.visible=n>0;},
+    setDoorBadge(on,label){doorSpot.off=!on;doorSpot.sp.visible=!!on;if(label)doorSpot.label=label;nearKey=null;},
     setFx(v){fxOn=!!v&&!!fx;fit();},
     setGarden(st){gPlants.forEach((q,i)=>{const v=st?st[i]:undefined;if(v===undefined||v===null||v<0){q.g.visible=false;return;}q.g.visible=true;const k=.45+v*.19;q.g.scale.set(k,.5+v*.25,k);q.b.visible=v>=4;});},
     arrive(){startCine();},
@@ -1838,7 +1870,7 @@ function House3D(props){
   const [fxPref,setFxPref]=useState(()=>{try{return localStorage.getItem('mel-fx')||'on';}catch(e){return 'on';}});
   const [cineN,setCineN]=useState(0);
   const say=(m,ms)=>{setHint(m);clearTimeout(hintT.current);if(m)hintT.current=setTimeout(()=>setHint(''),ms||2800);};
-  const sync=(w)=>{const p=cb.current;w.setWho(p.me||'Angelos');w.setDoorDone(!!p.doorDone);w.setMovie(!!p.movieNight);w.setSealed(p.sealedN||0);w.setGifts(p.gifts||[],p.me);w.setShell(p.shell);w.setPartner(p.other,p.partnerBubble,p.partnerK);w.setGarden(p.garden||[]);};
+  const sync=(w)=>{const p=cb.current;w.setWho(p.me||'Angelos');w.setDoorDone(!!p.doorDone);w.setDoorBadge(p.doorBadge===undefined?!p.doorDone:!!p.doorBadge,p.doorLabel);w.setMovie(!!p.movieNight);w.setSealed(p.sealedN||0);w.setGifts(p.gifts||[],p.me);w.setShell(p.shell);w.setPartner(p.other,p.partnerBubble,p.partnerK);w.setGarden(p.garden||[]);};
   useEffect(()=>{
     let alive=true;setLoading(true);
     const start=worldRef.current?worldRef.current.pos():null;
@@ -1865,7 +1897,7 @@ function House3D(props){
   useEffect(()=>{const w=worldRef.current;if(w)w.setActive(!!active);if(!active){setOpen(false);setFan(null);}},[active]);
   const gk=(props.gifts||[]).map(g=>g.id).join(',')+'|'+me;
   const sk=props.shell?props.shell.i+':'+props.shell.found:'';
-  useEffect(()=>{const w=worldRef.current;if(w)sync(w);},[me,props.doorDone,props.movieNight,props.sealedN,gk,sk,props.partnerBubble,(props.garden||[]).join(',')]);
+  useEffect(()=>{const w=worldRef.current;if(w)sync(w);},[me,props.doorDone,props.movieNight,props.sealedN,gk,sk,props.partnerBubble,(props.garden||[]).join(','),props.doorBadge,props.doorLabel]);
   useEffect(()=>{const t=setTimeout(()=>setCoach(false),9000);return ()=>clearTimeout(t);},[]);
   const W=()=>worldRef.current;
   const pickMode=(m)=>{try{localStorage.setItem('mel-sky',m);}catch(e){}setMode(m);};
@@ -2448,6 +2480,140 @@ function ArcadeSheet({doc,me,other,onSave,onClassic,onClose}){
     </div>`;
 }
 
+// ================= THE DOOR · one new question every day =================
+const qotdStats=(qotd)=>{const both=(k)=>{const d=(qotd||{})[k];return !!(d&&d.Angelos&&d.Antigoni);},days=Object.keys(qotd||{}).filter(both).sort();let streak=0;const d=new Date();if(!both(dkey(d)))d.setDate(d.getDate()-1);
+  while(both(dkey(d))){streak++;d.setDate(d.getDate()-1);}return {days,streak,total:days.length};};
+function DoorSheet({tk,q,qotd,me,other,doorOpen,val,onVal,onSeal,onEnter,onNudge,onLove,onClose}){
+  const [open,setOpen]=useState(null);const [more,setMore]=useState(20);const [pick,setPick]=useState(0);const [nudged,setNudged]=useState(false);
+  const today=(qotd||{})[tk]||{},mine=me?today[me]:null,theirs=me?today[other]:null,S=qotdStats(qotd),love=today.love||{};
+  const ico=(w,s)=>html`<${HIco} n=${w==='Antigoni'?'waves':'sun'} s=${s||15}/>`;
+  const fd=(k,long)=>{try{return new Date(k+'T12:00:00').toLocaleDateString(undefined,long?{weekday:'long',month:'long',day:'numeric'}:{month:'short',day:'numeric',year:'numeric'});}catch(e){return k;}};
+  const qOf=(k)=>((qotd||{})[k]||{}).q||QOTD[qIndexFor(k)];
+  const past=S.days.filter(k=>k!==tk).reverse(),mem=past.length?past[(pick+parseInt(tk.slice(-2),10)*3)%past.length]:null;
+  const now=new Date(),mins=Math.max(1,Math.round((new Date(now.getFullYear(),now.getMonth(),now.getDate()+1)-now)/6e4)),left=mins>=60?Math.floor(mins/60)+'h '+(mins%60)+'m':mins+'m';
+  const pair=(rec,hearts)=>['Angelos','Antigoni'].map(w=>html`<div class="gans" key=${w}><span class="gi">${ico(w)}</span><span class="gtx">${rec[w].txt}</span>
+      ${hearts&&(w===other?html`<button class=${'lovebtn'+(love[me]?' on':'')} aria-label="Love this answer" onClick=${()=>onLove(!love[me])}><${HIco} n="heart" s=${17} f=${love[me]?1:0}/></button>`:love[other]?html`<span class="lovebtn on" title=${other+' loved this'}><${HIco} n="heart" s=${17} f=${1}/></span>`:null)}</div>`);
+  return html`
+    <div class="dsheet" onClick=${e=>{if(e.target.classList.contains('dsheet'))onClose();}}>
+      <div class="inner hsheet">
+        <div class="swhead"><span>Today’s <em>question</em></span><button class="hbtn hx" onClick=${onClose}><${HIco} n="x" s=${16}/></button></div>
+        <div class="gdsub">${fd(tk,true)} · a new one every morning</div>
+        <div class="gstats"><div class="gstat"><b>${S.streak}</b><span>${S.streak===1?'day':'days'} in a row</span></div><div class="gstat"><b>${S.total}</b><span>answered together</span></div><div class="gstat"><b>${left}</b><span>to the next one</span></div></div>
+        <div class="dq"><div class="dqm">“</div><div class="dqt">${q}</div></div>
+        ${!me&&html`<div class="sealwait">Sign in to answer.</div>`}
+        ${me&&!mine&&html`
+          <textarea style="min-height:84px" placeholder=${'Just for '+other+'. Sealed until you’ve both answered…'} value=${val} onInput=${e=>onVal(e.target.value)}></textarea>
+          <button class="btn terra wide mt10" onClick=${onSeal}>${doorOpen?'Seal my answer':'Seal it and open the door'}</button>
+          ${theirs&&html`<div class="sm" style="text-align:center">${other} has already answered. Yours unlocks both.</div>`}`}
+        ${me&&mine&&!theirs&&html`
+          <div class="gm" style="margin:0 2px 0">yours, sealed</div>
+          <div class="gans"><span class="gi">${ico(me)}</span><span class="gtx">${mine.txt}</span></div>
+          <div class="sealwait">Waiting for ${other}. The moment she answers, you both see everything.</div>
+          <button class="btn quiet wide mt8" disabled=${nudged} onClick=${()=>{setNudged(true);onNudge();}}>${nudged?'Knocked':'Give '+other+' a little knock'}</button>`}
+        ${mine&&theirs&&html`${pair(today,true)}`}
+        ${!doorOpen&&html`<button class="swlink" onClick=${onEnter}>${mine?'Step inside':'Tiptoe in without answering'}</button>`}
+
+        ${mem&&html`
+          <div class="bkh"><span>From the book</span><button class="kpill" onClick=${()=>setPick(pick+1)}>Another</button></div>
+          <div class="take" style="margin-top:0"><div class="gm" style="margin:0 0 4px">${fd(mem)}</div><div class="gq" style="margin:0 0 8px;font-size:17px">${qOf(mem)}</div>${pair(qotd[mem],false)}</div>`}
+        ${past.length>0&&html`
+          <div class="bkh"><span>Our answers · ${S.total}</span></div>
+          ${past.slice(0,more).map(k=>html`<div class="take" key=${k} style="margin-top:8px">
+            <div class="row" style="justify-content:space-between;align-items:center;gap:10px;cursor:pointer" onClick=${()=>setOpen(open===k?null:k)}><div style="min-width:0"><div class="gm" style="margin:0 0 3px">${fd(k)}</div><div style="font-family:var(--serif);font-size:15.5px;line-height:1.3;color:var(--ink)">${qOf(k)}</div></div><${HIco} n="chev" s=${14}/></div>
+            ${open===k&&pair(qotd[k],false)}</div>`)}
+          ${past.length>more&&html`<button class="swlink" onClick=${()=>setMore(more+30)}>Show older answers</button>`}`}
+      </div>
+    </div>`;
+}
+
+// ================= THE KITCHEN · what's on the stove tonight, the cookbook, the week =================
+function KitchenSheet({list,me,other,tk,wheelN,start,tableSub,onSave,onWheel,onTable,onUpload,onView,onClose}){
+  const [view,setView]=useState(start||'book');const [nm,setNm]=useState('');const [how,setHow]=useState('');const [open,setOpen]=useState(null);const [busy,setBusy]=useState(false);
+  const [note,setNote]=useState('');const [arm,setArm]=useState(null);const [adding,setAdding]=useState(false);const [dayIn,setDayIn]=useState(null);const [dayTx,setDayTx]=useState('');
+  if(list===null)return html`<div class="dsheet mid"><div class="swbox"><div class="swempty"><div class="sm">putting the kettle on…</div></div></div></div>`;
+  const recipes=list.filter(x=>(x.kind||'try')==='try'),plans=list.filter(x=>x.kind==='plan');
+  const cooks=(r)=>r.cooked&&r.cooked.length?r.cooked:(r.done?[{d:'',ts:0,by:r.done.by,rate:{},imgs:[],note:'',old:1}]:[]);
+  const tonight=plans.find(p=>p.when===tk&&!p.done),madeAll=recipes.reduce((n,r)=>n+cooks(r).length,0);
+  const ico=(w,s)=>html`<${HIco} n=${w==='Antigoni'?'waves':'sun'} s=${s||14}/>`;
+  const hue=(s)=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%360;return h;};
+  const nid=()=>Date.now().toString(36);
+  const upd=(id,fn)=>onSave(list.map(x=>x.id!==id?x:fn(x)));
+  const add=()=>{const n=nm.trim();if(!n||!me)return;onSave([{id:nid(),kind:'try',txt:n,how:how.trim(),by:me,at:nowStamp()},...list]);setNm('');setHow('');setAdding(false);};
+  const planFor=(day,txt,rid)=>{const rec={id:nid(),kind:'plan',txt,when:day,by:me||'',at:nowStamp()};if(rid)rec.rid=rid;onSave([rec,...list.filter(x=>!(x.kind==='plan'&&x.when===day&&!x.done))]);};
+  const imIn=()=>upd(tonight.id,x=>Object.assign({},x,{in:Object.assign({},x.in||{},{[me]:Date.now()})}));
+  const logCook=(r,planId)=>{const cook={d:tk,ts:Date.now(),by:me||'',rate:{},imgs:[],note:''};
+    onSave(list.map(x=>x.id===planId?Object.assign({},x,{done:{by:me||'',at:nowStamp()}}):x.id===r.id?Object.assign({},x,{cooked:[cook,...(x.cooked||[])]}):x));setOpen(r.id);setView('book');};
+  const madeTonight=()=>{const base=tonight.txt.split(' · ')[0].toLowerCase(),r=recipes.find(x=>x.id===tonight.rid)||recipes.find(x=>x.txt.toLowerCase()===base);
+    if(r)logCook(r,tonight.id);else upd(tonight.id,x=>Object.assign({},x,{done:{by:me||'',at:nowStamp()}}));};
+  const setCook=(r,i,patch)=>upd(r.id,x=>Object.assign({},x,{cooked:(x.cooked||[]).map((c,k)=>k!==i?c:Object.assign({},c,patch))}));
+  const addPics=async(r,i,files)=>{if(!files.length)return;setBusy(true);try{const ims=await onUpload(files);const c=(r.cooked||[])[i];setCook(r,i,{imgs:[...(c.imgs||[]),...ims]});}catch(e){}setBusy(false);};
+  const op=recipes.find(r=>r.id===open),week=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()+i);return dkey(d);});
+  const dn=(k,i)=>i===0?'Tonight':i===1?'Tomorrow':new Date(k+'T12:00:00').toLocaleDateString(undefined,{weekday:'long'});
+  const gallery=recipes.reduce((a,r)=>a.concat((r.cooked||[]).reduce((b,c)=>b.concat((c.imgs||[]).map(im=>({url:im.url,cap:r.txt,by:'',at:c.d,v:im.v}))),[])),[]);
+  return html`
+    <div class="dsheet" onClick=${e=>{if(e.target.classList.contains('dsheet'))onClose();}}>
+      <div class="inner hsheet">
+        <div class="swhead"><span>The <em>kitchen</em></span><button class="hbtn hx" onClick=${onClose}><${HIco} n="x" s=${16}/></button></div>
+        <div class=${'khero'+(tonight?' on':'')}>
+          <div class="sm2">${tonight?'on the stove tonight':'tonight'}</div>
+          <div class="kt1">${tonight?tonight.txt:'Nothing decided yet'}</div>
+          ${tonight?html`
+            <div class="kin">${['Angelos','Antigoni'].map(w=>html`<span key=${w} class=${(tonight.in||{})[w]?'on':''}>${ico(w,14)} ${(tonight.in||{})[w]?w+' is cooking':w}</span>`)}</div>
+            ${(tonight.in||{}).Angelos&&(tonight.in||{}).Antigoni&&html`<div class="kboth">Two kitchens, one dinner.</div>`}
+            <div class="row mt10" style="gap:8px">${me&&!(tonight.in||{})[me]&&html`<button class="kbtn" onClick=${imIn}>I’m in the kitchen</button>`}<button class="kbtn solid" onClick=${madeTonight}><${HIco} n="check" s=${14}/> We made it</button></div>
+            <button class="klink" onClick=${()=>onSave(list.filter(x=>x.id!==tonight.id))}>Change of plan</button>`
+          :html`<div class="row mt10" style="gap:8px"><button class="kbtn solid" onClick=${onWheel}><${HIco} n="wheel" s=${15}/> Spin the wheel</button><button class="kbtn" onClick=${()=>{setView('book');setOpen(null);}}>Pick from the cookbook</button></div>
+            <div class="klink" style="cursor:default">${wheelN>1?wheelN+' ideas on the wheel':'add a couple of recipes and the wheel wakes up'}</div>`}
+        </div>
+        <div class="gstats"><div class="gstat"><b>${recipes.filter(r=>!cooks(r).length).length}</b><span>to try</span></div><div class="gstat"><b>${madeAll}</b><span>cooked together</span></div><div class="gstat"><b>${plans.filter(p=>!p.done&&p.when>=tk).length}</b><span>dinners planned</span></div></div>
+        <div class="hseg" style="margin-bottom:12px">${[['book','Cookbook'],['week','This week'],['made','What we made']].map(m=>html`<button key=${m[0]} class=${view===m[0]?'on':''} onClick=${()=>{setView(m[0]);setOpen(null);}}>${m[1]}</button>`)}</div>
+
+        ${view==='book'&&!op&&html`
+          ${adding?html`<div class="take" style="margin:0 0 12px;border-color:var(--terra)">
+              <div class="ts" style="margin-bottom:10px">A dish for the cookbook</div>
+              <input placeholder="Seafood orzo like in Naxos" value=${nm} onInput=${e=>setNm(e.target.value)} />
+              <textarea class="mt8" style="min-height:70px" placeholder="How it goes: a link, the ingredients, your yiayia’s secret (optional)" value=${how} onInput=${e=>setHow(e.target.value)}></textarea>
+              <div class="row mt10" style="gap:8px"><button class="btn terra" style="flex:1" onClick=${add}>Into the cookbook</button><button class="btn quiet" onClick=${()=>setAdding(false)}>Cancel</button></div></div>`
+            :html`<button class="linkrow" style="margin:0 0 12px" onClick=${()=>setAdding(true)}><${HIco} n="plus" s=${18}/><span><b>Add a dish</b><i>something to try, or one you already love</i></span><${HIco} n="chev" s=${16}/></button>`}
+          ${recipes.length===0&&html`<div class="swempty" style="padding:14px 10px"><div class="big">An empty cookbook</div><div class="sm">Add the first dish you want to cook together, even two kitchens apart.</div></div>`}
+          <div class="ggrid" style="margin-top:0">${recipes.map(r=>{const n=cooks(r).length,pic=((r.cooked||[]).find(c=>(c.imgs||[]).length)||{imgs:[]}).imgs[0];
+            return html`<button class="rtile" key=${r.id} onClick=${()=>{setOpen(r.id);setArm(null);setNote('');}} style=${pic?{backgroundImage:'linear-gradient(180deg,rgba(0,0,0,.05) 30%,rgba(0,0,0,.66)),url('+pic.url+')'}:{background:'linear-gradient(155deg,hsl('+hue(r.txt)+' 58% 60%),hsl('+((hue(r.txt)+40)%360)+' 62% 42%))'}}>
+              <span class=${'rtag'+(n?' made':'')}>${n?'made '+n+'×':'to try'}</span><span class="rname">${r.txt}</span><span class="rby">${ico(r.by,11)} ${r.by}</span></button>`;})}</div>`}
+
+        ${view==='book'&&op&&html`
+          <button class="klink dark" style="text-align:left;padding-left:2px" onClick=${()=>setOpen(null)}><${HIco} n="back" s=${13}/> The whole cookbook</button>
+          <div class="bkcover" style=${{background:'linear-gradient(155deg,hsl('+hue(op.txt)+' 58% 58%),hsl('+((hue(op.txt)+40)%360)+' 62% 40%))',marginTop:'6px'}}><div class="sm2">added by ${op.by}</div><div class="bkt">${op.txt}</div><div class="sm2">${cooks(op).length?'cooked '+cooks(op).length+(cooks(op).length===1?' time':' times'):'not cooked yet'}</div></div>
+          ${op.how&&html`<div class="gnote" style="margin:0 0 10px;white-space:pre-wrap"><span>${op.how}</span></div>`}
+          <div class="row" style="gap:8px"><button class="btn terra" style="flex:1" onClick=${()=>{planFor(tk,op.txt,op.id);setOpen(null);}}>Cook it tonight</button><button class="btn quiet" style="flex:1" onClick=${()=>logCook(op,null)}>We made this</button></div>
+          ${(op.cooked||[]).map((c,i)=>html`<div class="take" key=${c.ts}>
+            <div class="gm" style="margin:0 0 6px">${c.d?new Date(c.d+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}):'cooked'}</div>
+            ${['Angelos','Antigoni'].map(w=>html`<div class="faces sm3" key=${w} style="margin:6px 0 0"><span style="display:flex;gap:5px;align-items:center;min-width:86px">${ico(w,12)} ${w}</span>${EAT_FACES.map(f=>html`<button key=${f[0]} class=${(c.rate||{})[w]===f[0]?'on':''} disabled=${w!==me} title=${f[2]} onClick=${()=>setCook(op,i,{rate:Object.assign({},c.rate||{},{[me]:f[0]})})}><span class="fc"><${HIco} n=${f[1]} s=${17}/></span></button>`)}</div>`)}
+            <div class="eatstrip" style="margin-top:10px">${(c.imgs||[]).map((im,k)=>html`<img key=${im.id||k} src=${im.url} loading="lazy" onClick=${()=>onView((c.imgs||[]).map(x=>({url:x.url,cap:op.txt,by:'',at:c.d,v:x.v})),k)} />`)}
+              <label class="kpill" style=${{opacity:busy?.5:1,alignSelf:'center'}}><${HIco} n="camera" s=${14}/> ${busy?'Uploading…':'Add a photo'}<input type="file" accept="image/*" multiple style="display:none" disabled=${busy} onChange=${e=>{const fs=Array.from(e.target.files||[]);e.target.value='';addPics(op,i,fs);}} /></label></div>
+            ${c.note?html`<div class="gnote"><span>${c.note}</span></div>`:html`<div class="row mt8" style="gap:7px"><input placeholder="How did it go?" value=${note} onInput=${e=>setNote(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter'&&note.trim()){setCook(op,i,{note:note.trim()});setNote('');}}} /><button class="btn quiet" style="flex:0 0 auto" onClick=${()=>{if(note.trim()){setCook(op,i,{note:note.trim()});setNote('');}}}>Save</button></div>`}
+          </div>`)}
+          <div class="row mt10" style="justify-content:flex-end"><button class="kpill" onClick=${()=>{if(arm===op.id){onSave(list.filter(x=>x.id!==op.id));setOpen(null);setArm(null);}else setArm(op.id);}}>${arm===op.id?'Tap again to remove':'Take it out of the cookbook'}</button></div>`}
+
+        ${view==='week'&&html`
+          ${week.map((k,i)=>{const p=plans.find(x=>x.when===k&&!x.done),dn2=plans.find(x=>x.when===k&&x.done);
+            return html`<div class="kday" key=${k}><div class="kd1"><b>${dn(k,i)}</b><i>${new Date(k+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'})}</i></div>
+              ${dayIn===k?html`<div class="row" style="gap:6px;flex:1;min-width:0"><input list="kdl" placeholder="What are we making?" value=${dayTx} onInput=${e=>setDayTx(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter'&&dayTx.trim()){const r=recipes.find(x=>x.txt.toLowerCase()===dayTx.trim().toLowerCase());planFor(k,dayTx.trim(),r&&r.id);setDayIn(null);setDayTx('');}}} /><button class="btn terra" style="flex:0 0 auto" onClick=${()=>{if(dayTx.trim()){const r=recipes.find(x=>x.txt.toLowerCase()===dayTx.trim().toLowerCase());planFor(k,dayTx.trim(),r&&r.id);setDayIn(null);setDayTx('');}}}>Set</button></div>`
+                :p?html`<div class="kd2">${p.txt}<i>${p.by?'planned by '+p.by:''}</i></div><button class="kx" aria-label="Clear" onClick=${()=>onSave(list.filter(x=>x.id!==p.id))}><${HIco} n="x" s=${13}/></button>`
+                :dn2?html`<div class="kd2 done"><${HIco} n="check" s=${13}/> ${dn2.txt}</div>`
+                :html`<button class="kadd" onClick=${()=>{setDayIn(k);setDayTx('');}}><${HIco} n="plus" s=${13}/> Plan a dinner</button>`}
+            </div>`;})}
+          <datalist id="kdl">${recipes.map(r=>html`<option key=${r.id} value=${r.txt}></option>`)}</datalist>`}
+
+        ${view==='made'&&html`
+          ${gallery.length===0&&madeAll===0&&html`<div class="swempty" style="padding:14px 10px"><div class="big">Nothing cooked yet</div><div class="sm">Cook something from the cookbook, tap “We made it”, and add a photo. This fills up fast.</div></div>`}
+          ${gallery.length>0&&html`<div class="kgal">${gallery.map((g,i)=>html`<img key=${i} src=${g.url} loading="lazy" onClick=${()=>onView(gallery,i)} />`)}</div>`}
+          ${recipes.filter(r=>cooks(r).length).map(r=>html`<button class="linkrow" key=${r.id} style="margin-top:8px" onClick=${()=>{setView('book');setOpen(r.id);}}><${HIco} n="check" s=${18}/><span><b>${r.txt}</b><i>cooked ${cooks(r).length}${cooks(r).length===1?' time':' times'}</i></span><${HIco} n="chev" s=${16}/></button>`)}`}
+
+        <button class="linkrow" onClick=${onTable}><${HIco} n="fork" s=${18}/><span><b>Eating out instead?</b><i>${tableSub}</i></span><${HIco} n="chev" s=${16}/></button>
+      </div>
+    </div>`;
+}
+
 function App(){
   const [authed,setAuthed]=useState(false);
   const [pinBuf,setPinBuf]=useState('');
@@ -2485,7 +2651,7 @@ function App(){
   const [tvWhen,setTvWhen]=useState('');
   const [tvPick,setTvPick]=useState('');
   const [houseDoc,setHouseDoc]=useState(null);         // trip_house: gifts left around + shells found
-  const [hSheet,setHSheet]=useState(null);
+  const [hSheet,setHSheet]=useState(null);const [kStart,setKStart]=useState('book');
   const [hMatch,setHMatch]=useState(null);
   const [eatsDoc,setEatsDoc]=useState(null);           // trip_eats: every place we've eaten, with photos
   const [booksDoc,setBooksDoc]=useState(null);         // trip_books: recs, the current read, hot takes, the shelf
@@ -3493,8 +3659,8 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     if(!me){setErr('Tap who you are (top right).');return;}
     setErr('');
     const cur=qotd[tk]||{};
-    write('trip_qotd',{byDate:{...qotd,[tk]:{...cur,[me]:{txt:t,at:nowStamp()}}}});
-    setQAns('');flash('Answered — sealed until you both have');
+    write('trip_qotd',{byDate:{...qotd,[tk]:{...cur,q:todaysQ,[me]:{txt:t,at:nowStamp()}}}});
+    setQAns('');flash('Sealed until you’ve both answered');
   }
   function addBucket(){
     if(!guard(bucket))return;
@@ -3829,8 +3995,9 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   function lockDinner(it){
     if(!guard(kitchen))return;
     if(!me){setErr('Sign in first.');return;}
-    write('trip_kitchen',{list:[{id:Date.now().toString(36),kind:'plan',txt:it.txt+(it.city?' · '+it.city:''),when:tk,by:me,at:nowStamp(),spun:1},...kitchen]});
-    setHSheet(null);flash('Dinner’s decided');
+    const rec={id:Date.now().toString(36),kind:'plan',txt:it.txt+(it.city?' · '+it.city:''),when:tk,by:me,at:nowStamp(),spun:1};if((it.kind||'try')==='try')rec.rid=it.id;
+    write('trip_kitchen',{list:[rec,...kitchen.filter(x=>!(x.kind==='plan'&&x.when===tk&&!x.done))]});
+    setKStart('book');setHSheet('kitchen');flash('Dinner’s decided');
   }
   const featFromHouse=(id)=>{
     if(id==='knock'){sendPing('knock');return;}
@@ -3838,12 +4005,13 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     if(id==='bucket'){setTab('list');return;}
     if(id==='ld'){setHSheet('miles');return;}
     if(id==='apart'){setTab('ld');return;}
+    if(id==='door'){setRitual(true);return;}
     if(id==='game'){setHSheet('arcade');return;}
     if(id==='notes'){setNoteView('wall');setTab('notes');return;}
     if(id==='letters'){setNoteView('letters');setTab('notes');return;}
-    if(id==='kitchen'){setKKind('try');setTab('kitchen');return;}
+    if(id==='kitchen'){setKStart('book');setHSheet('kitchen');return;}
     if(id==='spots'){setHSheet('eats');return;}
-    if(id==='plans'){setKKind('plan');setTab('kitchen');return;}
+    if(id==='plans'){setKStart('week');setHSheet('kitchen');return;}
     if(id==='wheel'){setHSheet('wheel');return;}
     if(id==='books'){setHSheet('books');return;}
     if(id==='tv'){setHSheet('swipe');return;}
@@ -3861,6 +4029,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   const bucketSub=(bucket||[]).length?doneCount+' of '+bucket.length+' done':'start the list';
   const mS=milesStats(milesDoc),mileSub=mS.past.length?mS.past.length+(mS.past.length===1?' reunion · ':' reunions · ')+Math.round(mS.totalKm*.621371).toLocaleString()+' miles flown':'log the first trip';
   const aMoves=arcadeMoves(arcadeDoc,me),arcadeSub=aMoves.length?'your move in '+aMoves.join(' and '):'four in a row, sea battle, tavli';
+  const kTonight=(kitchen||[]).find(x=>x.kind==='plan'&&x.when===tk&&!x.done);
   const houseMenu=[
     {id:'bed',name:'The bedroom',icon:'bed',items:[
       {key:'journal',icon:'bookopen',label:'Our journal',sub:(journal||[]).length?(journal||[]).length+' pages':'the first page is waiting',spot:'journal'},
@@ -3872,10 +4041,11 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       {key:'books',icon:'books',label:'Book club',sub:bkCur?bkCur.title+' · you '+((bkCur.prog||{})[me]||0)+'% · '+other+' '+((bkCur.prog||{})[other]||0)+'%':(bkWait?bkWait+' picks waiting on you':'pick a book together'),spot:'books'},
       {key:'game',icon:'dice',label:'Games',sub:arcadeSub,spot:'game'}]},
     {id:'kitchen',name:'Kitchen and dining',icon:'fork',items:[
-      {key:'kitchen',icon:'book',label:'Recipes and the dinner wheel',sub:kN('try'),spot:'kitchen'},
-      {key:'plans',icon:'cal',label:'Dinner plans',sub:kN('plan'),spot:'kitchen'},
+      {key:'kitchen',icon:'book',label:'Tonight and the cookbook',sub:kTonight?'tonight: '+kTonight.txt:kN('try'),spot:'kitchen'},
+      {key:'plans',icon:'cal',label:'This week’s dinners',sub:kN('plan'),spot:'kitchen'},
       {key:'spots',icon:'pin',label:'Our table',sub:eatWant.length+' to try · '+eatBeen+' visited',spot:'spots'}]},
     {id:'hall',name:'The hall',icon:'door',items:[
+      {key:'door',icon:'door',label:'Today’s question',sub:myA?(theirA?'you both answered — read them':'sealed, waiting for '+other):(theirA?other+' answered — your turn':'a new one is waiting'),spot:'door'},
       {key:'photos',icon:'image',label:'The album',sub:(photos||[]).length?(photos||[]).length+' memories':'hang the first',spot:'photos'},
       {key:'trip',icon:'case',label:'Our trips',sub:'days, plans, photos',spot:'trip'},
       {key:'concierge',icon:'bell',label:'The concierge',sub:'ask for ideas anywhere',spot:'concierge'}]},
@@ -3888,31 +4058,18 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   ];
   const EMO5={wave:'waved',hug:'sent a hug',kiss:'sent a kiss',dance:'danced for you',knock:'knocked'};
   const partnerBubble=lastPingFromThem?((EMO5[lastPingFromThem.k]||'thought of you')+' '+relTime(lastPingFromThem.ts)):'';
-  const ritualSheet=ritual&&!doorOpen&&html`
-    <div class="dsheet" onClick=${e=>{if(e.target.classList.contains('dsheet'))setRitual(false);}}>
-      <div class="inner">
-        <div class="eyebrow">At the door · question of the day</div>
-        <div class="qq">${todaysQ}</div>
-        ${me&&!myA&&html`
-          <textarea style="min-height:72px" placeholder="Only revealed once you’ve both answered…" value=${qAns} onInput=${e=>setQAns(e.target.value)}></textarea>
-          <button class="btn terra wide mt10" onClick=${()=>{if(!qAns.trim()){setErr('Write your answer first.');return;}answerQ();openDoor();setRitual(false);}}>Seal it — the door opens</button>
-        `}
-        ${me&&myA&&!theirA&&html`
-          <div class="qans"><div class="qwho">YOU · SEALED</div><div class="qtxt">${myA.txt}</div></div>
-          <div class="sealwait">Waiting for ${other}… then both reveal.</div>
-        `}
-        ${myA&&theirA&&html`
-          <div class="qans" style="border-left-color:var(--sand)"><div class="qwho"><${Sig} who="Angelos"/> ANGELOS</div><div class="qtxt">${qToday.Angelos.txt}</div></div>
-          <div class="qans" style="border-left-color:var(--aegean2)"><div class="qwho"><${Sig} who="Antigoni"/> ANTIGONI</div><div class="qtxt">${qToday.Antigoni.txt}</div></div>
-        `}
-        <button class="btn quiet wide mt10" onClick=${()=>{openDoor();setRitual(false);}}>${myA?'Step inside →':'Tiptoe in quietly →'}</button>
-      </div>
-    </div>`;
+  const [qSeen,setQSeen]=useState(()=>{try{return localStorage.getItem('mel-qseen')||'';}catch(e){return '';}});
+  useEffect(()=>{if(ritual&&myA&&theirA&&qSeen!==tk){try{localStorage.setItem('mel-qseen',tk);}catch(e){}setQSeen(tk);}},[ritual,!!myA,!!theirA]);
+  const qReveal=!!(myA&&theirA&&qSeen!==tk),doorBadge=!doorOpen||qReveal,doorLabel=qReveal?'Read both answers':'Knock — today’s question';
+  const loveQ=(v)=>{if(!guard(qotd)||!me)return;const cur=qotd[tk]||{};write('trip_qotd',{byDate:{...qotd,[tk]:{...cur,love:{...(cur.love||{}),[me]:v?1:0}}}});};
+  const ritualSheet=ritual&&html`<${DoorSheet} tk=${tk} q=${todaysQ} qotd=${qotd} me=${me} other=${other} doorOpen=${doorOpen} val=${qAns} onVal=${setQAns}
+      onSeal=${()=>{if(!qAns.trim()){setErr('Write your answer first.');return;}answerQ();openDoor();}} onEnter=${()=>{openDoor();setRitual(false);}}
+      onNudge=${()=>sendPing('knock')} onLove=${loveQ} onClose=${()=>setRitual(false)}/>`;
   const houseLayer=html`
     <${House3D} active=${tab==='home'} garden=${gStages} me=${me} other=${other} doorDone=${doorOpen} sealedN=${sealedN5} movieNight=${!!nextNight}
       menu=${['hall','kitchen','living','bed','out'].map(id=>houseMenu.find(x=>x.id===id)).filter(Boolean)} notice=${tab==='home'?err:''} gifts=${hGifts} shell=${{i:shellIdx,found:shellMine||!me}} stats=${shellStats}
       partnerBubble=${partnerBubble} partnerK=${lastPingFromThem?lastPingFromThem.k:''}
-      onFeature=${featFromHouse} onDoor=${()=>{if(!doorOpen)setRitual(true);}} onGiftFound=${findGift} onShell=${foundShell}
+      onFeature=${featFromHouse} onDoor=${()=>setRitual(true)} doorBadge=${doorBadge} doorLabel=${doorLabel} onGiftFound=${findGift} onShell=${foundShell}
       onEmote=${(k)=>sendPing(k)} onGift=${leaveGift} onMoment=${takeMeBack} onNotice=${()=>setErr('')}>
       ${ritualSheet}
       ${hSheet==='swipe'&&html`<${SwipeDeck} deck=${swipeDeck} other=${other} match=${hMatch} onSwipe=${tvSwipe}
@@ -3924,8 +4081,11 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       ${hSheet==='garden'&&html`<${GardenSheet} doc=${gardenDoc} me=${me} other=${other} bucketSub=${bucketSub} onSave=${(d)=>write('trip_garden',d)} onBucket=${()=>{setHSheet(null);setTab('list');}} onClose=${()=>setHSheet(null)}/>`}
       ${hSheet==='miles'&&html`<${MilesSheet} doc=${milesDoc} me=${me} other=${other} onSave=${(d)=>write('trip_miles',d)} onApart=${()=>{setHSheet(null);setTab('ld');}} onClose=${()=>setHSheet(null)}/>`}
       ${hSheet==='arcade'&&html`<${ArcadeSheet} doc=${arcadeDoc} me=${me} other=${other} onSave=${(d)=>write('trip_arcade',d)} onClassic=${(k)=>{setHSheet(null);setGGame(k);setTab('game');}} onClose=${()=>setHSheet(null)}/>`}
+      ${hSheet==='kitchen'&&html`<${KitchenSheet} list=${kitchen} me=${me} other=${other} tk=${tk} wheelN=${wheelPool.length} start=${kStart} tableSub=${eatWant.length+' places to try · '+eatBeen+' visited'}
+        onSave=${(l)=>{if(!guard(kitchen))return;write('trip_kitchen',{list:l});}} onWheel=${()=>setHSheet('wheel')} onTable=${()=>setHSheet('eats')}
+        onUpload=${(fs)=>uploadMany(fs,()=>{})} onView=${(l,i)=>setViewImg({list:l,idx:i})} onClose=${()=>setHSheet(null)}/>`}
       ${hSheet==='wheel'&&html`<${DinnerWheel} pool=${wheelPool} onLock=${lockDinner} onClose=${()=>setHSheet(null)}
-        onAdd=${()=>{setHSheet(null);setKKind('try');setTab('kitchen');}}/>`}
+        onAdd=${()=>{setKStart('book');setHSheet('kitchen');}}/>`}
     <//>`;
   const bedroomTab=html`
     <div class="roomhub">
