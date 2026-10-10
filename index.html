@@ -1211,7 +1211,7 @@ function buildWorld(T,wrap,opts){
 
   const WIND={value:0};let duck=null;
   // ---------- prop helpers ----------
-  const HX=6.5,HZ=4.5,H=3,TH=.2;
+  const HX=6.5,HZ=4.5,H=3.45,TH=.2;
   const rnd=(()=>{let s=20260729;return ()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};})();
   // real, modelled furniture is queued here and streamed in over the room shells
   const MODELS=[];const MD=(id,x,z,ry,s,y,o)=>{MODELS.push({id,x,y:y||0,z,ry:ry||0,s:s||1,o:o||null});};
@@ -1306,6 +1306,7 @@ function buildWorld(T,wrap,opts){
     const seg=(s,e,y0,y1,c)=>{if(e-s<.02||y1-y0<.02)return;const len=e-s,mid=(s+e)/2;
       if(ax==='x')B(len,y1-y0,TH,M.plaster,mid,(y0+y1)/2,f);else B(TH,y1-y0,len,M.plaster,f,(y0+y1)/2,mid);
       if(c&&y0===0){if(ax==='x')B(len+.03,.09,TH+.03,M.white,mid,.045,f);else B(TH+.03,.09,len+.03,M.white,f,.045,mid);}
+      if(y1===H){if(ax==='x'){B(len,.07,TH+.07,M.white,mid,H-.035,f);B(len,.05,TH+.14,M.white,mid,H-.025,f);}else{B(TH+.07,.07,len,M.white,f,H-.035,mid);B(TH+.14,.05,len,M.white,f,H-.025,mid);}}
       if(c){const bl=ax==='x'?block(s,f-TH/2,e,f+TH/2,1):block(f-TH/2,s,f+TH/2,e,1);if(y1<H)bl.top=y1;}};
     let cur=a;ops=(ops||[]).slice().sort((p,q)=>p.s-q.s);
     for(const o of ops){seg(cur,o.s,0,H,1);if(o.sill>0)seg(o.s,o.e,0,o.sill,1);seg(o.s,o.e,o.head,H,0);if(o.win)windowAt(ax,f,o,out||0);
@@ -1313,10 +1314,10 @@ function buildWorld(T,wrap,opts){
         else{B(fd,o.head,fw,M.white,f,o.head/2,o.s+fw/2);B(fd,o.head,fw,M.white,f,o.head/2,o.e-fw/2);B(fd,fw,o.e-o.s,M.white,f,o.head-fw/2,(o.s+o.e)/2);}}
       cur=o.e;}
     seg(cur,b,0,H,1);};
-  wall('x',HZ,-HX,HX,[{s:-5,e:-3.6,sill:.95,head:2.25,win:1},{s:-.65,e:.65,sill:0,head:2.3},{s:3.2,e:4.8,sill:.95,head:2.25,win:1}],1);
-  wall('x',-HZ,-HX,HX,[{s:-1.6,e:-.2,sill:.95,head:2.25,win:1},{s:3.6,e:5,sill:1.15,head:2.25,win:1}],-1);
-  wall('z',-HX,-HZ,HZ,[{s:-2.9,e:-.7,sill:0,head:2.5},{s:2.2,e:3.6,sill:.95,head:2.25,win:1}],-1);
-  wall('z',HX,-HZ,HZ,[{s:-2.6,e:-1.2,sill:1.15,head:2.25,win:1},{s:2,e:3.4,sill:.95,head:2.25,win:1}],1);
+  wall('x',HZ,-HX,HX,[{s:-5,e:-3.6,sill:.95,head:2.55,win:1},{s:-.65,e:.65,sill:0,head:2.3},{s:3.2,e:4.8,sill:.95,head:2.55,win:1}],1);
+  wall('x',-HZ,-HX,HX,[{s:-1.6,e:-.2,sill:.95,head:2.55,win:1},{s:3.6,e:5,sill:1.15,head:2.55,win:1}],-1);
+  wall('z',-HX,-HZ,HZ,[{s:-2.9,e:-.7,sill:0,head:2.75},{s:2.2,e:3.6,sill:.95,head:2.55,win:1}],-1);
+  wall('z',HX,-HZ,HZ,[{s:-2.6,e:-1.2,sill:1.15,head:2.55,win:1},{s:2,e:3.4,sill:.95,head:2.55,win:1}],1);
   wall('x',1,-HX,-1.3,[{s:-3,e:-1.9,sill:0,head:2.3}]);
   wall('z',-1.3,1,HZ,[]);
   wall('z',1.3,1,HZ,[{s:1.5,e:3,sill:0,head:2.3}]);
@@ -1344,13 +1345,13 @@ function buildWorld(T,wrap,opts){
   [1.5,4].forEach(z=>{MD('painted_wooden_nightstand',-6.135,z,Math.PI/2,1);tlamp(-6.15,.616,z);block(-6.4,z-.26,-5.88,z+.26);});
   MD('wooden_table_02',-2.6,4.03,0,1);block(-3.17,3.68,-2.03,4.4);MD('painted_wooden_chair_01',-2.6,3.42,0,1);block(-2.8,3.2,-2.4,3.62);
   B(.3,.02,.21,M.coral,-2.6,.812,4.0,.1);B(.27,.012,.19,M.white,-2.6,.826,4.0,.1);CY(.006,.006,.15,M.navy,-2.32,.806,3.95,6,Math.PI/2,.4);tlamp(-2.15,.8,4.2);MD('potted_plant_04',-3.02,4.2,0,1.5,.8);
-  MD('Ukulele_01',-3.42,4.355,Math.PI,1.15);
+  MD('Ukulele_01',-3.85,4.355,Math.PI,1.15);
   B(.03,.8,1.1,M.cork,-1.415,1.65,2.3);B(.035,.86,.05,M.oak,-1.415,1.65,1.73);B(.035,.86,.05,M.oak,-1.415,1.65,2.87);B(.035,.05,1.16,M.oak,-1.415,2.08,2.3);B(.035,.05,1.16,M.oak,-1.415,1.22,2.3);
   [M.lemon,M.blush,M.white,M.teal,M.coral,M.white].forEach((m,i)=>PL(.17,.17,m,-1.437,1.84-(i>2?.38:0),1.95+(i%3)*.35,0,-Math.PI/2));
   MD('painted_wooden_cabinet',-4.4,1.43,0,1);block(-5,1.1,-3.8,1.74);
   MD('ceramic_vase_01',-4.85,1.42,0,1,1.182);posy(-4.85,1.72,1.42,.15);B(.22,.03,.15,M.cream,-4.15,1.197,1.42,.25);B(.2,.025,.14,M.blush,-4.15,1.225,1.42,-.1);
   MD('fancy_picture_frame_01',-4.4,1.116,0,1.1,1.66);
-  curtain(.36,1.75,-5.15,1.6,4.34);curtain(.36,1.75,-3.45,1.6,4.34);CY(.012,.012,2.2,M.brass,-4.3,2.5,4.34,8,0,Math.PI/2);
+  curtain(.4,2.72,-5.17,1.38,4.34);curtain(.4,2.72,-3.43,1.38,4.34);CY(.014,.014,2.3,M.brass,-4.3,2.76,4.34,8,0,Math.PI/2);
   MD('potted_plant_02',-1.78,4.02,.5,1.15);block(-2.02,3.78,-1.54,4.26);
 
   // ---------- living room ----------
@@ -1374,7 +1375,7 @@ function buildWorld(T,wrap,opts){
   MD('hanging_picture_frame_02',-5.4,-4.383,0,1.3,1.32,{art:1});
   CY(.02,.02,1.6,M.brass,-6.05,.8,-4.05,8);CY(.16,.16,.03,M.brass,-6.05,.015,-4.05,16);CY(.2,.27,.32,M.glow,-6.05,1.66,-4.05,18);block(-6.2,-4.2,-5.9,-3.9);
   MD('potted_plant_02',-6,-.15,1,1.45);block(-6.3,-.45,-5.7,.15);
-  curtain(.55,2.45,-6.36,1.25,-3.14,Math.PI/2);curtain(.55,2.45,-6.36,1.25,-.46,Math.PI/2);B(.03,.03,3.3,M.brass,-6.36,2.52,-1.8);
+  curtain(.6,2.95,-6.36,1.5,-3.16,Math.PI/2);curtain(.6,2.95,-6.36,1.5,-.44,Math.PI/2);B(.03,.03,3.4,M.brass,-6.36,2.99,-1.8);
 
   // ---------- kitchen ----------
   B(4.12,.82,.62,M.cab,3.66,.49,-4.09);B(4.04,.08,.56,M.dark,3.66,.04,-4.06);B(4.2,.045,.68,M.marble,3.66,.925,-4.07);block(1.6,-4.4,5.72,-3.78);
@@ -1383,7 +1384,7 @@ function buildWorld(T,wrap,opts){
   PL(1.9,.8,M.tile,2.55,1.35,-4.395);PL(2.22,.2,M.tile,4.61,1.05,-4.395);
   B(.72,.02,.52,M.dark,2.5,.955,-4.07);[[2.33,-4.19],[2.67,-4.19],[2.33,-3.95],[2.67,-3.95]].forEach(p=>CY(.09,.09,.012,M.steel,p[0],.97,p[1],16));
   CY(.13,.13,.16,M.steel,2.33,1.05,-4.19,18);CY(.14,.12,.04,M.dark,2.67,.995,-3.95,18);B(.2,.02,.03,M.dark,2.86,1,-3.85,.6);
-  B(.8,.12,.5,M.steel,2.5,1.95,-4.15);B(.3,.95,.3,M.steel,2.5,2.52,-4.25);
+  B(.8,.12,.5,M.steel,2.5,1.95,-4.15);B(.3,H-2.01,.3,M.steel,2.5,(H+2.01)/2,-4.25);
   B(.6,.02,.42,M.steel,4.3,.952,-4.07);CY(.02,.02,.3,M.steel,4.3,1.1,-4.3,10);B(.03,.03,.2,M.steel,4.3,1.25,-4.21);
   [M.terra,M.lemon,M.aegean].forEach((m,i)=>CY(.06,.06,.16+i*.03,m,3.25+i*.17,1.03+i*.015,-4.22,14));B(.34,.025,.24,M.oak,5.3,.96,-4.05,.2);
   MD('planter_pot_clay',4.95,-4.2,.3,.8,.948);canopy(M.fGreen,4.95,1.22,-4.2,.14,.13,.14,16,.16);
@@ -1406,7 +1407,7 @@ function buildWorld(T,wrap,opts){
   MD('vintage_wooden_drawer_01',1.755,3.75,Math.PI/2,1.5);block(1.4,3.1,2.1,4.4);
   CY(.04,.04,.3,M.navy,1.7,.97,3.4,12);CY(.04,.04,.3,M.leaf2,1.74,.97,3.55,12);tlamp(1.72,.818,4.15);MD('ceramic_vase_01',1.72,3.82,0,.9,.818);
   B(.03,.66,.86,M.oak,6.385,1.65,3.95);PL(.8,.6,M.map,6.365,1.65,3.95,0,-Math.PI/2);
-  curtain(.36,1.75,3.05,1.6,4.34);curtain(.36,1.75,4.95,1.6,4.34);CY(.012,.012,2.4,M.brass,4,2.5,4.34,8,0,Math.PI/2);
+  curtain(.4,2.72,3.03,1.38,4.34);curtain(.4,2.72,4.97,1.38,4.34);CY(.014,.014,2.5,M.brass,4,2.76,4.34,8,0,Math.PI/2);
   MD('potted_plant_02',6.08,1.38,2,1.15);block(5.84,1.14,6.4,1.62);
 
   // ---------- terrace + pool ----------
@@ -1592,7 +1593,7 @@ function buildWorld(T,wrap,opts){
   const hitGeo=new T.SphereGeometry(.55,8,6),hitMat=new T.MeshBasicMaterial();
   const actives=[];
   // where along a→b the segment first enters a wall (2 = never); g widens the wall a little
-  const hitT=(ax,ay,az,bx,by,bz,c,g,h)=>{let t0=0,t1=1,d,u,v,q;g=g||0;h=h||c.top||3;
+  const hitT=(ax,ay,az,bx,by,bz,c,g,h)=>{let t0=0,t1=1,d,u,v,q;g=g||0;h=h||c.top||H;
     d=bx-ax;if(Math.abs(d)<1e-9){if(ax<c.x1-g||ax>c.x2+g)return 2;}else{u=(c.x1-g-ax)/d;v=(c.x2+g-ax)/d;if(u>v){q=u;u=v;v=q;}if(u>t0)t0=u;if(v<t1)t1=v;if(t0>t1)return 2;}
     d=bz-az;if(Math.abs(d)<1e-9){if(az<c.z1-g||az>c.z2+g)return 2;}else{u=(c.z1-g-az)/d;v=(c.z2+g-az)/d;if(u>v){q=u;u=v;v=q;}if(u>t0)t0=u;if(v<t1)t1=v;if(t0>t1)return 2;}
     d=by-ay;if(Math.abs(d)<1e-9){if(ay<0||ay>h)return 2;}else{u=(0-ay)/d;v=(h-ay)/d;if(u>v){q=u;u=v;v=q;}if(u>t0)t0=u;if(v<t1)t1=v;if(t0>t1)return 2;}
@@ -1653,7 +1654,7 @@ function buildWorld(T,wrap,opts){
   const walkTo=(x,z,after)=>{const p=findPath(P.x,P.z,x,z);if(!p)return false;P.path=p;P.after=after||null;P.stuck=0;const e=p[p.length-1];goalRing.position.set(e.x,.035,e.z);goalRing.visible=true;return true;};
   const _iv=new T.Matrix4();
   const applyCam=(dt)=>{dt=dt||.016;const ty=P.y+1.45,cp=Math.cos(C.pitch),dx=Math.sin(C.yaw)*cp,dy=Math.sin(C.pitch),dz=Math.cos(C.yaw)*cp,rx=Math.cos(C.yaw),rz=-Math.sin(C.yaw);
-    let want=C.dist;if(!cine&&ty+dy*C.dist+.1<H-.1){let tm=1;const ex=P.x+dx*C.dist,ey=ty+dy*C.dist+.1,ez=P.z+dz*C.dist;for(const c of camBlocks){if(!c.on)continue;const q=hitT(P.x,ty,P.z,ex,ey,ez,c,.14,3);if(q<tm)tm=q;}if(tm<1)want=Math.max(.85,tm*C.dist-.32);}
+    let want=C.dist;if(!cine&&ty+dy*C.dist+.1<H-.1){let tm=1;const ex=P.x+dx*C.dist,ey=ty+dy*C.dist+.1,ez=P.z+dz*C.dist;for(const c of camBlocks){if(!c.on)continue;const q=hitT(P.x,ty,P.z,ex,ey,ez,c,.14,H);if(q<tm)tm=q;}if(tm<1)want=Math.max(.85,tm*C.dist-.32);}
     C.cur+=(want-C.cur)*Math.min(1,dt*(want<C.cur?22:5));C.tx+=(P.x-C.tx)*Math.min(1,dt*16);C.tz+=(P.z-C.tz)*Math.min(1,dt*16);
     const sh=.42*Math.max(0,1-C.pitch/.8)*Math.min(1,C.cur/2.6);
     cam.position.set(C.tx+dx*C.cur+rx*sh,Math.max(.35,ty+dy*C.cur+.1),C.tz+dz*C.cur+rz*sh);cam.lookAt(C.tx+rx*sh,ty+.05,C.tz+rz*sh);
@@ -1772,7 +1773,7 @@ function buildWorld(T,wrap,opts){
     if(seaM.normalMap){seaM.normalMap.offset.x=t*.000012;seaM.normalMap.offset.y=t*.000008;}foam.material.opacity=.4+Math.sin(t*.0012)*.15;
     if(goalRing.visible)goalRing.scale.setScalar(1+Math.sin(t*.008)*.15);
     WIND.value=t*.001;if(duck){duck.position.set(-9.25+Math.sin(t*.0003)*.5,.012+Math.sin(t*.002)*.012,-2.9+Math.cos(t*.00037)*.8);duck.rotation.y=t*.0002;}
-    anyCut=false;for(const c of camBlocks){if(c.on&&hitT(cam.position.x,cam.position.y,cam.position.z,P.x,P.y+1.05,P.z,c,0,3)<=1){anyCut=true;break;}}
+    anyCut=false;for(const c of camBlocks){if(c.on&&hitT(cam.position.x,cam.position.y,cam.position.z,P.x,P.y+1.05,P.z,c,0,H)<=1){anyCut=true;break;}}
     for(const o of actives){if(o.off)continue;const pulse=1+Math.sin(t*.004+o.ph)*.07,big=o.key===nearKey?1.3:1;o.sp.position.y=o.by+Math.sin(t*.0025+o.ph)*.06;o.sp.scale.setScalar((o.size||.82)*pulse*big);const cd=cam.position.distanceTo(o.sp.position);o.vis+=((seen(o.x,o.by,o.z)?1:0)-o.vis)*Math.min(1,dt*9);o.sp.material.opacity=cine?0:o.vis*(cd<2?Math.max(0,cd-1):1);}
     tag.material.opacity=partnerSpot.vis;
     for(const p of parts){if(p.life<=0)continue;p.life-=dt;p.s.position.x+=p.vx*dt;p.s.position.y+=p.vy*dt;p.s.position.z+=p.vz*dt;p.s.material.opacity=Math.max(0,Math.min(1,p.life*1.4));if(p.life<=0)p.s.visible=false;}
