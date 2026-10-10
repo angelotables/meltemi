@@ -395,6 +395,47 @@
   .whgo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:78px;height:78px;border-radius:50%;border:5px solid #fff;
     background:var(--ink);color:#fff;font-weight:800;letter-spacing:.1em;font-size:13px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.3);font-family:inherit}
   .whres{padding:16px 6px 0}
+  .hsheet .swhead em{font-style:italic;color:var(--terra)}
+  .hsheet{max-height:88%}
+  .bkcover{border-radius:18px;padding:20px 18px;color:#fff;box-shadow:0 10px 26px rgba(0,0,0,.18);margin-bottom:14px}
+  .bkcover.tall{min-height:210px;display:flex;flex-direction:column;justify-content:flex-end}
+  .bkt{font-family:var(--serif);font-size:27px;line-height:1.15;margin:4px 0;text-shadow:0 2px 12px rgba(0,0,0,.2)}
+  .sm2{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;opacity:.9}
+  .race{display:flex;flex-direction:column;gap:10px;margin:4px 0 8px}
+  .lane{position:relative;height:30px;border-radius:999px;background:#EFE7D8}
+  .lane .fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,#FFD66B,#F5A742);transition:width .35s ease}
+  .lane:nth-child(2) .fill{background:linear-gradient(90deg,#8FD3E8,#1B8FB5)}
+  .lane .tok{position:absolute;top:1px;font-size:20px;transition:left .35s ease;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+  .lane .pc{position:absolute;right:12px;top:7px;font-size:11.5px;font-weight:700;color:var(--ink2)}
+  .bkrange{width:100%;margin:12px 0 10px;accent-color:#F5A742;height:28px;padding:0;border:none;background:none}
+  .bkh{display:flex;justify-content:space-between;align-items:center;font-family:var(--serif);font-size:19px;color:var(--ink);margin:20px 2px 10px}
+  .take{background:#fff;border:1px solid var(--hair);border-radius:16px;padding:14px;margin-top:10px}
+  .take.lock{color:var(--soft);font-size:13px;background:var(--paper);border-style:dashed}
+  .take .ts{font-family:var(--serif);font-size:18px;line-height:1.3;color:var(--ink)}
+  .tbtn{flex:1;border-radius:12px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;border:1.5px solid var(--hair);background:#fff;color:var(--ink)}
+  .tbtn.yes.on{background:#4FA35A;border-color:#4FA35A;color:#fff}
+  .tbtn.no.on{background:#E2574C;border-color:#E2574C;color:#fff}
+  .verdict{margin-top:10px;border-radius:12px;padding:10px 12px;font-weight:700;font-size:13.5px;text-align:center}
+  .verdict.same{background:#E6F4E8;color:#2E6B3A}
+  .verdict.split{background:#FDE9E5;color:#A4442C}
+  .argm{margin-top:8px;background:var(--paper);border-radius:12px 12px 12px 4px;padding:9px 12px;font-size:13.5px;max-width:88%}
+  .argm.me{margin-left:auto;border-radius:12px 12px 4px 12px;background:#FFF1D2}
+  .bkstars button{border:none;background:none;font-size:24px;color:#D9D2C4;cursor:pointer;padding:0 2px}
+  .bkstars button.on{color:#F5A742}
+  .faces{display:flex;gap:8px;margin:12px 0;align-items:center}
+  .faces button{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--hair);background:#fff;font-size:23px;cursor:pointer;padding:0;transition:transform .12s}
+  .faces button.on{border-color:#F5A742;background:#FFF1D2;transform:scale(1.12)}
+  .faces.sm3{margin:10px 0 0}.faces.sm3 span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);font-weight:600;margin-right:2px}
+  .faces.sm3 button{width:38px;height:38px;font-size:19px}
+  .eth{width:46px;height:46px;border-radius:10px;object-fit:cover}
+  .eat{background:#fff;border:1px solid var(--hair);border-radius:18px;overflow:hidden;margin-bottom:12px}
+  .eatcov{height:170px;background:linear-gradient(150deg,#F5A742,#E0349A);background-size:cover;background-position:center;display:flex;flex-direction:column;
+    justify-content:flex-end;padding:14px;color:#fff;cursor:pointer}
+  .eatn{font-family:var(--serif);font-size:24px;line-height:1.15;text-shadow:0 2px 12px rgba(0,0,0,.35)}
+  .eatstrip{display:flex;gap:4px;padding:4px 4px 0;overflow-x:auto}
+  .eatstrip img{width:74px;height:74px;object-fit:cover;border-radius:10px;flex:0 0 auto;cursor:pointer}
+  .eatb{padding:12px 14px 14px}
+  .eatr{font-size:17px}
   .kpill{flex:0 0 auto;padding:9px 14px;border-radius:999px;border:1px solid var(--hair);background:none;color:var(--soft);
     font-weight:600;font-size:12.5px;cursor:pointer;font-family:inherit}
   .kpill.on{border-color:var(--ink);color:var(--ink)}
@@ -871,9 +912,10 @@ const HOUSE_SPOTS=[
   {id:'letters',e:'💌',label:'Open the drawer of letters',p:[-4.4,1.55,1.35],s:[-3.8,2.05]},
   {id:'tv',e:'🍿',label:'Movie night',p:[-3.2,2.4,-4.3],s:[-3.2,-3.5]},
   {id:'game',e:'🎲',label:'Play a game together',p:[-2.6,1.1,-2.75],s:[-1.6,-2.75]},
+  {id:'books',e:'📚',label:'Open the library — our book club',p:[-5,2.45,.45],s:[-4.8,-.25]},
   {id:'kitchen',e:'📖',label:'Open the recipe book',p:[4.1,1.55,-1.9],s:[5.1,-1.9]},
   {id:'wheel',e:'🎡',label:'Spin for tonight’s dinner',p:[6.1,2.4,-3.7],s:[5.3,-3.05]},
-  {id:'spots',e:'📍',label:'Places we want to eat',p:[6.3,2.3,3.95],s:[5.55,3.95]},
+  {id:'spots',e:'📍',label:'Our table — eaten & still to eat',p:[6.3,2.3,3.95],s:[5.55,3.95]},
   {id:'ld',e:'🌊',label:'Sit on the terrace — us',p:[-7.6,1.45,-.2],s:[-7.6,-1.15]},
 ];
 const HOUSE_SHELLS=[[8.5,9.5],[-6,10.5],[11,3],[-12,7],[3.5,-9.5],[-4,-9],[12,-5],[-11.5,-7.5],[.5,12.5],[7,12],[-9.3,-3.2],[4.6,8.4],[-5.2,8.9],[9.5,-10]];
@@ -1485,6 +1527,194 @@ function DinnerWheel({pool,onLock,onClose,onAdd}){
     </div>`;
 }
 
+// The library — pick a book together, race through it, argue about it.
+const BOOK_TAKES=['The ending was earned.','The main character is secretly the villain.','It started better than it finished.','I’d give this to my mother.','The love story was the weakest part.','It should be a movie — and I know who’d star.','I saw the twist coming.','The best character wasn’t the main one.','It was fifty pages too long.','I’ll still think about this in a year.','The title is better than the book.','I’d read the sequel tomorrow.','Someone in this book reminds me of you.','The author was showing off.','The first chapter almost lost me.','I underlined something.','It made me want to book a trip.','We’d have survived this plot better than they did.','It deserved its hype.','I trust the narrator.'];
+function BookClub({doc,me,other,onSave,onClose}){
+  const [view,setView]=useState(null);const [t1,setT1]=useState('');const [t2,setT2]=useState('');
+  const [drag,setDrag]=useState(null);const [take,setTake]=useState('');const [arg,setArg]=useState({});
+  if(doc===null)return html`<div class="dsheet mid"><div class="swbox"><div class="swempty"><div class="sm">opening the library…</div></div></div></div>`;
+  const D={recs:doc.recs||[],cur:doc.cur||null,debates:doc.debates||[],done:doc.done||[]};
+  const save=(patch)=>onSave(Object.assign({},D,patch));
+  const nid=()=>Date.now().toString(36);
+  const ico=(w)=>w==='Antigoni'?'🌊':'☀️';
+  const cur=D.cur,myP=cur?((cur.prog||{})[me]||0):0,herP=cur?((cur.prog||{})[other]||0):0;
+  const deck=D.recs.filter(r=>me&&!(r.votes||{})[me]&&!(r.pass||{})[me]);
+  const matches=D.recs.filter(r=>(r.votes||{}).Angelos&&(r.votes||{}).Antigoni);
+  const v=view||(cur?'now':'picks');
+  const addRec=()=>{const t=t1.trim();if(!t||!me)return;save({recs:[{id:nid(),title:t,author:t2.trim(),by:me,ts:Date.now(),votes:{[me]:1}},...D.recs]});setT1('');setT2('');};
+  const vote=(r,yes)=>save({recs:D.recs.map(x=>x.id!==r.id?x:Object.assign({},x,yes?{votes:Object.assign({},x.votes||{},{[me]:1})}:{pass:Object.assign({},x.pass||{},{[me]:1})}))});
+  const start=(r)=>{save({recs:D.recs.filter(x=>x.id!==r.id),cur:{id:r.id,title:r.title,author:r.author||'',ts:Date.now(),prog:{Angelos:0,Antigoni:0},stars:{}}});setView('now');};
+  const setProg=(p)=>{p=Math.max(0,Math.min(100,Math.round(p)));save({cur:Object.assign({},cur,{prog:Object.assign({},cur.prog||{},{[me]:p})})});};
+  const bookDeb=cur?D.debates.filter(d=>d.book===cur.id):[];
+  const newTake=(s)=>{s=(s||'').trim();if(!s||!cur||!me)return;save({debates:[{id:nid(),book:cur.id,s,by:me,ts:Date.now(),pct:myP,votes:{},args:[]},...D.debates]});setTake('');};
+  const draw=()=>{const used=bookDeb.map(d=>d.s),pool=BOOK_TAKES.filter(x=>used.indexOf(x)<0);if(pool.length)newTake(pool[Math.floor(Math.random()*pool.length)]);};
+  const side=(d,val)=>save({debates:D.debates.map(x=>x.id!==d.id?x:Object.assign({},x,{votes:Object.assign({},x.votes||{},{[me]:val})}))});
+  const argue=(d)=>{const t=(arg[d.id]||'').trim();if(!t)return;save({debates:D.debates.map(x=>x.id!==d.id?x:Object.assign({},x,{args:[...(x.args||[]),{by:me,txt:t,ts:Date.now()}]}))});setArg(Object.assign({},arg,{[d.id]:''}));};
+  const star=(n)=>save({cur:Object.assign({},cur,{stars:Object.assign({},cur.stars||{},{[me]:n})})});
+  const shelve=()=>{save({cur:null,done:[Object.assign({},cur,{finished:Date.now()}),...D.done]});setView('shelf');};
+  const shownP=drag!==null?drag:myP;
+  const gap=myP-herP;
+  const hue=(s)=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%360;return h;};
+  const stars=(n)=>'★★★★★'.slice(0,n)+'☆☆☆☆☆'.slice(0,5-n);
+  return html`
+    <div class="dsheet" onClick=${e=>{if(e.target.classList.contains('dsheet'))onClose();}}>
+      <div class="inner hsheet">
+        <div class="swhead"><span>The <em>library</em></span><button class="hbtn hx" onClick=${onClose}>✕</button></div>
+        <div class="hseg" style="margin-bottom:14px">
+          ${[['now','Reading'],['picks','Picks'+(deck.length?' · '+deck.length:'')],['shelf','Shelf'+(D.done.length?' · '+D.done.length:'')]].map(m=>html`<button key=${m[0]} class=${v===m[0]?'on':''} onClick=${()=>setView(m[0])}>${m[1]}</button>`)}
+        </div>
+        ${!me&&html`<div class="sealwait">Tap who you are first (top right of the house).</div>`}
+
+        ${v==='now'&&!cur&&html`<div class="swempty"><div class="big">Nothing on the nightstand 📚</div><div class="sm">Pick a book you both want and read it at the same time.</div>
+          <button class="btn terra wide mt10" onClick=${()=>setView('picks')}>Choose one together</button></div>`}
+
+        ${v==='now'&&cur&&html`
+          <div class="bkcover" style=${{background:'linear-gradient(150deg,hsl('+hue(cur.title)+' 62% 52%),hsl('+((hue(cur.title)+50)%360)+' 66% 36%))'}}>
+            <div class="sm2">reading together</div><div class="bkt">${cur.title}</div>${cur.author&&html`<div class="sm2">${cur.author}</div>`}
+          </div>
+          <div class="race">
+            ${[[me,shownP],[other,herP]].map(([w,p])=>html`
+              <div class="lane" key=${w}><div class="fill" style=${{width:p+'%'}}></div><span class="tok" style=${{left:'calc('+p+'% - '+(p*.3)+'px)'}}>${ico(w)}</span><span class="pc">${p}%</span></div>`)}
+          </div>
+          <div class="sm" style="text-align:center">${myP>=100&&herP>=100?'You both finished 🎉':gap===0?'Neck and neck.':gap>0?'You’re '+gap+'% ahead — no spoilers.':other+' is '+(-gap)+'% ahead — catch up.'}</div>
+          ${me&&html`
+            <input class="bkrange" type="range" min="0" max="100" value=${shownP} onInput=${e=>setDrag(+e.target.value)} onChange=${e=>{setProg(+e.target.value);setDrag(null);}} />
+            <div class="row" style="gap:7px;justify-content:center;flex-wrap:wrap">
+              ${[5,10,25].map(n=>html`<button key=${n} class="kpill" onClick=${()=>setProg(myP+n)}>+${n}%</button>`)}
+              <button class="kpill on" onClick=${()=>setProg(100)}>Finished</button>
+            </div>`}
+
+          <div class="bkh"><span>Hot takes</span><button class="kpill on" onClick=${draw}>🎴 Draw one</button></div>
+          <div class="row" style="gap:7px"><input placeholder="…or write your own take" value=${take} onInput=${e=>setTake(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')newTake(take);}} />
+            <button class="btn terra" style="flex:0 0 auto" onClick=${()=>newTake(take)}>Post</button></div>
+          ${bookDeb.length===0&&html`<div class="sm" style="text-align:center;margin:12px 0">Draw a take, pick a side, see if you agree.</div>`}
+          ${bookDeb.map(d=>{
+            const locked=d.by!==me&&myP<(d.pct||0),mine=(d.votes||{})[me],hers=(d.votes||{})[other],both=mine&&hers;
+            if(locked)return html`<div class="take lock" key=${d.id}>🔒 ${d.by} left a take at ${d.pct}% — it unlocks when you get there.</div>`;
+            return html`
+              <div class="take" key=${d.id}>
+                <div class="ts">“${d.s}”</div>
+                <div class="sm">${ico(d.by)} ${d.by}${d.pct?' · at '+d.pct+'%':''}</div>
+                ${!both&&html`<div class="row mt8" style="gap:8px">
+                  <button class=${'tbtn yes'+(mine==='y'?' on':'')} onClick=${()=>side(d,'y')}>Agree</button>
+                  <button class=${'tbtn no'+(mine==='n'?' on':'')} onClick=${()=>side(d,'n')}>Disagree</button></div>
+                  ${mine&&html`<div class="sm">Locked in. Waiting for ${other} — then both reveal.</div>`}`}
+                ${both&&html`
+                  <div class=${'verdict '+(mine===hers?'same':'split')}>${mine===hers?'You both '+(mine==='y'?'agree':'disagree')+' 🤝':'Split — '+ico(me)+' '+(mine==='y'?'agree':'disagree')+' · '+ico(other)+' '+(hers==='y'?'agree':'disagree')+' 🥊'}</div>
+                  ${(d.args||[]).map((a,i)=>html`<div class=${'argm'+(a.by===me?' me':'')} key=${i}><b>${ico(a.by)}</b> ${a.txt}</div>`)}
+                  <div class="row mt8" style="gap:7px"><input placeholder=${mine===hers?'Add a thought…':'Make your case…'} value=${arg[d.id]||''} onInput=${e=>setArg(Object.assign({},arg,{[d.id]:e.target.value}))} onKeyDown=${e=>{if(e.key==='Enter')argue(d);}} />
+                    <button class="btn quiet" style="flex:0 0 auto" onClick=${()=>argue(d)}>Send</button></div>`}
+              </div>`;})}
+          <div class="bkh"><span>Done with it?</span><span class="bkstars">${[1,2,3,4,5].map(n=>html`<button key=${n} class=${((cur.stars||{})[me]||0)>=n?'on':''} onClick=${()=>star(n)}>★</button>`)}</span></div>
+          <button class="btn quiet wide" onClick=${shelve}>Put it on our shelf</button>`}
+
+        ${v==='picks'&&html`
+          ${matches.map(r=>html`<div class="take" key=${r.id} style="border-color:var(--terra)"><div class="ts">${r.title}</div><div class="sm">${r.author?r.author+' · ':''}you both want this one 📚</div>
+            <button class="btn terra wide mt8" onClick=${()=>start(r)}>${cur?'Read this next (replaces the current one)':'Start reading it together'}</button></div>`)}
+          ${deck[0]?html`
+            <div class="bkcover tall" style=${{background:'linear-gradient(150deg,hsl('+hue(deck[0].title)+' 62% 52%),hsl('+((hue(deck[0].title)+50)%360)+' 66% 36%))'}}>
+              <div class="sm2">${deck[0].by} wants to read</div><div class="bkt">${deck[0].title}</div>${deck[0].author&&html`<div class="sm2">${deck[0].author}</div>`}
+            </div>
+            <div class="swbtns"><button class="no" onClick=${()=>vote(deck[0],false)}>✕</button><span>${deck.length} to decide</span><button class="yes" onClick=${()=>vote(deck[0],true)}>♥</button></div>
+          `:html`<div class="sm" style="text-align:center;margin:10px 0 4px">${matches.length?'':'No picks waiting on you. Recommend one:'}</div>`}
+          <div class="bkh"><span>Recommend a book</span></div>
+          <input placeholder="Title" value=${t1} onInput=${e=>setT1(e.target.value)} />
+          <div class="row mt8" style="gap:7px"><input placeholder="Author (optional)" value=${t2} onInput=${e=>setT2(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')addRec();}} />
+            <button class="btn terra" style="flex:0 0 auto" onClick=${addRec}>Add</button></div>
+          ${D.recs.filter(r=>r.by===me&&!(r.votes||{})[other]).length>0&&html`<div class="sm mt8">Waiting on ${other}: ${D.recs.filter(r=>r.by===me&&!(r.votes||{})[other]&&!(r.pass||{})[other]).map(r=>r.title).join(' · ')||'—'}</div>`}`}
+
+        ${v==='shelf'&&html`
+          ${D.done.length===0&&html`<div class="swempty"><div class="big">An empty shelf</div><div class="sm">Books you finish together live here.</div></div>`}
+          ${D.done.map(b=>html`<div class="take" key=${b.id+b.finished}><div class="ts">${b.title}</div><div class="sm">${b.author?b.author+' · ':''}finished ${relTime(b.finished)}</div>
+            <div class="sm">☀️ ${stars((b.stars||{}).Angelos||0)} · 🌊 ${stars((b.stars||{}).Antigoni||0)}</div></div>`)}`}
+      </div>
+    </div>`;
+}
+
+// Our table — places we want to eat, and a photo diary of everywhere we've been.
+function EatsBook({want,doc,me,other,busyUp,onSave,onWent,onAddSpot,onUpload,onView,onClose}){
+  const [view,setView]=useState(null);const [form,setForm]=useState(null);const [busy,setBusy]=useState(false);
+  const [city,setCity]=useState('');const [w1,setW1]=useState('');const [w2,setW2]=useState('');
+  if(doc===null)return html`<div class="dsheet mid"><div class="swbox"><div class="swempty"><div class="sm">setting the table…</div></div></div></div>`;
+  const been=doc.been||[],FACES=[['4','😍'],['3','😋'],['2','🙂'],['1','😬']];
+  const save=(list)=>onSave({been:list});
+  const v=view||(been.length||!want.length?'been':'want');
+  const ico=(w)=>w==='Antigoni'?'🌊':'☀️';
+  const face=(r)=>{const f=FACES.find(x=>x[0]===r);return f?f[1]:'—';};
+  const cities=been.map(b=>(b.city||'').trim()).filter((c,i,a)=>c&&a.indexOf(c)===i);
+  const shown=city?been.filter(b=>(b.city||'').trim()===city):been;
+  const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+  const fmt=(k)=>{try{return new Date(k+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}catch(e){return k||'';}};
+  const openForm=(src)=>{setForm({src:src||null,name:src?src.txt:'',city:src?(src.city||''):'',when:today(),rate:'',imgs:[],note:''});setView('been');};
+  const addImgs=async(files,target)=>{if(!files.length)return;setBusy(true);
+    try{const ims=await onUpload(files);if(target==='form')setForm(f=>f?Object.assign({},f,{imgs:[...f.imgs,...ims]}):f);
+      else save(been.map(b=>b.id!==target?b:Object.assign({},b,{imgs:[...(b.imgs||[]),...ims]})));}catch(e){}
+    setBusy(false);};
+  const submit=()=>{const n=form.name.trim();if(!n||!me)return;
+    save([{id:Date.now().toString(36),name:n,city:form.city.trim(),when:form.when||today(),by:me,ts:Date.now(),rate:form.rate?{[me]:form.rate}:{},imgs:form.imgs,note:form.note.trim()},...been]);
+    if(form.src)onWent(form.src);setForm(null);};
+  const rate=(b,r)=>save(been.map(x=>x.id!==b.id?x:Object.assign({},x,{rate:Object.assign({},x.rate||{},{[me]:r})})));
+  const addWant=()=>{const n=w1.trim();if(!n)return;onAddSpot(n,w2.trim());setW1('');};
+  const pics=been.reduce((n,b)=>n+(b.imgs||[]).length,0);
+  const filePick=(target)=>html`<label class="kpill" style=${{opacity:busy?.5:1}}>${busy?'Uploading…':'📷 Add photos'}
+    <input type="file" accept="image/*" multiple style="display:none" disabled=${busy} onChange=${e=>{const fs=Array.from(e.target.files||[]);e.target.value='';addImgs(fs,target);}} /></label>`;
+  return html`
+    <div class="dsheet" onClick=${e=>{if(e.target.classList.contains('dsheet'))onClose();}}>
+      <div class="inner hsheet">
+        <div class="swhead"><span>Our <em>table</em></span><button class="hbtn hx" onClick=${onClose}>✕</button></div>
+        <div class="hseg" style="margin-bottom:14px">
+          ${[['been','Been there'+(been.length?' · '+been.length:'')],['want','Want to go'+(want.length?' · '+want.length:'')]].map(m=>html`<button key=${m[0]} class=${v===m[0]?'on':''} onClick=${()=>{setView(m[0]);setForm(null);}}>${m[1]}</button>`)}
+        </div>
+        ${!me&&html`<div class="sealwait">Tap who you are first (top right of the house).</div>`}
+
+        ${form&&html`
+          <div class="take" style="border-color:var(--terra);margin-top:0">
+            <div class="ts" style="margin-bottom:10px">${form.src?'So — how was it?':'Log a place we went'}</div>
+            <input placeholder="The place" value=${form.name} onInput=${e=>setForm(Object.assign({},form,{name:e.target.value}))} />
+            <div class="row mt8" style="gap:7px"><input placeholder="City" value=${form.city} onInput=${e=>setForm(Object.assign({},form,{city:e.target.value}))} />
+              <input type="date" value=${form.when} onInput=${e=>setForm(Object.assign({},form,{when:e.target.value}))} /></div>
+            <div class="faces">${FACES.map(f=>html`<button key=${f[0]} class=${form.rate===f[0]?'on':''} onClick=${()=>setForm(Object.assign({},form,{rate:f[0]}))}>${f[1]}</button>`)}</div>
+            <div class="row" style="gap:8px;align-items:center;flex-wrap:wrap">${filePick('form')}
+              ${form.imgs.map(im=>html`<img class="eth" key=${im.id} src=${im.url} />`)}</div>
+            <input class="mt8" placeholder="What we’ll remember (optional)" value=${form.note} onInput=${e=>setForm(Object.assign({},form,{note:e.target.value}))} />
+            <div class="row mt10" style="gap:8px"><button class="btn terra" style="flex:1" disabled=${busy} onClick=${submit}>Save it</button><button class="btn quiet" onClick=${()=>setForm(null)}>Cancel</button></div>
+          </div>`}
+
+        ${v==='been'&&!form&&html`
+          <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div class="sm" style="margin:0">${been.length?been.length+' places · '+cities.length+(cities.length===1?' city':' cities')+' · '+pics+' photos':'Every table you’ve shared, in one place.'}</div>
+            <button class="kpill on" onClick=${()=>openForm(null)}>＋ Log one</button>
+          </div>
+          ${cities.length>1&&html`<div class="row" style="gap:6px;flex-wrap:wrap;margin-bottom:10px">
+            <button class=${'kpill'+(city===''?' on':'')} onClick=${()=>setCity('')}>All</button>
+            ${cities.map(c=>html`<button key=${c} class=${'kpill'+(city===c?' on':'')} onClick=${()=>setCity(c)}>${c}</button>`)}</div>`}
+          ${been.length===0&&html`<div class="swempty"><div class="big">No tables yet 🍽</div><div class="sm">Log the first place you ate together — photos and all.</div></div>`}
+          ${shown.map(b=>{const im=b.imgs||[],mine=(b.rate||{})[me],list=im.map(x=>({url:x.url,cap:b.name,by:'',at:fmt(b.when),v:x.v}));
+            return html`
+            <div class="eat" key=${b.id}>
+              <div class="eatcov" style=${im[0]?{backgroundImage:'linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.62)),url('+im[0].url+')'}:{}} onClick=${()=>{if(im.length)onView(list,0);}}>
+                <div class="eatn">${b.name}</div><div class="sm2">${[b.city,fmt(b.when)].filter(Boolean).join(' · ')}</div>
+              </div>
+              ${im.length>1&&html`<div class="eatstrip">${im.slice(1).map((x,i)=>html`<img key=${x.id} src=${x.url} loading="lazy" onClick=${()=>onView(list,i+1)} />`)}</div>`}
+              <div class="eatb">
+                <div class="row" style="align-items:center;gap:10px"><span class="eatr">☀️ ${face((b.rate||{}).Angelos)} · 🌊 ${face((b.rate||{}).Antigoni)}</span><span style="margin-left:auto">${filePick(b.id)}</span></div>
+                ${b.note&&html`<div class="sm" style="font-style:italic">“${b.note}”</div>`}
+                ${me&&!mine&&html`<div class="faces sm3"><span>your verdict</span>${FACES.map(f=>html`<button key=${f[0]} onClick=${()=>rate(b,f[0])}>${f[1]}</button>`)}</div>`}
+              </div>
+            </div>`;})}`}
+
+        ${v==='want'&&!form&&html`
+          ${want.length===0&&html`<div class="sm" style="text-align:center;margin:8px 0 14px">Nowhere on the list yet. Add the place you keep talking about.</div>`}
+          ${want.map(it=>html`<div class="krow" key=${it.id}><div class="kt">${it.txt}<div class="ksub">${it.city?it.city+' · ':''}${it.by}</div></div>
+            <button class="kpill on" onClick=${()=>openForm(it)}>We went ✓</button></div>`)}
+          <div class="bkh"><span>Add a place</span></div>
+          <input placeholder="The place" value=${w1} onInput=${e=>setW1(e.target.value)} />
+          <div class="row mt8" style="gap:7px"><input placeholder="City" value=${w2} onInput=${e=>setW2(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')addWant();}} />
+            <button class="btn terra" style="flex:0 0 auto" onClick=${addWant}>Add</button></div>`}
+      </div>
+    </div>`;
+}
+
 function App(){
   const [authed,setAuthed]=useState(false);
   const [pinBuf,setPinBuf]=useState('');
@@ -1524,6 +1754,8 @@ function App(){
   const [houseDoc,setHouseDoc]=useState(null);         // trip_house: gifts left around + shells found
   const [hSheet,setHSheet]=useState(null);
   const [hMatch,setHMatch]=useState(null);
+  const [eatsDoc,setEatsDoc]=useState(null);           // trip_eats: every place we've eaten, with photos
+  const [booksDoc,setBooksDoc]=useState(null);         // trip_books: recs, the current read, hot takes, the shelf
   const pingT=useRef(0);
   const [doorOpen,setDoorOpen]=useState(()=>{try{return localStorage.getItem('mel-door')===dkey(new Date());}catch(e){return false;}});
   const [ritual,setRitual]=useState(false);
@@ -1613,7 +1845,9 @@ function App(){
     const u21=sub('trip_kitchen',(s)=>setKitchen(s.exists()?(s.data().list||[]):[]));
     const u22=sub('trip_tv',(s)=>setTvdoc(s.exists()?s.data():{list:[],dates:[]}));
     const u23=sub('trip_house',(s)=>setHouseDoc(s.exists()?s.data():{gifts:[],shells:{}}));
-    return ()=>{u1();u2();u3();u4();u5();u6();u7();u8();u9();u10();u17();u18();u19();u20();u11();u12();u13();u14();u15();u16();u21();u22();u23();};
+    const u25=sub('trip_eats',(s)=>setEatsDoc(s.exists()?s.data():{been:[]}));
+    const u24=sub('trip_books',(s)=>setBooksDoc(s.exists()?s.data():{recs:[],cur:null,debates:[],done:[]}));
+    return ()=>{u1();u2();u3();u4();u5();u6();u7();u8();u9();u10();u17();u18();u19();u20();u11();u12();u13();u14();u15();u16();u21();u22();u23();u24();u25();};
   },[authed]);
 
   const guard=(loaded)=>{if(loaded===null){setErr('Still connecting — try again in a second.');return false;}return true;};
@@ -1983,6 +2217,8 @@ function App(){
     kitchen:{data:{list:kitchen||[]},n:(kitchen||[]).length},
     tv:{data:tvdoc||{list:[],dates:[]},n:((tvdoc||{}).list||[]).length+((tvdoc||{}).dates||[]).length},
     house:{data:houseDoc||{gifts:[],shells:{}},n:Object.keys((houseDoc||{}).shells||{}).length},
+    eats:{data:eatsDoc||{been:[]},n:((eatsDoc||{}).been||[]).reduce((n,b)=>n+1+(b.imgs||[]).length,0)},
+    books:{data:booksDoc||{recs:[],cur:null,debates:[],done:[]},n:((booksDoc||{}).recs||[]).length+((booksDoc||{}).debates||[]).length+((booksDoc||{}).done||[]).length*3},
   });
   async function runBackup(){
     try{
@@ -2862,13 +3098,18 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     if(id==='notes'){setNoteView('wall');setTab('notes');return;}
     if(id==='letters'){setNoteView('letters');setTab('notes');return;}
     if(id==='kitchen'){setKKind('try');setTab('kitchen');return;}
-    if(id==='spots'){setKKind('spot');setTab('kitchen');return;}
+    if(id==='spots'){setHSheet('eats');return;}
     if(id==='plans'){setKKind('plan');setTab('kitchen');return;}
     if(id==='wheel'){setHSheet('wheel');return;}
+    if(id==='books'){setHSheet('books');return;}
     if(id==='tv'){if(swipeDeck.length>0)setHSheet('swipe');else setTab('tv');return;}
     if(id==='tvlist'){setTab('tv');return;}
     setTab(id);
   };
+  const bkCur=(booksDoc||{}).cur||null,bkWait=me?((booksDoc||{}).recs||[]).filter(r=>!(r.votes||{})[me]&&!(r.pass||{})[me]).length:0;
+  const eatWant=(kitchen||[]).filter(x=>x.kind==='spot'&&!x.done),eatBeen=((eatsDoc||{}).been||[]).length;
+  const eatAdd=(n,c)=>{if(!guard(kitchen))return;if(!me){setErr('Tap who you are first.');return;}const rec={id:Date.now().toString(36),kind:'spot',txt:n,by:me,at:nowStamp()};if(c)rec.city=c;write('trip_kitchen',{list:[rec,...kitchen]});flash('Added to our table');};
+  const eatWent=(it)=>{if(!guard(kitchen))return;write('trip_kitchen',{list:kitchen.map(x=>x.id===it.id?Object.assign({},x,{done:{by:me,at:nowStamp()}}):x)});};
   const kN=(k)=>{const n=(kitchen||[]).filter(x=>(x.kind||'try')===k&&!x.done).length;return n?n+' waiting':'nothing yet';};
   const houseMenu=[
     {id:'bed',name:'The bedroom',icon:'🛏',items:[
@@ -2878,12 +3119,13 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     {id:'living',name:'The living room',icon:'🛋',items:[
       {key:'tv',icon:'🍿',label:swipeDeck.length?'Swipe the watchlist':'Movie night',sub:swipeDeck.length?swipeDeck.length+' waiting for your vote':(nextNight?fmtNight(nextNight.when):'plan the next one'),spot:'tv'},
       {key:'tvlist',icon:'📺',label:'Watchlist & dates',sub:tvList.filter(x=>!x.watched).length+' queued',spot:'tv'},
+      {key:'books',icon:'📚',label:'Book club',sub:bkCur?bkCur.title+' · you '+((bkCur.prog||{})[me]||0)+'% · '+other+' '+((bkCur.prog||{})[other]||0)+'%':(bkWait?bkWait+' picks waiting on you':'pick a book together'),spot:'books'},
       {key:'game',icon:'🎲',label:'Games',sub:'tavli, duels, JALLA!',spot:'game'}]},
     {id:'kitchen',name:'Kitchen & dining',icon:'🍳',items:[
       {key:'wheel',icon:'🎡',label:'Spin for dinner',sub:wheelPool.length>1?wheelPool.length+' ideas on the wheel':'needs a couple of ideas',spot:'wheel'},
       {key:'kitchen',icon:'📖',label:'Recipes to try',sub:kN('try'),spot:'kitchen'},
       {key:'plans',icon:'🗓',label:'Dinner plans',sub:kN('plan'),spot:'wheel'},
-      {key:'spots',icon:'📍',label:'Places to eat',sub:kN('spot'),spot:'spots'}]},
+      {key:'spots',icon:'📍',label:'Our table',sub:eatWant.length+' to try · '+eatBeen+' visited',spot:'spots'}]},
     {id:'hall',name:'The hall',icon:'🚪',items:[
       {key:'photos',icon:'🖼',label:'The album',sub:(photos||[]).length?(photos||[]).length+' memories':'hang the first',spot:'photos'},
       {key:'trip',icon:'🧳',label:'Our trips',sub:'days, plans, photos',spot:'trip'},
@@ -2926,6 +3168,9 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       ${ritualSheet}
       ${hSheet==='swipe'&&html`<${SwipeDeck} deck=${swipeDeck} other=${other} match=${hMatch} onSwipe=${tvSwipe}
         onClose=${()=>setHSheet(null)} onList=${()=>{setHSheet(null);setTab('tv');}}/>`}
+      ${hSheet==='eats'&&html`<${EatsBook} want=${eatWant} doc=${eatsDoc} me=${me} other=${other} onSave=${(d)=>{write('trip_eats',d);}} onWent=${eatWent} onAddSpot=${eatAdd}
+        onUpload=${(fs)=>uploadMany(fs,()=>{})} onView=${(list,idx)=>setViewImg({list,idx})} onClose=${()=>setHSheet(null)}/>`}
+      ${hSheet==='books'&&html`<${BookClub} doc=${booksDoc} me=${me} other=${other} onSave=${(d)=>write('trip_books',d)} onClose=${()=>setHSheet(null)}/>`}
       ${hSheet==='wheel'&&html`<${DinnerWheel} pool=${wheelPool} onLock=${lockDinner} onClose=${()=>setHSheet(null)}
         onAdd=${()=>{setHSheet(null);setKKind('try');setTab('kitchen');}}/>`}
     <//>`;
