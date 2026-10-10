@@ -510,6 +510,29 @@
   .gans .gtx{flex:1;min-width:0}
   .lovebtn{border:none;background:none;padding:2px;color:#D9D2C4;cursor:pointer;flex:0 0 auto;display:flex}
   .lovebtn.on{color:#E0607E}
+  .h3dover{position:fixed;inset:0;z-index:151}
+  .jwho{display:inline-flex;margin-right:6px;color:var(--aegean);vertical-align:-2px}
+  .lwhen{font-size:11px;color:var(--soft);margin-top:3px;letter-spacing:.04em}
+  .seal{display:flex;justify-content:center;color:#B4854F}
+  .ogs .card{background:#fff;border:1px solid var(--hair);border-radius:20px;padding:16px;margin:0 0 14px;box-shadow:none}
+  .ogs .eyebrow{font-size:10px;letter-spacing:.12em;color:var(--soft)}
+  .ogs textarea{font-size:17px;line-height:1.5;background:var(--paper)}
+  .ogs .attach{border:1px solid var(--hair);border-radius:999px;background:#fff;color:var(--ink2);font-weight:600;font-size:12.5px;padding:9px 14px;display:inline-flex;align-items:center;gap:6px}
+  .ogs .jentry{background:#fff;border:1px solid var(--hair);border-radius:20px;padding:16px;margin:0 0 10px}
+  .ogs .jrule,.ogs .rule{display:none}
+  .ogs .jdate{letter-spacing:.1em;display:inline-flex;align-items:center}
+  .ogs .jwho{width:22px;height:22px;border-radius:50%;background:#DCEEF2;justify-content:center;align-items:center;margin-right:8px}
+  .ogs .jtxt{font-size:17.5px;line-height:1.55;margin-top:10px}
+  .ogs .jimg{border-radius:14px;box-shadow:none}
+  .ogs .note{box-shadow:0 6px 16px rgba(60,40,10,.08);font-size:16.5px;line-height:1.45}
+  .ogs .letter{border-radius:20px;box-shadow:none}
+  .ogs .letter.sealed{background:linear-gradient(160deg,#FFF7E3,#FBE6C2);border-color:#F1DDB0;padding:20px 16px}
+  .ogs .seal{width:52px;height:52px;border-radius:50%;background:#fff;align-items:center;margin:0 auto 8px;box-shadow:0 6px 14px rgba(180,133,79,.25)}
+  .ogs .lopens{font-style:normal;font-size:20px;color:var(--ink)}
+  .ogs .lfrom{letter-spacing:.12em}
+  .ogs .ltxt{font-size:17.5px;line-height:1.6}
+  .ogs .empty{font-size:16px;padding:18px 0}
+  .ogs .wall{margin-top:4px}
   .ndot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--terra);margin-left:5px;vertical-align:middle}
   .gdsub{font-family:var(--serif);font-style:italic;color:var(--soft);font-size:14px;margin:-10px 8px 14px}
   .gstats{display:flex;gap:8px;margin:0 0 14px}
@@ -4092,8 +4115,9 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
     if(id==='apart'){setTab('ld');return;}
     if(id==='door'){setRitual(true);return;}
     if(id==='game'){setHSheet('arcade');return;}
-    if(id==='notes'){setNoteView('wall');setTab('notes');return;}
-    if(id==='letters'){setNoteView('letters');setTab('notes');return;}
+    if(id==='notes'){setNoteView('wall');setHSheet('notes');return;}
+    if(id==='journal'){setHSheet('journal');return;}
+    if(id==='letters'){setNoteView('letters');setHSheet('notes');return;}
     if(id==='kitchen'){setKStart('book');setHSheet('kitchen');return;}
     if(id==='spots'){setHSheet('eats');return;}
     if(id==='plans'){setKStart('week');setHSheet('kitchen');return;}
@@ -4601,8 +4625,8 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         <textarea placeholder="What happened, what it felt like, what you never want to forget…" value=${jTxt} onInput=${e=>setJTxt(e.target.value)}></textarea>
         <div class="attachrow" style="flex-wrap:wrap">
           ${jImgs.map(im=>html`
-            <div class="stagedimg" key=${im.id}><img src=${im.url} /><button onClick=${()=>{rmStored(im.id);setJImgs(jImgs.filter(x=>x.id!==im.id));}}>✕</button></div>`)}
-          <label class="attach">${jUp?(jUp==='…'?'Uploading…':`Uploading ${jUp}…`):jImgs.length?'+ more':'📷 Attach photos'}
+            <div class="stagedimg" key=${im.id}><img src=${im.url} /><button onClick=${()=>{rmStored(im.id);setJImgs(jImgs.filter(x=>x.id!==im.id));}}><${HIco} n="x" s=${12}/></button></div>`)}
+          <label class="attach">${jUp?(jUp==='…'?'Uploading…':`Uploading ${jUp}…`):jImgs.length?'+ more':html`<${HIco} n="camera" s=${14}/> Attach photos`}
             <input type="file" accept="image/*" multiple style="display:none" disabled=${!!jUp} onChange=${e=>{const fs=Array.from(e.target.files||[]);if(fs.length)attachJImgs(fs);e.target.value='';}} />
           </label>
           <button class="btn" style="margin-left:auto" onClick=${addJournal}>Add to our story</button>
@@ -4613,10 +4637,10 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       ${(journal||[]).map(j=>html`
         <div class="jentry" key=${j.id}>
           <div style="display:flex;justify-content:space-between;align-items:baseline">
-            <span class="jdate">${j.at} · <span class="jby">${j.by}</span></span>
+            <span class="jdate"><span class="jwho"><${HIco} n=${j.by==='Antigoni'?'waves':'sun'} s=${12}/></span>${j.at} · <span class="jby">${j.by}</span></span>
             ${armDel===j.id
               ?html`<span><button class="jx" style="color:#A4442C;font-weight:700" onClick=${()=>delJournal(j)}>delete?</button> <button class="jx" onClick=${()=>setArmDel(null)}>keep</button></span>`
-              :html`<button class="jx" onClick=${()=>setArmDel(j.id)}>✕</button>`}
+              :html`<button class="jx" onClick=${()=>setArmDel(j.id)}><${HIco} n="x" s=${12}/></button>`}
           </div>
           ${j.txt&&html`<div class="jtxt">${j.txt}</div>`}
           ${j.img&&html`<img class="jimg" src=${j.img} loading="lazy" onClick=${()=>setViewImg({url:j.img,cap:'',by:j.by,at:j.at})} />`}
@@ -4634,10 +4658,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
 
   const notesTab=html`
     <${Fragment}>
-      <div class="row" style="gap:8px;margin-bottom:14px">
-        ${[['wall','🗒 The wall'],['letters','💌 Sealed letters'+((letters||[]).length?' · '+(letters||[]).length:'')]].map(([v5,l5])=>html`
-          <button key=${v5} class="ghost" style=${{flex:1,padding:'10px 8px',border:'1px solid '+(noteView===v5?'var(--ink)':'var(--hair)'),borderRadius:'999px',color:noteView===v5?'var(--ink)':'var(--soft)',fontWeight:600,fontSize:'12.5px'}} onClick=${()=>{setNoteView(v5);setArmDel(null);}}>${l5}</button>`)}
-      </div>
+      <div class="hseg" style="margin-bottom:14px">${[['wall','The wall'+((notes||[]).length?' · '+(notes||[]).length:'')],['letters','Sealed letters'+((letters||[]).length?' · '+(letters||[]).length:'')]].map(([v5,l5])=>html`<button key=${v5} class=${noteView===v5?'on':''} onClick=${()=>{setNoteView(v5);setArmDel(null);}}>${l5}</button>`)}</div>
       ${noteView==='wall'&&html`
       <div class="card">
         <div class="eyebrow" style="margin-bottom:10px">Leave a little note</div>
@@ -4647,11 +4668,11 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         </div>
         <div class="row mt8" style="align-items:center;gap:8px">
           ${vRec&&vRec.for==='note'?html`
-            <button class="btn terra" onClick=${stopVoice}>◼ ${vRec.sec}s, stop</button>
+            <button class="btn terra" onClick=${stopVoice}>Stop · ${vRec.sec}s</button>
           `:vNote&&vNote.for==='note'?html`
             <span style="display:flex;align-items:center;gap:8px;flex:1">
               <audio controls src=${vNote.url} style="height:32px;max-width:160px"></audio>
-              <button class="jx" onClick=${discardVoice}>✕</button>
+              <button class="jx" onClick=${discardVoice}><${HIco} n="x" s=${12}/></button>
             </span>
           `:html`
             <button class="btn quiet" onClick=${()=>startVoice('note')}><${MicMark}/> voice note</button>
@@ -4677,16 +4698,16 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
           <input placeholder="YYYY-MM-DD" value=${letDate} onInput=${e=>setLetDate(e.target.value)} />
           <div class="row mt10">
             ${vRec?html`
-              <button class="btn terra" onClick=${stopVoice}>◼ ${vRec.sec}s, stop</button>
+              <button class="btn terra" onClick=${stopVoice}>Stop · ${vRec.sec}s</button>
             `:vNote&&vNote.for==='letter'?html`
               <span style="display:flex;align-items:center;gap:8px;flex:1">
                 <audio controls src=${vNote.url} style="height:34px;max-width:170px"></audio>
-                <button class="jx" onClick=${discardVoice}>✕</button>
+                <button class="jx" onClick=${discardVoice}><${HIco} n="x" s=${12}/></button>
               </span>
             `:html`
               <button class="btn quiet" onClick=${()=>startVoice('letter')}><${MicMark}/> voice</button>
             `}
-            <button class="btn" onClick=${sealLetter}>Seal it 💌</button>
+            <button class="btn" onClick=${sealLetter}>Seal it</button>
             <button class="ghost" onClick=${()=>setLetOpen(false)}>cancel</button>
           </div>
         </div>`}
@@ -4704,9 +4725,9 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
                   <audio controls src=${L.voice.url} style="height:36px;width:100%"></audio>
                 </div>`}
             `:html`
-              <div class="seal">💌</div>
+              <div class="seal"><${HIco} n="mail" s=${22}/></div>
               <div class="lfrom">FROM ${L.by==='Angelos'?html`<${Sig} who="Angelos"/> ANGELOS`:html`<${Sig} who="Antigoni"/> ANTIGONI`}</div>
-              <div class="lopens">sealed until ${L.openAt}${L.voice?' · carries a voice':''}</div>
+              <div class="lopens">opens in ${Math.max(1,Math.round((new Date(L.openAt+'T12:00:00')-new Date(tk+'T12:00:00'))/864e5))} days${L.voice?' · carries a voice':''}</div><div class="lwhen">${L.openAt}</div>
               ${L.by===me&&(armDel===L.id
                 ?html`<div class="mt8"><button class="jx" style="color:#A4442C;font-weight:700" onClick=${()=>delLetter(L.id)}>delete?</button> <button class="jx" onClick=${()=>setArmDel(null)}>keep</button></div>`
                 :html`<div class="mt8"><button class="jx" onClick=${()=>setArmDel(L.id)}>unseal & discard</button></div>`)}
@@ -4719,7 +4740,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       <div class="wall">
         ${(notes||[]).map(n2=>html`
           <div class="note" style=${{background:n2.col||NOTE_COLORS[0]}} key=${n2.id}>
-            <button class="nx" onClick=${()=>delNote(n2.id)}>✕</button>
+            <button class="nx" onClick=${()=>delNote(n2.id)}><${HIco} n="x" s=${12}/></button>
             ${n2.txt}
             ${n2.voice&&html`
               <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
@@ -5138,6 +5159,15 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
         ${tab==='home'?null:tab==='bedroom'?bedroomTab:tab==='living'?livingTab:tab==='kitchen'?kitchenTab:tab==='tv'?tvTab:tab==='trip'?tripTab:tab==='concierge'?conciergeTab:tab==='ld'?ldTab:tab==='list'?listTab:tab==='journal'?journalTab:tab==='notes'?notesTab:tab==='game'?gameTab:photosTab}
       </div>
       ${houseLayer}
+      ${tab==='home'&&hSheet==='journal'&&html`<div class="h3dover"><div class="dsheet" onClick=${e=>{if(e.target.classList.contains('dsheet'))setHSheet(null);}}><div class="inner hsheet ogs">
+        <div class="swhead"><span>Our <em>journal</em></span><button class="hbtn hx" onClick=${()=>setHSheet(null)}><${HIco} n="x" s=${16}/></button></div>
+        <div class="gdsub">the story so far, a page at a time</div>
+        <div class="gstats"><div class="gstat"><b>${(journal||[]).length}</b><span>pages</span></div><div class="gstat"><b>${(journal||[]).reduce((n,j)=>n+(j.img?1:0)+(j.imgs||[]).length,0)}</b><span>photos</span></div><div class="gstat"><b>${new Set((journal||[]).map(j=>String(j.at||'').split(' · ')[0])).size}</b><span>days written</span></div></div>
+        ${journalTab}</div></div></div>`}
+      ${tab==='home'&&hSheet==='notes'&&html`<div class="h3dover"><div class="dsheet" onClick=${e=>{if(e.target.classList.contains('dsheet'))setHSheet(null);}}><div class="inner hsheet ogs">
+        <div class="swhead"><span>${noteView==='letters'?html`Sealed <em>letters</em>`:html`Wall of <em>notes</em>`}</span><button class="hbtn hx" onClick=${()=>setHSheet(null)}><${HIco} n="x" s=${16}/></button></div>
+        <div class="gdsub">${noteView==='letters'?'written now, opened on the day you choose':'little things, pinned where you both see them'}</div>
+        ${notesTab}</div></div></div>`}
       ${viewImg&&(()=>{
         const V=viewImg.list?viewImg.list[viewImg.idx]:viewImg;
         const nav=(d5)=>{if(!viewImg.list)return;const n2=viewImg.idx+d5;if(n2>=0&&n2<viewImg.list.length){setViewImg({...viewImg,idx:n2});setArmDel(null);}};
