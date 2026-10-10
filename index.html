@@ -1622,7 +1622,7 @@ function buildWorld(T,wrap,opts){
   // ---------- player, camera, pathfinding ----------
   const R=.26,st=opts.start;
   const P={x:st?st.x:0,z:st?st.z:8.3,y:0,vy:0,vx:0,vz:0,face:st?st.face:Math.PI,path:null,after:null,stuck:0};
-  const C={yaw:st?st.yaw:0,pitch:st?st.pitch:.24,dist:st&&st.dist?st.dist:3.8,cur:3.8,tx:P.x,tz:P.z,manual:-1e9,preset:0};
+  const C={yaw:st?st.yaw:0,pitch:st?st.pitch:.62,dist:st&&st.dist?st.dist:6.5,cur:st&&st.dist?st.dist:6.5,tx:P.x,tz:P.z,manual:-1e9,preset:1};
   const inPool=(x,z)=>x>-10.2&&x<-8.3&&z>-4.2&&z<-1.6,inHouse=(x,z)=>Math.abs(x)<HX+.1&&Math.abs(z)<HZ+.1;
   const groundY=(x,z)=>{if(inPool(x,z))return -.5;const d=Math.hypot(x,z-1);return d>17.5?-(d-17.5)*.2:0;};
   const collide=()=>{for(let it=0;it<2;it++)for(const c of cols){if(!c.on)continue;const cx=Math.max(c.x1,Math.min(c.x2,P.x)),cz=Math.max(c.z1,Math.min(c.z2,P.z)),dx=P.x-cx,dz=P.z-cz,d2=dx*dx+dz*dz;
@@ -1676,7 +1676,7 @@ function buildWorld(T,wrap,opts){
   let cine=null;const _cl=new T.Vector3(),_ce=new T.Vector3(),beamMesh=meshOf.get(M.beam);
   const gameFov=()=>{const a=W()/HH();return a<.8?80:a<1.2?70:58;};
   const endCine=()=>{if(!cine)return;cine=null;CUT.uCutR.value=1.2;cam.fov=gameFov();cam.updateProjectionMatrix();if(beamMesh)beamMesh.visible=true;tag.visible=true;C.manual=-1e9;applyCam(1);if(opts.onCine)opts.onCine(0);};
-  const startCine=()=>{if(cine)return;P.x=0;P.z=8.3;P.y=0;P.vx=P.vz=P.vy=0;P.path=null;P.after=null;goalRing.visible=false;P.face=Math.PI;C.yaw=0;C.pitch=.24;C.dist=C.cur=3.8;C.tx=P.x;C.tz=P.z;C.preset=0;joyReset();ptrs.clear();
+  const startCine=()=>{if(cine)return;P.x=0;P.z=8.3;P.y=0;P.vx=P.vz=P.vy=0;P.path=null;P.after=null;goalRing.visible=false;P.face=Math.PI;C.yaw=0;C.pitch=.62;C.dist=C.cur=6.5;C.tx=P.x;C.tz=P.z;C.preset=1;joyReset();ptrs.clear();
     cine={t:0,shot:-1};CUT.uCutR.value=0;if(opts.onCine)opts.onCine(1);};
   const cineCam=(dt)=>{cine.t+=dt;const t=cine.t,fa=W()/HH()<.8?50:34;let px,py,pz,fov=fa,shot;
     if(t<3.4){shot=0;const u=t/3.4;px=3-1.5*u;py=1.4+1.9*u;pz=52-21*u;_cl.set(0,2.2,2);}
@@ -1721,7 +1721,7 @@ function buildWorld(T,wrap,opts){
   const goTo=(key,jump)=>{const a=actives.find(o=>o.key===key);if(!a)return;const s=a.stand||[a.x+.9,a.z+.4];
     if(Math.hypot(s[0]-P.x,s[1]-P.z)<.4)return;if(!jump&&walkTo(s[0],s[1],{x:a.x,z:a.z}))return;
     opts.setFade(true);setTimeout(()=>{P.x=s[0];P.z=s[1];P.vx=P.vz=0;P.path=null;goalRing.visible=false;collide();P.y=groundY(P.x,P.z);C.tx=P.x;C.tz=P.z;
-      C.yaw=Math.atan2(P.x-a.x,P.z-a.z);P.face=Math.atan2(a.x-P.x,a.z-P.z);C.pitch=Math.min(C.pitch,.3);C.manual=-1e9;applyCam(1);opts.setFade(false);},170);};
+      C.yaw=Math.atan2(P.x-a.x,P.z-a.z);P.face=Math.atan2(a.x-P.x,a.z-P.z);C.manual=-1e9;applyCam(1);opts.setFade(false);},170);};
   function tap(e){const r=wrap.getBoundingClientRect(),v=new T.Vector2(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);
     scene.updateMatrixWorld(true);cam.updateMatrixWorld(true);ray.setFromCamera(v,cam);
     const live=actives.filter(a=>!a.off&&!a.passive&&a.vis>.3),hits=ray.intersectObjects(live.map(a=>a.h),false);
