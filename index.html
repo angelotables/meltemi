@@ -2012,7 +2012,7 @@ function House3D(props){
   const {active,me,other,menu,notice,stats,children}=props;
   const wrapRef=useRef(null),worldRef=useRef(null),cb=useRef(props),hintT=useRef(null);cb.current=props;
   const [room,setRoom]=useState('');const [near,setNear]=useState(null);const [hint,setHint]=useState('');
-  const [loading,setLoading]=useState(true);const [open,setOpen]=useState(false);const [sec,setSec]=useState('bed');
+  const [loading,setLoading]=useState(true);const [open,setOpen]=useState(false);const [sec,setSec]=useState('');
   const [fade,setFade]=useState(false);const [fan,setFan]=useState(null);const [coach,setCoach]=useState(true);
   const [mode,setMode]=useState(()=>{try{return localStorage.getItem('mel-sky')||'auto';}catch(e){return 'auto';}});
   const [fxPref,setFxPref]=useState(()=>{try{return localStorage.getItem('mel-fx')||'on';}catch(e){return 'on';}});
@@ -2060,7 +2060,7 @@ function House3D(props){
       <div class=${'h3dfade'+(fade?' on':'')}></div>
       <div class="hvig"></div><div class="cbar t"></div><div class="cbar b"></div>
       <div class=${'ctitle'+(cineN===1||cineN===2?' on':'')}><div class="wm">Mel<em>temi</em></div><div class="cs">welcome home${props.me?', '+props.me:''}</div></div>
-      <button class="hbtn hmenu" aria-label="Menu" onClick=${()=>{setOpen(true);setFan(null);}}><${HIco} n="menu" s=${22}/></button>
+      <button class="hbtn hmenu" aria-label="Menu" onClick=${()=>{setSec('');setOpen(true);setFan(null);}}><${HIco} n="menu" s=${22}/></button>
       ${room&&html`<div class="hroom">${room}</div>`}
       <div class="hmap"><canvas class="hmapc" width="264" height="264"></canvas></div>
       <div class="hside">
