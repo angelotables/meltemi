@@ -1555,16 +1555,14 @@ function buildWorld(T,wrap,opts){
   btree(4.6,6.8,.78,M.fGreen,M.cGreen,1.15);for(let i=0;i<14;i++){const a=i*2.1,r=.55+((i*7)%5)/9;SP(.05,M.lemon,4.6+Math.cos(a)*r,1.5+((i*7)%10)/10,6.8+Math.sin(a)*r,1,1.25,1);}
   btree(-6.4,8.2,1,M.fOlive,M.cOlive,1.05);
   cypress(8.3,2.2);cypress(8.8,.6,4.8);cypress(8.2,-1.2,3.8);cypress(-4.5,-8.2,4.6);cypress(1.5,-8.6);cypress(9.5,6.2,3.6);
-  [[10,10],[-13,-2],[5,-13],[-9,12],[14,2]].forEach(p=>{rock(p[0],p[1],.6);rock(p[0]+.7,p[1]+.3,.34);block(p[0]-.5,p[1]-.4,p[0]+.5,p[1]+.4);tuft(M.fGrass,p[0]-.5,p[1]+.6,6,.6,.6);});
+  [[10,10],[-13,-2],[5,-13],[-9,12],[14,2]].forEach(p=>{rock(p[0],p[1],.6);rock(p[0]+.7,p[1]+.3,.34);block(p[0]-.5,p[1]-.4,p[0]+.5,p[1]+.4);});
   CY(.03,.03,2.2,M.white,8.2,1.1,11,10);put(new T.ConeGeometry(1.35,.5,18),M.coral,8.2,2.3,11);
   [7.55,8.85].forEach((x,i)=>{B(.6,.07,1.7,M.white,x,.2,11);[[-.24,-.75],[.24,-.75],[-.24,.75],[.24,.75]].forEach(q=>B(.05,.2,.05,M.white,x+q[0],.1,11+q[1]));soft(.56,.1,1.62,i?M.clay:M.dusty,x,.29,11,0,{r:.045,puff:.3});block(x-.3,10.15,x+.3,11.85);});
-  for(let i=0;i<110;i++){const a=rnd()*6.2832,d=13+rnd()*4.2,x=Math.cos(a)*d,z=1+Math.sin(a)*d;if((Math.abs(x)<3.2&&z>4&&z<12)||(x<-5.5&&x>-11.5&&z>-5.5&&z<2)||(Math.abs(x-8.2)<1.8&&Math.abs(z-11)<1.8))continue;tuft(M.fGrass,x,z,5+Math.floor(rnd()*4),.45+rnd()*.4,.55);}
   [[-5.9,4.9],[5.6,4.95],[6.95,-2],[-2.6,-4.9],[2.4,-4.95]].forEach(p=>posy(p[0],.28,p[1],.34));
   B(3.2,.7,1.1,M.white,-36,.05,24,.5);put(new T.ConeGeometry(1.3,3.4,3),M.white,-36,2.2,24,0,.5,0,1,1,.12);
   [[-170,-120,34,11],[150,-170,46,14],[190,90,30,9],[-120,170,40,10]].forEach(p=>{[[0,0,1,1],[.8,.3,.6,.62],[-.75,-.2,.7,.5],[.25,-.5,.5,.8]].forEach(q=>put(new T.SphereGeometry(p[2],18,10,0,Math.PI*2,0,Math.PI/2),M.far,p[0]+q[0]*p[2],-1.5,p[1]+q[1]*p[2],0,0,0,q[2],q[3]*p[3]/p[2],q[2]));});
   [[60,46,-120],[-90,52,-80],[120,58,40],[-40,48,130],[-150,60,30],[20,64,-170]].forEach((p,i)=>{for(let k=0;k<4;k++)SP(7+((i+k)*5)%5,M.cloud,p[0]*1.5+k*9-13,p[1]+34+(k%2)*2,p[2]*1.5+(k%3)*3,1.6,.4,1);});
   // ---------- the grounds: lawn, lavender along the path, an olive grove, palms by the water, a gate, a jetty ----------
-  for(let i=0;i<90;i++){const a=i/90*6.2832+rnd()*.05,rr=12.3+.5*Math.sin(a*3+.6)+.32*Math.sin(a*7+1.9)+.18*Math.sin(a*13)+rnd()*.5,x=Math.cos(a)*rr,z=1+Math.sin(a)*rr;if(Math.abs(x)<1.3&&z>10)continue;tuft(i%3?M.fLawn:M.fGrass,x,z,6,.3+rnd()*.25,.6);}
   PL(1.7,3.2,M.deck,0,.01,11.3,-Math.PI/2);
   for(let k=0;k<8;k++){const z=6.7+k*.62;[-1.28,1.28].forEach(x=>tuft(M.fLav,x,z,7,.5+rnd()*.12,.5,.004));}
   [7.3,9.2,11.1].forEach(z=>[-1.02,1.02].forEach(x=>{CY(.025,.035,.46,M.blk,x,.23,z,8);SP(.065,M.glow,x,.5,z);}));
@@ -1581,7 +1579,6 @@ function buildWorld(T,wrap,opts){
   // gate walls and pillars
   [[-5.6,-1.45],[1.45,5.6]].forEach(q=>{const len=q[1]-q[0],mid=(q[0]+q[1])/2;B(len,.55,.28,M.plaster,mid,.275,12.5);B(len+.06,.06,.36,M.white,mid,.58,12.5);block(q[0],12.36,q[1],12.64);posy(mid,.75,12.5,.3);});
   [-1.45,1.45,-5.6,5.6].forEach(x=>{B(.42,1,.42,M.plaster,x,.5,12.5);B(.5,.06,.5,M.white,x,1.03,12.5);SP(.1,M.glow,x,1.16,12.5);block(x-.21,12.29,x+.21,12.71);});
-  [[-8.6,-1.2],[8.9,7.4],[-3.2,-6.4],[5.2,-6.2],[-11.2,2.6]].forEach(p=>{posy(p[0],.3,p[1],.42);canopy(M.fGreen,p[0]+.6,.3,p[1]+.3,.45,.3,.45,40,.3);});
   // the jetty and a little boat
   B(1.5,.1,6.6,M.beamW,0,.3,21);for(let k=0;k<3;k++)[-.72,.72].forEach(x=>CY(.07,.07,1.5,M.wal,x,-.2,18.4+k*2.7,8));
   put(new T.SphereGeometry(1,18,10,0,Math.PI*2,Math.PI/2,Math.PI/2),M.white,2.2,.22,22.4,0,.3,0,1.55,.5,.55);B(.9,.04,.5,M.wal,2.2,.1,22.4,.3);B(.6,.04,.4,M.dusty,2.75,.1,22.6,.3);
