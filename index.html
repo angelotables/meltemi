@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="theme-color" content="#FBF1E6" />
 <title>Meltemi · A & A</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='s' x2='0' y2='1'><stop offset='0' stop-color='%23F9B56E'/><stop offset='1' stop-color='%23FBE9CF'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23s)'/><path d='M0 62h100v16a22 22 0 0 1-22 22H22A22 22 0 0 1 0 78z' fill='%2317647B'/><path d='M28 47a12.5 12.5 0 0 1 25 0z' fill='%231F7F99'/><rect x='24' y='46' width='33' height='32' rx='2' fill='%23fff'/><rect x='53' y='55' width='24' height='23' rx='2' fill='%23fff'/><path d='M36 78V64a4.5 4.5 0 0 1 9 0v14z' fill='%2317647B'/><rect x='61' y='62' width='8' height='9' rx='1' fill='%2317647B'/><rect x='17' y='78' width='68' height='4' rx='1.5' fill='%23E7DCC8'/></svg>" /><text x='50' y='71' font-size='62' text-anchor='middle' font-family='Georgia,serif' fill='%23155E73'>M</text></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='s' x2='0' y2='1'><stop offset='0' stop-color='%23F9B56E'/><stop offset='1' stop-color='%23FBE9CF'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23s)'/><path d='M0 62h100v16a22 22 0 0 1-22 22H22A22 22 0 0 1 0 78z' fill='%2317647B'/><path d='M28 47a12.5 12.5 0 0 1 25 0z' fill='%231F7F99'/><rect x='24' y='46' width='33' height='32' rx='2' fill='%23fff'/><rect x='53' y='55' width='24' height='23' rx='2' fill='%23fff'/><path d='M36 78V64a4.5 4.5 0 0 1 9 0v14z' fill='%2317647B'/><rect x='61' y='62' width='8' height='9' rx='1' fill='%2317647B'/><rect x='17' y='78' width='68' height='4' rx='1.5' fill='%23E7DCC8'/></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -1781,7 +1781,7 @@ function buildWorld(T,wrap,opts){
   // ---------- player, camera, pathfinding ----------
   const R=.26,st=opts.start;
   const P={x:st?st.x:0,z:st?st.z:8.3,y:0,vy:0,vx:0,vz:0,face:st?st.face:Math.PI,path:null,after:null,stuck:0};
-  const C={yaw:st?st.yaw:0,pitch:st?st.pitch:.62,dist:st&&st.dist?st.dist:6.5,cur:st&&st.dist?st.dist:6.5,tx:P.x,tz:P.z,manual:-1e9,preset:1};
+  const C={yaw:st?st.yaw:0,pitch:st?st.pitch:.24,dist:st&&st.dist?st.dist:3.8,cur:st&&st.dist?st.dist:3.8,tx:P.x,tz:P.z,manual:-1e9,preset:0};
   const inPool=(x,z)=>x>-10.2&&x<-8.3&&z>-4.2&&z<-1.6,inHouse=(x,z)=>Math.abs(x)<HX+.1&&Math.abs(z)<HZ+.1;
   const groundY=(x,z)=>{if(inPool(x,z))return -.5;const d=Math.hypot(x,z-1);return d>17.5?-(d-17.5)*.2:0;};
   const collide=()=>{for(let it=0;it<2;it++)for(const c of cols){if(!c.on)continue;const cx=Math.max(c.x1,Math.min(c.x2,P.x)),cz=Math.max(c.z1,Math.min(c.z2,P.z)),dx=P.x-cx,dz=P.z-cz,d2=dx*dx+dz*dz;
@@ -1845,7 +1845,7 @@ function buildWorld(T,wrap,opts){
   let cine=null;const _cl=new T.Vector3(),_ce=new T.Vector3(),beamMesh=meshOf.get(M.beam);
   const gameFov=()=>{const a=capSize?capSize[0]/capSize[1]:W()/HH();return a<.8?80:a<1.2?70:58;};
   const endCine=()=>{if(!cine)return;cine=null;CUT.uCutR.value=1.2;cam.fov=gameFov();cam.updateProjectionMatrix();if(beamMesh)beamMesh.visible=true;tag.visible=true;C.manual=-1e9;applyCam(1);if(opts.onCine)opts.onCine(0);};
-  const startCine=()=>{if(cine)return;P.x=0;P.z=8.3;P.y=0;P.vx=P.vz=P.vy=0;P.path=null;P.after=null;goalRing.visible=false;P.face=Math.PI;C.yaw=0;C.pitch=.62;C.dist=C.cur=6.5;C.tx=P.x;C.tz=P.z;C.preset=1;joyReset();ptrs.clear();
+  const startCine=()=>{if(cine)return;P.x=0;P.z=8.3;P.y=0;P.vx=P.vz=P.vy=0;P.path=null;P.after=null;goalRing.visible=false;P.face=Math.PI;C.yaw=0;C.pitch=.24;C.dist=C.cur=3.8;C.tx=P.x;C.tz=P.z;C.preset=0;joyReset();ptrs.clear();
     cine={t:0,shot:-1};CUT.uCutR.value=0;if(opts.onCine)opts.onCine(1);};
   const cineCam=(dt)=>{cine.t+=dt;const t=cine.t,fa=W()/HH()<.8?50:34;let px,py,pz,fov=fa,shot;
     if(t<3.4){shot=0;const u=t/3.4;px=3-1.5*u;py=1.4+1.9*u;pz=52-21*u;_cl.set(0,2.2,2);}
