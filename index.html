@@ -298,6 +298,20 @@
     font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--aegean);padding:0;font-family:inherit;transition:transform .12s}
   .hbtn:active{transform:scale(.9)}
   .hmenu{top:calc(12px + env(safe-area-inset-top));left:14px;font-size:22px}
+  .hstog{top:calc(12px + env(safe-area-inset-top));left:72px;color:var(--aegean)}
+  .hsimple{position:absolute;inset:0;z-index:5;background:linear-gradient(180deg,#FDF9F0,#EEF4F3);overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+  .hsw{max-width:520px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+  .hsh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+  .hsh .wm{font-family:var(--serif);font-size:30px;color:var(--ink)}.hsh .wm em{font-style:italic;color:var(--terra)}
+  .hsh .cs{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-top:2px}
+  .hswalk{display:flex;align-items:center;gap:7px;border:1px solid var(--hair);background:#fff;border-radius:999px;padding:9px 14px;font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--aegean);box-shadow:0 2px 10px rgba(30,42,51,.06);white-space:nowrap}
+  .hsg{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:17px;color:var(--ink);margin:22px 4px 9px}.hsg .ic{display:flex;color:var(--aegean)}
+  .hsc{background:var(--card);border:1px solid var(--hair);border-radius:20px;overflow:hidden;box-shadow:0 4px 18px rgba(30,42,51,.05)}
+  .hsr{display:flex;align-items:center;gap:13px;width:100%;padding:14px 14px;border:none;border-top:1px solid var(--hair);background:none;text-align:left;font-family:inherit;color:var(--ink)}
+  .hsr:first-child{border-top:none}.hsr:active{background:#F6F0E4}
+  .hsr .ic{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:12px;background:#EAF3F5;color:var(--aegean);flex:0 0 auto}
+  .hsr .tx{flex:1;min-width:0}.hsr .lb{font-size:15px;font-weight:600;border:none;padding:0;margin:0;letter-spacing:0;text-transform:none;color:var(--ink)}.hsr .sb{font-size:12.5px;color:var(--soft);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hsr .ch{display:flex;color:#C9BFAE}
   .hwho{top:calc(12px + env(safe-area-inset-top));right:14px}
   .hx{position:static;width:38px;height:38px;font-size:15px;box-shadow:none;background:rgba(30,42,51,.07);border:none}
   .hroom{position:absolute;top:calc(15px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:999px;
@@ -1094,6 +1108,7 @@ const MNavIcon=({id})=>{
 // Third-person island villa. Static world batched into a few draw calls; photographed
 // materials and sky load over procedural fallbacks; one line-icon set, no emoji.
 const HICONS={
+  grid:['M4 4h6v6H4z','M14 4h6v6h-6z','M4 14h6v6H4z','M14 14h6v6h-6z'],
   plane:['M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z'],
   menu:['M3 6h18','M3 12h18','M3 18h18'],x:['M18 6L6 18','M6 6l12 12'],chev:['M9 6l6 6-6 6'],plus:['M12 5v14','M5 12h14'],check:['M20 6L9 17l-5-5'],
   up:['M12 19V5','M5 12l7-7 7 7'],video:['M23 7l-7 5 7 5V7z','M3 5h11a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z'],
@@ -2021,6 +2036,8 @@ function House3D(props){
   const [mode,setMode]=useState(()=>{try{return localStorage.getItem('mel-sky')||'auto';}catch(e){return 'auto';}});
   const [fxPref,setFxPref]=useState(()=>{try{return localStorage.getItem('mel-fx')||'on';}catch(e){return 'on';}});
   const [cineN,setCineN]=useState(0);
+  const [simple,setSimple]=useState(()=>{try{return localStorage.getItem('mel-ui')==='simple';}catch(e){return false;}});
+  const pickUi=(v)=>{try{localStorage.setItem('mel-ui',v?'simple':'house');}catch(e){}setOpen(false);setFan(null);setSimple(v);};
   const say=(m,ms)=>{setHint(m);clearTimeout(hintT.current);if(m)hintT.current=setTimeout(()=>setHint(''),ms||2800);};
   const sync=(w)=>{const p=cb.current;w.setWho(p.me||'Angelos');w.setDoorDone(!!p.doorDone);w.setDoorBadge(p.doorBadge===undefined?!p.doorDone:!!p.doorBadge,p.doorLabel);w.setMovie(!!p.movieNight);w.setSealed(p.sealedN||0);w.setGifts(p.gifts||[],p.me);w.setShell(p.shell);w.setPartner(p.other,p.partnerBubble,p.partnerK);w.setGarden(p.garden||[]);};
   useEffect(()=>{
@@ -2046,7 +2063,7 @@ function House3D(props){
     return ()=>{alive=false;};
   },[mode]);
   useEffect(()=>()=>{if(worldRef.current)worldRef.current.dispose();},[]);
-  useEffect(()=>{const w=worldRef.current;if(w)w.setActive(!!active);if(!active){setOpen(false);setFan(null);}},[active]);
+  useEffect(()=>{const w=worldRef.current;if(w)w.setActive(!!active&&!simple);if(!active){setOpen(false);setFan(null);}},[active,simple,loading]);
   const gk=(props.gifts||[]).map(g=>g.id).join(',')+'|'+me;
   const sk=props.shell?props.shell.i+':'+props.shell.found:'';
   useEffect(()=>{const w=worldRef.current;if(w)sync(w);},[me,props.doorDone,props.movieNight,props.sealedN,gk,sk,props.partnerBubble,(props.garden||[]).join(','),props.doorBadge,props.doorLabel]);
@@ -2065,6 +2082,7 @@ function House3D(props){
       <div class="hvig"></div><div class="cbar t"></div><div class="cbar b"></div>
       <div class=${'ctitle'+(cineN===1||cineN===2?' on':'')}><div class="wm">Mel<em>temi</em></div><div class="cs">welcome home${props.me?', '+props.me:''}</div></div>
       <button class="hbtn hmenu" aria-label="Menu" onClick=${()=>{setSec('');setOpen(true);setFan(null);}}><${HIco} n="menu" s=${22}/></button>
+      <button class="hbtn hstog" aria-label="Simple view" onClick=${()=>pickUi(true)}><${HIco} n="grid" s=${20}/></button>
       ${room&&html`<div class="hroom">${room}</div>`}
       <div class="hmap"><canvas class="hmapc" width="264" height="264"></canvas></div>
       <div class="hside">
@@ -2103,7 +2121,22 @@ function House3D(props){
           <button class="hdbtn" onClick=${()=>{setOpen(false);cb.current.onMoment();}}><${HIco} n="back" s=${15}/> Take me back to a moment</button>
         </div>
       </div>
-      ${loading&&html`<div class="hload"><div class="wm">Mel<em>temi</em></div><div class="bar"><i></i></div><div class="lt">opening the house…</div></div>`}
+      ${simple&&html`<div class="hsimple">
+        <div class="hsw">
+          <div class="hsh"><div><div class="wm">Mel<em>temi</em></div><div class="cs">welcome home${props.me?', '+props.me:''}</div></div>
+            <button class="hswalk" onClick=${()=>pickUi(false)}><${HIco} n="door" s=${16}/> Walk the house</button></div>
+          ${(menu||[]).map(s=>html`
+            <div class="hsg" key=${s.id}><span class="ic"><${HIco} n=${s.icon} s=${17}/></span>${s.name}</div>
+            <div class="hsc">${s.items.map(it=>html`
+              <button class="hsr" key=${it.key} onClick=${()=>cb.current.onFeature(it.key)}>
+                <span class="ic"><${HIco} n=${it.icon} s=${20}/></span>
+                <span class="tx"><div class="lb">${it.label}</div><div class="sb">${it.sub}</div></span>
+                <span class="ch"><${HIco} n="chev" s=${15}/></span>
+              </button>`)}</div>`)}
+          ${notice&&html`<div class="hnotice" style="position:static;margin:14px 0 0" onClick=${()=>cb.current.onNotice()}>${notice}</div>`}
+        </div>
+      </div>`}
+      ${loading&&!simple&&html`<div class="hload"><div class="wm">Mel<em>temi</em></div><div class="bar"><i></i></div><div class="lt">opening the house…</div></div>`}
       ${children}
     </div>`;
 }
