@@ -300,7 +300,36 @@
   .hmenu{top:calc(12px + env(safe-area-inset-top));left:14px;font-size:22px}
   .hstog{top:calc(12px + env(safe-area-inset-top));left:72px;color:var(--aegean)}
   .hsimple{position:absolute;inset:0;z-index:5;background:linear-gradient(180deg,#FDF9F0,#EEF4F3);overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
-  .hsw{max-width:520px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+  .hsw{max-width:520px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(120px + env(safe-area-inset-bottom))}
+  .hstabs{position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:492px;margin:0 auto;z-index:5;display:flex;background:rgba(255,253,248,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair);border-radius:24px;box-shadow:0 10px 30px rgba(30,42,51,.14);padding:6px}
+  .hstabs button{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0 7px;border:none;background:none;border-radius:18px;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+  .hstabs button.on{color:var(--aegean);background:#EAF3F5}
+  .hstabs button i{position:absolute;top:7px;left:calc(50% + 9px);width:8px;height:8px;border-radius:50%;background:#C97B5A;border:1.5px solid #FFFDF8}
+  .hshero{display:block;width:100%;text-align:left;border:none;border-radius:24px;padding:20px 20px 18px;margin-top:14px;color:#F6EFE2;font-family:inherit;background:linear-gradient(140deg,#1E7A93,#155E73 55%,#0F4557);box-shadow:0 12px 30px rgba(21,94,115,.28)}
+  .hshero .k{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+  .hshero .st{background:rgba(255,255,255,.16);border-radius:999px;padding:4px 9px;letter-spacing:.06em}
+  .hshero .q{font-family:var(--serif);font-size:23px;line-height:1.3;margin:12px 0 16px}
+  .hshero .cta{display:inline-flex;align-items:center;gap:6px;background:#FFFDF8;color:var(--aegean);border-radius:999px;padding:9px 14px;font-size:13px;font-weight:600}
+  .hsnote{margin-top:10px;padding:10px 14px;border-radius:14px;background:#FFF6F1;border:1px solid #F0D5C8;color:#A4442C;font-size:13px;font-weight:600;text-align:center}
+  .hsduo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .hsmini,.hscard,.hstile{background:var(--card);border:1px solid var(--hair);border-radius:20px;box-shadow:0 4px 18px rgba(30,42,51,.05);text-align:left;font-family:inherit;color:var(--ink)}
+  .hsmini{padding:15px 15px 14px;min-width:0}.hsmini:active,.hstile:active{transform:scale(.97)}
+  .hsmini .k,.hscard .k{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--soft)}
+  .hsmini .big{font-family:var(--serif);font-size:27px;line-height:1.15;color:var(--aegean);margin:8px 0 4px;overflow:hidden;text-overflow:ellipsis}
+  .hsmini .big.sm{font-size:19px;line-height:1.25;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:48px;margin-bottom:0}
+  .hsmini .sb,.hstile .sb{font-size:12px;color:var(--soft)}
+  .hscard{padding:15px;margin-top:12px}.hscard .pb{font-family:var(--serif);font-size:17px;margin:7px 0 12px}
+  .hsemo{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .hsemo button{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 0 8px;border:1px solid var(--hair);background:#fff;border-radius:14px;color:var(--aegean);font-family:var(--sans);font-size:11px;font-weight:600}
+  .hsemo button span{color:var(--ink)}.hsemo button:active{background:#EAF3F5}
+  .hsclear{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;font-size:13px;color:var(--soft)}.hsclear svg{color:var(--sand)}
+  .hsstats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:20px;text-align:center}
+  .hsstats b{display:block;font-family:var(--serif);font-weight:500;font-size:21px;color:var(--ink)}.hsstats span{font-size:10px;letter-spacing:.06em;color:var(--soft)}
+  .hsgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .hstile{padding:15px;min-width:0}.hstile.wide{grid-column:1/-1}
+  .hstile .ic{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:13px;background:#EAF3F5;color:var(--aegean)}
+  .hstile .lb{display:block;border:none;padding:0;font-size:15px;font-weight:600;margin:12px 0 3px;color:var(--ink)}
+  .hstile .sb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .hsh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
   .hsh .wm{font-family:var(--serif);font-size:30px;color:var(--ink)}.hsh .wm em{font-style:italic;color:var(--terra)}
   .hsh .cs{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-top:2px}
@@ -2037,6 +2066,7 @@ function House3D(props){
   const [fxPref,setFxPref]=useState(()=>{try{return localStorage.getItem('mel-fx')||'on';}catch(e){return 'on';}});
   const [cineN,setCineN]=useState(0);
   const [simple,setSimple]=useState(()=>{try{return localStorage.getItem('mel-ui')==='simple';}catch(e){return false;}});
+  const [stab,setStab]=useState('today');
   const pickUi=(v)=>{try{localStorage.setItem('mel-ui',v?'simple':'house');}catch(e){}setOpen(false);setFan(null);setSimple(v);};
   const say=(m,ms)=>{setHint(m);clearTimeout(hintT.current);if(m)hintT.current=setTimeout(()=>setHint(''),ms||2800);};
   const sync=(w)=>{const p=cb.current;w.setWho(p.me||'Angelos');w.setDoorDone(!!p.doorDone);w.setDoorBadge(p.doorBadge===undefined?!p.doorDone:!!p.doorBadge,p.doorLabel);w.setMovie(!!p.movieNight);w.setSealed(p.sealedN||0);w.setGifts(p.gifts||[],p.me);w.setShell(p.shell);w.setPartner(p.other,p.partnerBubble,p.partnerK);w.setGarden(p.garden||[]);};
@@ -2121,21 +2151,54 @@ function House3D(props){
           <button class="hdbtn" onClick=${()=>{setOpen(false);cb.current.onMoment();}}><${HIco} n="back" s=${15}/> Take me back to a moment</button>
         </div>
       </div>
-      ${simple&&html`<div class="hsimple">
+      ${simple&&(()=>{const d=props.dash||{},go=(k)=>cb.current.onFeature(k),all=(menu||[]).reduce((a,x)=>a.concat(x.items),[]),it=(k)=>all.find(x=>x.key===k),
+        tile=(k,wide)=>{const x=it(k);return x&&html`<button class=${'hstile'+(wide?' wide':'')} key=${k} onClick=${()=>go(k)}><span class="ic"><${HIco} n=${x.icon} s=${21}/></span><div class="lb">${x.label}</div><div class="sb">${x.sub}</div></button>`;},
+        hr=new Date().getHours(),hi=hr<5?'Still up':hr<12?'Good morning':hr<18?'Good afternoon':'Good evening',
+        qCta={none:'Answer it',theirs:'Answer to read theirs',mine:'Sealed. Give '+other+' a nudge',both:'Read both answers'}[d.qState||'none'],
+        TABS=[['today','sun','Today'],['us','heart','Us'],['plans','cal','Plans'],['play','dice','Play']];
+        return html`<div class="hsimple">
         <div class="hsw">
-          <div class="hsh"><div><div class="wm">Mel<em>temi</em></div><div class="cs">welcome home${props.me?', '+props.me:''}</div></div>
+          <div class="hsh"><div><div class="wm">Mel<em>temi</em></div><div class="cs">${hi}${props.me?', '+props.me:''}</div></div>
             <button class="hswalk" onClick=${()=>pickUi(false)}><${HIco} n="door" s=${16}/> Walk the house</button></div>
-          ${(menu||[]).map(s=>html`
-            <div class="hsg" key=${s.id}><span class="ic"><${HIco} n=${s.icon} s=${17}/></span>${s.name}</div>
-            <div class="hsc">${s.items.map(it=>html`
-              <button class="hsr" key=${it.key} onClick=${()=>cb.current.onFeature(it.key)}>
-                <span class="ic"><${HIco} n=${it.icon} s=${20}/></span>
-                <span class="tx"><div class="lb">${it.label}</div><div class="sb">${it.sub}</div></span>
-                <span class="ch"><${HIco} n="chev" s=${15}/></span>
-              </button>`)}</div>`)}
-          ${notice&&html`<div class="hnotice" style="position:static;margin:14px 0 0" onClick=${()=>cb.current.onNotice()}>${notice}</div>`}
+          ${notice&&html`<div class="hsnote" onClick=${()=>cb.current.onNotice()}>${notice}</div>`}
+          ${stab==='today'&&html`
+            <button class="hshero" onClick=${()=>go('door')}>
+              <div class="k"><span>Today’s question</span>${d.streak>1&&html`<span class="st">${d.streak} days in a row</span>`}</div>
+              <div class="q">${d.q}</div>
+              <div class="cta">${qCta}<${HIco} n="chev" s=${15}/></div>
+            </button>
+            <div class="hsduo">
+              <button class="hsmini" onClick=${()=>go('ld')}>
+                <div class="k">${d.nowTog?'Right now':d.next?'Next time together':'The distance'}</div>
+                <div class="big">${d.nowTog?'Together':d.next?(d.next.days<=0?'Today':d.next.days+(d.next.days===1?' day':' days')):(d.apart?d.apart+' days':'Log a trip')}</div>
+                <div class="sb">${d.nowTog?'make it count':d.next?'until '+d.next.to:(d.apart?'apart so far':'and start the count')}</div>
+              </button>
+              <button class="hsmini" onClick=${()=>go('kitchen')}>
+                <div class="k">Tonight</div>
+                <div class="big sm">${d.tonight||'Nothing planned'}</div>
+                <div class="sb">${d.tonight?'on the menu':'plan it or spin the wheel'}</div>
+              </button>
+            </div>
+            <div class="hscard">
+              <div class="k">${other||'Your person'}</div>
+              <div class="pb">${props.partnerBubble?other+' '+props.partnerBubble:'Let '+other+' know you are thinking of them'}</div>
+              <div class="hsemo">${HOUSE_EMOTES.map(e=>html`<button key=${e[0]} onClick=${()=>{cb.current.onEmote(e[0]);}}><${HIco} n=${e[1]} s=${18}/><span>${e[3]}</span></button>`)}</div>
+            </div>
+            ${(d.todo||[]).length?html`<div class="hsg">Waiting on you</div>
+              <div class="hsc">${d.todo.map(t=>html`<button class="hsr" key=${t.key} onClick=${()=>go(t.key)}><span class="ic"><${HIco} n=${t.icon} s=${20}/></span><span class="tx"><div class="lb">${t.label}</div></span><span class="ch"><${HIco} n="chev" s=${15}/></span></button>`)}</div>`
+              :html`<div class="hsclear"><${HIco} n="star" s=${16}/> You are all caught up</div>`}
+            <div class="hsstats">
+              <div><b>${d.reunions||0}</b><span>reunions</span></div><div><b>${(d.miles||0).toLocaleString()}</b><span>miles flown</span></div><div><b>${d.pages||0}</b><span>journal pages</span></div><div><b>${d.photos||0}</b><span>photos</span></div>
+            </div>`}
+          ${stab==='us'&&html`<div class="hsg">The two of us</div><div class="hsgrid">${['journal','notes','letters','photos','list','ld','apart','bucket'].map(k=>tile(k))}</div>`}
+          ${stab==='plans'&&html`<div class="hsg">Eating</div><div class="hsgrid">${['kitchen','plans','spots'].map((k,i)=>tile(k,i===0))}</div>
+            <div class="hsg">Watching</div><div class="hsgrid">${['tv','tvlist'].map(k=>tile(k))}</div>
+            <div class="hsg">Going</div><div class="hsgrid">${['trip','concierge'].map(k=>tile(k))}</div>`}
+          ${stab==='play'&&html`<div class="hsg">Play and read together</div><div class="hsgrid">${['game','books','tv','door'].map((k,i)=>tile(k,i===0))}</div>
+            <button class="hdbtn" style="margin-top:16px;width:100%" onClick=${()=>cb.current.onMoment()}><${HIco} n="back" s=${15}/> Take me back to a moment</button>`}
         </div>
-      </div>`}
+        <div class="hstabs">${TABS.map(t=>html`<button key=${t[0]} class=${stab===t[0]?'on':''} onClick=${()=>{setStab(t[0]);const el=document.querySelector('.hsimple');if(el)el.scrollTop=0;}}><${HIco} n=${t[1]} s=${21}/><span>${t[2]}</span>${t[0]==='today'&&(d.todo||[]).length?html`<i></i>`:null}</button>`)}</div>
+      </div>`;})()}
       ${loading&&!simple&&html`<div class="hload"><div class="wm">Mel<em>temi</em></div><div class="bar"><i></i></div><div class="lt">opening the house…</div></div>`}
       ${children}
     </div>`;
@@ -4271,6 +4334,14 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
       {key:'apart',icon:'waves',label:'The days apart',sub:'good mornings, missions, the jar',spot:'ld'},
       {key:'knock',icon:'chat',label:'Thinking of you',sub:'send a little knock',spot:'knock'}]},
   ];
+  const dashTodo=[
+    gThirsty&&{key:'list',icon:'leaf',label:gThirsty===1?'One plant is waiting for your water':gThirsty+' plants are waiting for your water'},
+    aMoves.length&&{key:'game',icon:'dice',label:'Your move in '+aMoves.join(' and ')},
+    swipeDeck.length&&{key:'tv',icon:'film',label:swipeDeck.length===1?'One film is waiting for your vote':swipeDeck.length+' films are waiting for your vote'},
+    bkWait&&{key:'books',icon:'books',label:bkWait===1?'One book pick is waiting on you':bkWait+' book picks are waiting on you'}].filter(Boolean);
+  const dash={q:todaysQ,qState:myA?(theirA?'both':'mine'):(theirA?'theirs':'none'),streak:qotdStats(qotd).streak,tonight:kTonight?kTonight.txt:'',
+    next:mS.next?{days:mS.dnum(mS.next.d1)-mS.dnum(mS.today),to:placeNick(mS.next.to)}:null,nowTog:mS.nowTog,apart:mS.apart,reunions:mS.past.length,
+    miles:Math.round(mS.totalKm*.621371),todo:dashTodo,pages:(journal||[]).length,photos:(photos||[]).length};
   const EMO5={wave:'waved',hug:'sent a hug',kiss:'sent a kiss',dance:'danced for you',knock:'knocked'};
   const partnerBubble=lastPingFromThem?((EMO5[lastPingFromThem.k]||'thought of you')+' '+relTime(lastPingFromThem.ts)):'';
   const [qSeen,setQSeen]=useState(()=>{try{return localStorage.getItem('mel-qseen')||'';}catch(e){return '';}});
@@ -4283,7 +4354,7 @@ Search the web for current, open, well-reviewed options. Then output ONLY a JSON
   const houseLayer=html`
     <${House3D} active=${tab==='home'} garden=${gStages} me=${me} other=${other} doorDone=${doorOpen} sealedN=${sealedN5} movieNight=${!!nextNight}
       menu=${['hall','kitchen','living','bed','out'].map(id=>houseMenu.find(x=>x.id===id)).filter(Boolean)} notice=${tab==='home'?err:''} gifts=${hGifts} shell=${{i:shellIdx,found:shellMine||!me}} stats=${shellStats}
-      partnerBubble=${partnerBubble} partnerK=${lastPingFromThem?lastPingFromThem.k:''}
+      dash=${dash} partnerBubble=${partnerBubble} partnerK=${lastPingFromThem?lastPingFromThem.k:''}
       onFeature=${featFromHouse} onDoor=${()=>setRitual(true)} doorBadge=${doorBadge} doorLabel=${doorLabel} onGiftFound=${findGift} onShell=${foundShell}
       onEmote=${(k)=>sendPing(k)} onGift=${leaveGift} onMoment=${takeMeBack} onNotice=${()=>setErr('')}>
       ${ritualSheet}
